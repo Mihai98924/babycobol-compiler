@@ -1,0 +1,4 @@
+       IDENTIFICATION DIVISION.
+           A. TEST.
+       PROCEDURE DIVISION.
+           DISPLAY "HELLO WORLD!".

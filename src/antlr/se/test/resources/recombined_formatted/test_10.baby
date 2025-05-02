@@ -1,0 +1,15 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. TEST-ACCEPT-DISPLAY.
+       DATA DIVISION.
+         01 B PICTURE IS 99V99.
+         01 A PICTURE IS SZZZV99.
+       PROCEDURE DIVISION.
+           NEXT SENTENCE.
+       REST.
+           MOVE 4 TO Y
+           ADD 2 TO Y GIVING X
+           DISPLAY 1
+           COPY "WHOAH"
+           DISPLAY FAILURE.
+           COPY "COPYBOOK".
+           DISPLAY 3.

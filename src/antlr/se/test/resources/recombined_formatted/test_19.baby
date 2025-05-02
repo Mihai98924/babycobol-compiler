@@ -1,0 +1,23 @@
+       IDENTIFICATION DIVISION.
+       DATA DIVISION.
+                                         77 A PICTURE IS 9.
+                                         77 B PICTURE IS 9.
+                                         77 C PICTURE IS 9.
+                                         77 D PICTURE IS 9.
+                                         77 E PICTURE IS 1.
+                                         77 F PICTURE IS 9.
+                                         77 add PICTURE IS 9.
+                                         77 to PICTURE IS 9.
+       PROCEDURE DIVISION.
+           ADD A TO B
+           ADD C TO D
+           ADD E TO F.
+           ADD A TO B
+           ADD C TO D
+           ADD E TO F.
+           ADD A TO B
+           ADD C TO D
+           ADD E TO F.
+           ADD A TO B
+           ADD C TO D
+           ADD E TO F.

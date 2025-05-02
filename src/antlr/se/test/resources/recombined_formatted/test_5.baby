@@ -1,0 +1,9 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. TEST.
+       PROCEDURE DIVISION.
+           EVALUATE TRUE
+           WHEN TRUE
+           DISPLAY SUCCESS
+           WHEN FALSE
+           DISPLAY FAILURE
+           END.

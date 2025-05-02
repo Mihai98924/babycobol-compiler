@@ -1,0 +1,12 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. TEST.
+       PROCEDURE DIVISION.
+           PERFORM A THROUGH C.
+           STOP .
+           DISPLAY FAILURE.
+       A.
+           DISPLAY "A" WITH NO ADVANCING.
+       B.
+           DISPLAY "B" WITH NO ADVANCING.
+       TEST9.
+           DISPLAY "C" WITH NO ADVANCING.

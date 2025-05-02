@@ -1,0 +1,14 @@
+       IDENTIFICATION DIVISION.
+       DATA DIVISION.
+                                         77 TARGET PICTURE IS XXXXXXX.
+       PROCEDURE DIVISION.
+           PERFORM PROC1.
+           PERFORM PROC2.
+           MOVE SPACES TO TARGET.
+           MOVE "PRO C2" TO TARGET.
+           GO TO TARGET.
+           DISPLAY "X".
+       PROC1.
+           DISPLAY "PROC1".
+       PROC2.
+           DISPLAY "PROC2".

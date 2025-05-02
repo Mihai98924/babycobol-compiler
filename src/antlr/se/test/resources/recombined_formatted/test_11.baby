@@ -1,0 +1,9 @@
+       IDENTIFICATION DIVISION.
+       DATA DIVISION.
+                 5 TEST9 PICTURE IS 999.
+       PROCEDURE DIVISION.
+           LOOP UNTIL TEST9 > 30
+           ADD 5 TO GOTOTEST
+           DISPLAY TEST9
+           END.
+           DISPLAY TEST9.

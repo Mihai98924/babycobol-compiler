@@ -1,0 +1,5 @@
+       IDENTIFICATION DIVISION.
+       DATA DIVISION.
+                                         77 A PICTURE IS 99.
+       PROCEDURE DIVISION.
+           MOVE B TO A.

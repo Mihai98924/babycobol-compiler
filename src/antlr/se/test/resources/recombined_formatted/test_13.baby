@@ -1,0 +1,10 @@
+       IDENTIFICATION DIVISION.
+       DATA DIVISION.
+         01 X PICTURE IS 9.
+         01 Y PICTURE IS 9.
+       PROCEDURE DIVISION.
+           ACCEPT X Y
+           ADD X TO Y.
+           DISPLAY X.
+           DISPLAY Y WITH NO ADVANCING.
+           DISPLAY "FINISH".
