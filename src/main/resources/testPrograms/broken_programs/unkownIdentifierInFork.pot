@@ -1,5 +1,0 @@
-int i = 0;
-fork {
-    i = 2;
-}
-join;

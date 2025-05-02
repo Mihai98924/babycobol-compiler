@@ -1,4 +1,0 @@
-while (true){
-    join;
-    printNL "this won't compile";
-}
