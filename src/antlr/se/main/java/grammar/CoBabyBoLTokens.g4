@@ -57,6 +57,19 @@ TIMES: T WS* I WS* M WS* E WS* S;
 RETURNING: R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
 AS_PRIMITIVE: A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
 AS_STRUCT: A WS* S WS+ S WS* T WS* R WS* U WS* C WS* T;
+PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
+IS: I WS* S;
+LIKE: L WS* I WS* K WS* E;
+OCCURS: O WS* C WS* C WS* U WS* R WS* S;
+DOT: D WS* O WS* T;
+ALSO: A WS* L WS* S WS* O;
+VARYING: V WS* A WS* R WS* Y WS* I WS* N WS* G;
+WHILE: W WS* H WS* I WS* L WS* E;
+UNTIL: U WS* N WS* T WS* I WS* L;
+WHEN: W WS* H WS* E WS* N;
+OTHER: O WS* T WS* H WS* E WS* R;
+STOP: S WS* T WS* O WS* P;
+
 // === LITERALS ===============================================================
 fragment LETTER     : [a-zA-Z];
 fragment DIGIT      : [0-9];
@@ -64,8 +77,15 @@ fragment CHARACTER  : ~['"\r\n];
 fragment ALPHANUMERIC : [a-zA-Z0-9];
 TEXT_UNTIL_DOT : ~[.\r\n]+ ;
 
+LEVEL
+    : DIGIT+
+    ;
 
 ATOMIC
+    : IDENTIFIER
+    ;
+
+REPRESENTATION
     : IDENTIFIER
     ;
 
