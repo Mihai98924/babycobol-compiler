@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/antlr/se/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/src/antlr/se/test/resources/recombined_formatted" />
+      <excludeFolder url="file://$MODULE_DIR$/src/antlr/se/test/resources/programs" />
     </content>
   </component>
 </module>

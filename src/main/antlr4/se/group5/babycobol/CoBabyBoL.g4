@@ -1,6 +1,6 @@
 grammar CoBabyBoL;
 
-@header{package antlr.se.grammar;}
+@header{package main.antlr4.se.group5.babycobol;}
 
 import CoBabyBoLTokens;
 
