@@ -150,8 +150,10 @@ LT: '<';
 
 WS: [ \n\t\r] -> skip;
 DEC_POINT : '.' | ',';
+SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
 EOL : '.';
 SIGN : '+' | '-';
+LQ: (SOL '-' WS*) | WS+;
 
 
 

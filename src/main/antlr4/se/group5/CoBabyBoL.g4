@@ -1,7 +1,5 @@
 grammar CoBabyBoL;
 
-@header{package main.antlr4.se.group5;}
-
 import CoBabyBoLTokens;
 
 program
@@ -9,9 +7,9 @@ program
       statement* EOF
     ;
 
-identification_division: IDENTIFICATION_DIVISION EOL clause+;
+identification_division: SOL IDENTIFICATION_DIVISION EOL clause*;
 
-statement: (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | data_division | evaluate | next_sentence | stop) EOL;
+statement: SOL (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | data_division | evaluate | next_sentence | stop) EOL;
 
 accept: ACCEPT WS+ IDENTIFIER;
 alter: ALTER WS+ PROCEDURE_NAME WS+ TO WS+ PROCEED WS+ TO WS+ PROCEDURE_NAME;

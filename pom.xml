@@ -52,9 +52,14 @@
                     <listener>true</listener>
                 </configuration>
                 <executions>
-                    <execution><goals><goal>antlr4</goal></goals></execution>
+                    <execution>
+                        <id>generate-antlr</id>
+                        <phase>generate-sources</phase>
+                        <goals><goal>antlr4</goal></goals>
+                    </execution>
                 </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
