@@ -1,0 +1,49 @@
+graph {
+   pEwehUgl [label=<Program>];
+   yExEdxrr [label=<Array Declaration>];
+   NaaXzqMq [label=<Print>];
+   mKcadJQf [label=<Array Declaration>];
+   GblbYwuO [label=<Print>];
+   pVLfgejk [label=<Local Array Variable <br/>ID: 'test'<br/> Size: '6'>];
+   FmZNkmuk [label=<Int Array<br/>stores: '6' Ints>];
+   ojIBXAdP [label=<Variable Access>];
+   NjILqiIg [label=<Local Array Variable <br/>ID: 'testCopy'<br/> Size: '6'>];
+   FDKEzdaV [label=<Variable Access>];
+   MCMTPRCe [label=<Variable Access>];
+   ngstTPfS [label=<Int: '0'>];
+   iSlinwQA [label=<Int: '1'>];
+   QoBAUMWP [label=<Int: '2'>];
+   XhLRdoKv [label=<Int: '3'>];
+   RBWNcbrY [label=<Int: '4'>];
+   HqTobJbR [label=<Int: '5'>];
+   bOXGILsD [label=<Local Array Variable <br/>ID: 'test'<br/> Size: '6'>];
+   jQuYGbht [label=<Local Array Variable <br/>ID: 'test'<br/> Size: '6'>];
+   QIdFFrfo [label=<Local Array Variable <br/>ID: 'testCopy'<br/> Size: '6'>];
+   
+   { rank=same; pEwehUgl  }
+   { rank=same; yExEdxrr NaaXzqMq mKcadJQf GblbYwuO  }
+   { rank=same; pVLfgejk FmZNkmuk ojIBXAdP NjILqiIg FDKEzdaV MCMTPRCe  }
+   { rank=same; ngstTPfS iSlinwQA QoBAUMWP XhLRdoKv RBWNcbrY HqTobJbR bOXGILsD jQuYGbht QIdFFrfo  }
+   
+
+   ojIBXAdP -- bOXGILsD
+   GblbYwuO -- MCMTPRCe
+   mKcadJQf -- NjILqiIg
+   mKcadJQf -- FDKEzdaV
+   MCMTPRCe -- QIdFFrfo
+   pEwehUgl -- yExEdxrr
+   pEwehUgl -- NaaXzqMq
+   pEwehUgl -- mKcadJQf
+   pEwehUgl -- GblbYwuO
+   FDKEzdaV -- jQuYGbht
+   NaaXzqMq -- ojIBXAdP
+   yExEdxrr -- pVLfgejk
+   yExEdxrr -- FmZNkmuk
+   FmZNkmuk -- ngstTPfS
+   FmZNkmuk -- iSlinwQA
+   FmZNkmuk -- QoBAUMWP
+   FmZNkmuk -- XhLRdoKv
+   FmZNkmuk -- RBWNcbrY
+   FmZNkmuk -- HqTobJbR
+   
+}

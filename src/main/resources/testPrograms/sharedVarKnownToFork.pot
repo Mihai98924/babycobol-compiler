@@ -1,0 +1,5 @@
+shared string test = "this string is shared and thus known to the fork";
+fork {
+    printNL test;
+}
+join;

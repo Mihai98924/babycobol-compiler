@@ -1,0 +1,3 @@
+fork {
+    printNL "this program wont compile without a join following the fork";
+}

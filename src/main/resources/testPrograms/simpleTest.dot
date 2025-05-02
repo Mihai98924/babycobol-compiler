@@ -1,0 +1,106 @@
+graph {
+   XEAsZErQ [label=<Program>];
+   cEnFWzQn [label=<Array Declaration>];
+   ucJDRPSB [label=<Array Declaration>];
+   CCUBdNBn [label=<Declaration>];
+   UCUMRCrR [label=<Declaration>];
+   fDuXKnAK [label=<Array Declaration>];
+   BBkZiLbo [label=<Array Declaration>];
+   jBSJsIuz [label=<Print>];
+   oPmJXgQV [label=<Local Array Variable <br/>ID: 'test'<br/> Size: '3'>];
+   GOpkKzPc [label=<Int Array<br/>stores: '3' Ints>];
+   ZNayzWkg [label=<Local Array Variable <br/>ID: 'testCopy'<br/> Size: '3'>];
+   jLodgwJy [label=<Variable Access>];
+   wwciFwXA [label=<Local Variable <br/>ID: 'blub'<br/> Size: '1'>];
+   cTwytZRZ [label=<Array Variable Element Access>];
+   zrvAdbDP [label=<Local Variable <br/>ID: 'a'<br/> Size: '1'>];
+   GvDfqhtd [label=<Char: 'a'>];
+   lefzfAvb [label=<Local Array Variable <br/>ID: 'str'<br/> Size: '5'>];
+   CvauMXCU [label=<Char Array<br/>stores: '5' Chars>];
+   aIWTzJsD [label=<Local Array Variable <br/>ID: 'str2'<br/> Size: '10'>];
+   xhAGvLRS [label=<Char Array<br/>stores: '10' Chars>];
+   UIjJCcpq [label=<Equal>];
+   YuNiAvtD [label=<Int: '1'>];
+   VQtPiFUg [label=<Int: '2'>];
+   hFsipJqI [label=<Int: '3'>];
+   drHhUuiT [label=<Local Array Variable <br/>ID: 'test'<br/> Size: '3'>];
+   hhdDTgTJ [label=<Local Array Variable <br/>ID: 'testCopy'<br/> Size: '3'>];
+   BGQTCtyX [label=<Int: '0'>];
+   RXjWTiqx [label=<Char: 'A'>];
+   oyLUYMdZ [label=<Char: 'B'>];
+   kYIDVAdA [label=<Char: 'C'>];
+   fJbUVZyD [label=<Char: 'D'>];
+   UBbaQUux [label=<Char: 'E'>];
+   uqAYagak [label=<Char: 'a'>];
+   YaOXTpWU [label=<Char: 'b'>];
+   FhZwDCeC [label=<Char: 'c'>];
+   qOsSntEi [label=<Char: 'd'>];
+   nwVbocIL [label=<Char: 'e'>];
+   EgnbnLmI [label=<Char: 'f'>];
+   xYTmJyzT [label=<Char: 'g'>];
+   FzISbkIU [label=<Char: 'h'>];
+   kOPkxjNx [label=<Char: 'i'>];
+   RmZTprAv [label=<Char: 'j'>];
+   lwwtMiST [label=<Multiplication>];
+   NBjgMFTA [label=<Addition>];
+   BSNnOJzo [label=<Int: '3'>];
+   fLxNrgrj [label=<Int: '3'>];
+   YycHYoMN [label=<Int: '4'>];
+   ZOdupXfe [label=<Int: '5'>];
+   
+   { rank=same; XEAsZErQ  }
+   { rank=same; cEnFWzQn ucJDRPSB CCUBdNBn UCUMRCrR fDuXKnAK BBkZiLbo jBSJsIuz  }
+   { rank=same; oPmJXgQV GOpkKzPc ZNayzWkg jLodgwJy wwciFwXA cTwytZRZ zrvAdbDP GvDfqhtd lefzfAvb CvauMXCU aIWTzJsD xhAGvLRS UIjJCcpq  }
+   { rank=same; YuNiAvtD VQtPiFUg hFsipJqI drHhUuiT hhdDTgTJ BGQTCtyX RXjWTiqx oyLUYMdZ kYIDVAdA fJbUVZyD UBbaQUux uqAYagak YaOXTpWU FhZwDCeC qOsSntEi nwVbocIL EgnbnLmI xYTmJyzT FzISbkIU kOPkxjNx RmZTprAv lwwtMiST NBjgMFTA  }
+   { rank=same; BSNnOJzo fLxNrgrj YycHYoMN ZOdupXfe  }
+   
+
+   UCUMRCrR -- zrvAdbDP
+   UCUMRCrR -- GvDfqhtd
+   lwwtMiST -- BSNnOJzo
+   lwwtMiST -- fLxNrgrj
+   CvauMXCU -- RXjWTiqx
+   CvauMXCU -- oyLUYMdZ
+   CvauMXCU -- kYIDVAdA
+   CvauMXCU -- fJbUVZyD
+   CvauMXCU -- UBbaQUux
+   jLodgwJy -- drHhUuiT
+   UIjJCcpq -- lwwtMiST
+   UIjJCcpq -- NBjgMFTA
+   CCUBdNBn -- wwciFwXA
+   CCUBdNBn -- cTwytZRZ
+   XEAsZErQ -- cEnFWzQn
+   XEAsZErQ -- ucJDRPSB
+   XEAsZErQ -- CCUBdNBn
+   XEAsZErQ -- UCUMRCrR
+   XEAsZErQ -- fDuXKnAK
+   XEAsZErQ -- BBkZiLbo
+   XEAsZErQ -- jBSJsIuz
+   cTwytZRZ -- hhdDTgTJ
+   cTwytZRZ -- BGQTCtyX
+   NBjgMFTA -- YycHYoMN
+   NBjgMFTA -- ZOdupXfe
+   fDuXKnAK -- lefzfAvb
+   fDuXKnAK -- CvauMXCU
+   ucJDRPSB -- ZNayzWkg
+   ucJDRPSB -- jLodgwJy
+   BBkZiLbo -- aIWTzJsD
+   BBkZiLbo -- xhAGvLRS
+   xhAGvLRS -- uqAYagak
+   xhAGvLRS -- YaOXTpWU
+   xhAGvLRS -- FhZwDCeC
+   xhAGvLRS -- qOsSntEi
+   xhAGvLRS -- nwVbocIL
+   xhAGvLRS -- EgnbnLmI
+   xhAGvLRS -- xYTmJyzT
+   xhAGvLRS -- FzISbkIU
+   xhAGvLRS -- kOPkxjNx
+   xhAGvLRS -- RmZTprAv
+   GOpkKzPc -- YuNiAvtD
+   GOpkKzPc -- VQtPiFUg
+   GOpkKzPc -- hFsipJqI
+   cEnFWzQn -- oPmJXgQV
+   cEnFWzQn -- GOpkKzPc
+   jBSJsIuz -- UIjJCcpq
+   
+}

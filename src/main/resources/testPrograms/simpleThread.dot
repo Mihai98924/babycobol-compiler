@@ -1,0 +1,130 @@
+graph {
+   IfYWHwrP [label=<Program>];
+   FAQkjhRQ [label=<Fork>];
+   dTGQEVgC [label=<Print>];
+   JitnHynZ [label=<Parallel Scope>];
+   ZxbyYHsg [label=<Char Array<br/>stores: '10' Chars>];
+   DZGlIgvN [label=<Print>];
+   INxjNudR [label=<Declaration>];
+   NlyWbdMG [label=<While>];
+   nAxvXqJp [label=<Print>];
+   OGcFDZvm [label=<Char: 'a'>];
+   baOValFc [label=<Char: 'f'>];
+   FbOkiEju [label=<Char: 't'>];
+   nueAqgtD [label=<Char: 'e'>];
+   JyyXhHqV [label=<Char: 'r'>];
+   ASZHoivY [label=<Char: ' '>];
+   fLdAfYFK [label=<Char: 'j'>];
+   BSaKwJKl [label=<Char: 'o'>];
+   xGljkiVG [label=<Char: 'i'>];
+   paltCcrl [label=<Char: 'n'>];
+   ibzZAatC [label=<Char Array<br/>stores: '12' Chars>];
+   MOHvrFrF [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   RurZLDfF [label=<Int: '0'>];
+   avRglQfn [label=<Less Than>];
+   WcGemKFU [label=<Scope>];
+   AaZysYvm [label=<Char Array<br/>stores: '12' Chars>];
+   nKFkbKtN [label=<Char: 't'>];
+   xWxMnPml [label=<Char: 'h'>];
+   subUrIEo [label=<Char: 'r'>];
+   nzyxoowF [label=<Char: 'e'>];
+   Ogunknrq [label=<Char: 'a'>];
+   GfxqHApt [label=<Char: 'd'>];
+   eXlxfziq [label=<Char: ' '>];
+   zWSLNRzT [label=<Char: 's'>];
+   IwqaaOJk [label=<Char: 't'>];
+   jHDHEUpJ [label=<Char: 'a'>];
+   wQlifnvZ [label=<Char: 'r'>];
+   ZtfzVBVl [label=<Char: 't'>];
+   AqnjYYlH [label=<Variable Access>];
+   JurZEOPg [label=<Int: '3000'>];
+   rAoTLdzN [label=<Assignment>];
+   rRiHUuRT [label=<Char: 't'>];
+   pBQxapFt [label=<Char: 'h'>];
+   YTdKdPPr [label=<Char: 'r'>];
+   GKzrzFkm [label=<Char: 'e'>];
+   cMzbilyX [label=<Char: 'a'>];
+   HzpBhRod [label=<Char: 'd'>];
+   mSxNdHID [label=<Char: ' '>];
+   LBRQIPQs [label=<Char: 'D'>];
+   rAKrkBZR [label=<Char: 'O'>];
+   wzIJfbZo [label=<Char: 'N'>];
+   koycfbHr [label=<Char: 'E'>];
+   MTLVbRqm [label=<Char: '!'>];
+   DIdrFEvX [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   qWodMgIm [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   FAeLNmIK [label=<Addition>];
+   ybfmVQUv [label=<Variable Access>];
+   seHPzoZx [label=<Int: '1'>];
+   lSmoqhfG [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   
+   { rank=same; IfYWHwrP  }
+   { rank=same; FAQkjhRQ dTGQEVgC  }
+   { rank=same; JitnHynZ ZxbyYHsg  }
+   { rank=same; DZGlIgvN INxjNudR NlyWbdMG nAxvXqJp OGcFDZvm baOValFc FbOkiEju nueAqgtD JyyXhHqV ASZHoivY fLdAfYFK BSaKwJKl xGljkiVG paltCcrl  }
+   { rank=same; ibzZAatC MOHvrFrF RurZLDfF avRglQfn WcGemKFU AaZysYvm  }
+   { rank=same; nKFkbKtN xWxMnPml subUrIEo nzyxoowF Ogunknrq GfxqHApt eXlxfziq zWSLNRzT IwqaaOJk jHDHEUpJ wQlifnvZ ZtfzVBVl AqnjYYlH JurZEOPg rAoTLdzN rRiHUuRT pBQxapFt YTdKdPPr GKzrzFkm cMzbilyX HzpBhRod mSxNdHID LBRQIPQs rAKrkBZR wzIJfbZo koycfbHr MTLVbRqm  }
+   { rank=same; DIdrFEvX qWodMgIm FAeLNmIK  }
+   { rank=same; ybfmVQUv seHPzoZx  }
+   { rank=same; lSmoqhfG  }
+   
+
+   JitnHynZ -- DZGlIgvN
+   JitnHynZ -- INxjNudR
+   JitnHynZ -- NlyWbdMG
+   JitnHynZ -- nAxvXqJp
+   INxjNudR -- MOHvrFrF
+   INxjNudR -- RurZLDfF
+   AqnjYYlH -- DIdrFEvX
+   AaZysYvm -- rRiHUuRT
+   AaZysYvm -- pBQxapFt
+   AaZysYvm -- YTdKdPPr
+   AaZysYvm -- GKzrzFkm
+   AaZysYvm -- cMzbilyX
+   AaZysYvm -- HzpBhRod
+   AaZysYvm -- mSxNdHID
+   AaZysYvm -- LBRQIPQs
+   AaZysYvm -- rAKrkBZR
+   AaZysYvm -- wzIJfbZo
+   AaZysYvm -- koycfbHr
+   AaZysYvm -- MTLVbRqm
+   dTGQEVgC -- ZxbyYHsg
+   FAeLNmIK -- ybfmVQUv
+   FAeLNmIK -- seHPzoZx
+   ybfmVQUv -- lSmoqhfG
+   NlyWbdMG -- avRglQfn
+   NlyWbdMG -- WcGemKFU
+   DZGlIgvN -- ibzZAatC
+   rAoTLdzN -- qWodMgIm
+   rAoTLdzN -- FAeLNmIK
+   FAQkjhRQ -- JitnHynZ
+   ZxbyYHsg -- OGcFDZvm
+   ZxbyYHsg -- baOValFc
+   ZxbyYHsg -- FbOkiEju
+   ZxbyYHsg -- nueAqgtD
+   ZxbyYHsg -- JyyXhHqV
+   ZxbyYHsg -- ASZHoivY
+   ZxbyYHsg -- fLdAfYFK
+   ZxbyYHsg -- BSaKwJKl
+   ZxbyYHsg -- xGljkiVG
+   ZxbyYHsg -- paltCcrl
+   WcGemKFU -- rAoTLdzN
+   nAxvXqJp -- AaZysYvm
+   IfYWHwrP -- FAQkjhRQ
+   IfYWHwrP -- dTGQEVgC
+   avRglQfn -- AqnjYYlH
+   avRglQfn -- JurZEOPg
+   ibzZAatC -- nKFkbKtN
+   ibzZAatC -- xWxMnPml
+   ibzZAatC -- subUrIEo
+   ibzZAatC -- nzyxoowF
+   ibzZAatC -- Ogunknrq
+   ibzZAatC -- GfxqHApt
+   ibzZAatC -- eXlxfziq
+   ibzZAatC -- zWSLNRzT
+   ibzZAatC -- IwqaaOJk
+   ibzZAatC -- jHDHEUpJ
+   ibzZAatC -- wQlifnvZ
+   ibzZAatC -- ZtfzVBVl
+   
+}

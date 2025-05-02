@@ -1,0 +1,2 @@
+string test = "abc" ++ "def" ++ "ghi";
+printNL test ++ "jkl";

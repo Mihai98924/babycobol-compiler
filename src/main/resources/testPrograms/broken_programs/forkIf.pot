@@ -1,0 +1,5 @@
+if (true){
+    fork {
+        printNL "this won't compile";
+    }
+}

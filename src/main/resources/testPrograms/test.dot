@@ -1,0 +1,29 @@
+graph {
+   qOYgsCfn [label=<Program>];
+   BiTaVLDZ [label=<Array Declaration>];
+   TuWgDtPW [label=<Assignment>];
+   bfwAgIYy [label=<Local Array Variable <br/>ID: 'teststr'<br/> Size: '3'>];
+   lrbLZxMc [label=<Char Array<br/>stores: '3' Chars>];
+   rjyCtshj [label=<Local Array Variable <br/>ID: 'teststr'<br/> Size: '3'>];
+   YxDGUbWn [label=<Char: 'b'>];
+   oDCYflLT [label=<Char: 'a'>];
+   FfviRYSZ [label=<Char: 'a'>];
+   WMKPfsOS [label=<Char: 'a'>];
+   
+   { rank=same; qOYgsCfn  }
+   { rank=same; BiTaVLDZ TuWgDtPW  }
+   { rank=same; bfwAgIYy lrbLZxMc rjyCtshj YxDGUbWn  }
+   { rank=same; oDCYflLT FfviRYSZ WMKPfsOS  }
+   
+
+   qOYgsCfn -- BiTaVLDZ
+   qOYgsCfn -- TuWgDtPW
+   TuWgDtPW -- rjyCtshj
+   TuWgDtPW -- YxDGUbWn
+   BiTaVLDZ -- bfwAgIYy
+   BiTaVLDZ -- lrbLZxMc
+   lrbLZxMc -- oDCYflLT
+   lrbLZxMc -- FfviRYSZ
+   lrbLZxMc -- WMKPfsOS
+   
+}

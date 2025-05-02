@@ -1,0 +1,64 @@
+graph {
+   NbwiWmwe [label=<Program>];
+   ZjnscTLb [label=<Declaration>];
+   VcfUDqIh [label=<While>];
+   LnczVEZW [label=<Print>];
+   fOBzGUuE [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   FNoguKhR [label=<Int: '0'>];
+   giXFNkTV [label=<Less Than>];
+   MvFtWGhD [label=<Scope>];
+   eoCtOlFV [label=<Char Array<br/>stores: '5' Chars>];
+   PkNyfTbY [label=<Variable Access>];
+   NNSwoukl [label=<Int: '10'>];
+   lJrvCnoq [label=<Print>];
+   QymXEwNZ [label=<Assignment>];
+   hWuegpat [label=<Char: 'D'>];
+   RIPnnGTH [label=<Char: 'O'>];
+   hGWiVRuC [label=<Char: 'N'>];
+   eyCQKFwt [label=<Char: 'E'>];
+   sdbdMpdm [label=<Char: '!'>];
+   dWjtroSz [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   XPsRBRPv [label=<Variable Access>];
+   cgtCXUBI [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   vzGZWFfE [label=<Addition>];
+   KvUoumPr [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   vttbwQHc [label=<Variable Access>];
+   qbBOGbKB [label=<Int: '1'>];
+   wBYJzkOR [label=<Local Variable <br/>ID: 'i'<br/> Size: '1'>];
+   
+   { rank=same; NbwiWmwe  }
+   { rank=same; ZjnscTLb VcfUDqIh LnczVEZW  }
+   { rank=same; fOBzGUuE FNoguKhR giXFNkTV MvFtWGhD eoCtOlFV  }
+   { rank=same; PkNyfTbY NNSwoukl lJrvCnoq QymXEwNZ hWuegpat RIPnnGTH hGWiVRuC eyCQKFwt sdbdMpdm  }
+   { rank=same; dWjtroSz XPsRBRPv cgtCXUBI vzGZWFfE  }
+   { rank=same; KvUoumPr vttbwQHc qbBOGbKB  }
+   { rank=same; wBYJzkOR  }
+   
+
+   vttbwQHc -- wBYJzkOR
+   VcfUDqIh -- giXFNkTV
+   VcfUDqIh -- MvFtWGhD
+   PkNyfTbY -- dWjtroSz
+   eoCtOlFV -- hWuegpat
+   eoCtOlFV -- RIPnnGTH
+   eoCtOlFV -- hGWiVRuC
+   eoCtOlFV -- eyCQKFwt
+   eoCtOlFV -- sdbdMpdm
+   ZjnscTLb -- fOBzGUuE
+   ZjnscTLb -- FNoguKhR
+   vzGZWFfE -- vttbwQHc
+   vzGZWFfE -- qbBOGbKB
+   LnczVEZW -- eoCtOlFV
+   lJrvCnoq -- XPsRBRPv
+   QymXEwNZ -- cgtCXUBI
+   QymXEwNZ -- vzGZWFfE
+   NbwiWmwe -- ZjnscTLb
+   NbwiWmwe -- VcfUDqIh
+   NbwiWmwe -- LnczVEZW
+   XPsRBRPv -- KvUoumPr
+   giXFNkTV -- PkNyfTbY
+   giXFNkTV -- NNSwoukl
+   MvFtWGhD -- lJrvCnoq
+   MvFtWGhD -- QymXEwNZ
+   
+}

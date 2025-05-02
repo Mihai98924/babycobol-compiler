@@ -1,0 +1,17 @@
+fork {
+    fork {
+        printNL "thread2";
+        int i = 0;
+        while (i < 3000) {
+            i = i + 1;
+        }
+        printNL "2 DONE!";
+    }
+    printNL "thread1";
+    join;
+    printNL "1 DONE!";
+}
+printNL "before main join";
+join;
+printNL "after main join";
+

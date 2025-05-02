@@ -1,0 +1,28 @@
+// Basic integer declarations.
+int x = 5;
+print x;
+
+int y = 7;
+print y;
+
+// Basic character declarations.
+char c1 = 'A';
+print c1;
+print ' ';
+
+char c2 = 'z';
+printNL c2;
+
+// Basic boolean declarations.
+bool b1 = true;
+print b1;
+print ' ';
+
+bool b2 = false;
+printNL b2;
+
+
+
+
+
+

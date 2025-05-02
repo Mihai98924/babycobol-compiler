@@ -1,0 +1,125 @@
+graph {
+   CObYgLTX [label=<Program>];
+   eSHeteZO [label=<Array Declaration>];
+   CZUuvBEk [label=<Fork>];
+   fySkfyUi [label=<Shared Array Variable <br/>ID: 'test'<br/> Size: '48'>];
+   RGIPRnqh [label=<Char Array<br/>stores: '48' Chars>];
+   jqSKGYeI [label=<Parallel Scope>];
+   StUeUIWo [label=<Char: 't'>];
+   tCkytGRp [label=<Char: 'h'>];
+   BNSeQxMA [label=<Char: 'i'>];
+   NYlZtOcK [label=<Char: 's'>];
+   ApgIxDid [label=<Char: ' '>];
+   YUrgXhSr [label=<Char: 's'>];
+   aqOMOyVJ [label=<Char: 't'>];
+   YeEGlkKZ [label=<Char: 'r'>];
+   oJCCfmSF [label=<Char: 'i'>];
+   GJLuNLSo [label=<Char: 'n'>];
+   IZRdadkO [label=<Char: 'g'>];
+   fAUyGdCg [label=<Char: ' '>];
+   itepCvRF [label=<Char: 'i'>];
+   JqYGYOUy [label=<Char: 's'>];
+   MaQreTrJ [label=<Char: ' '>];
+   KEJvwNZQ [label=<Char: 's'>];
+   JJUfGtIJ [label=<Char: 'h'>];
+   mUpnLyjv [label=<Char: 'a'>];
+   hnedsshI [label=<Char: 'r'>];
+   IullspzX [label=<Char: 'e'>];
+   PHEzGIwy [label=<Char: 'd'>];
+   jmzEoPlm [label=<Char: ' '>];
+   OtqOjDXf [label=<Char: 'a'>];
+   QKrYDXwR [label=<Char: 'n'>];
+   WFJjBgvo [label=<Char: 'd'>];
+   CwtpzmwI [label=<Char: ' '>];
+   kjAPXefw [label=<Char: 't'>];
+   ALHydaOP [label=<Char: 'h'>];
+   vmSyFHWn [label=<Char: 'u'>];
+   ALdwQAkL [label=<Char: 's'>];
+   SFONTgnw [label=<Char: ' '>];
+   ZaZyqipX [label=<Char: 'k'>];
+   VISaidxU [label=<Char: 'n'>];
+   oZRuJPvx [label=<Char: 'o'>];
+   BxQVlSbz [label=<Char: 'w'>];
+   PkXBhePK [label=<Char: 'n'>];
+   WOtgMigG [label=<Char: ' '>];
+   rIirWiDY [label=<Char: 't'>];
+   VPpujohp [label=<Char: 'o'>];
+   xAVCOELq [label=<Char: ' '>];
+   tCoYCGxL [label=<Char: 't'>];
+   RbwByBkJ [label=<Char: 'h'>];
+   SwumboxM [label=<Char: 'e'>];
+   bdBzyOKJ [label=<Char: ' '>];
+   OhsWJHgK [label=<Char: 'f'>];
+   aUKIxtMg [label=<Char: 'o'>];
+   HcMHYJjy [label=<Char: 'r'>];
+   RBVXEUYE [label=<Char: 'k'>];
+   ATIzOWuX [label=<Print>];
+   yVtqOgzj [label=<Variable Access>];
+   FmWsqkgS [label=<Shared Array Variable <br/>ID: 'test'<br/> Size: '48'>];
+   
+   { rank=same; CObYgLTX  }
+   { rank=same; eSHeteZO CZUuvBEk  }
+   { rank=same; fySkfyUi RGIPRnqh jqSKGYeI  }
+   { rank=same; StUeUIWo tCkytGRp BNSeQxMA NYlZtOcK ApgIxDid YUrgXhSr aqOMOyVJ YeEGlkKZ oJCCfmSF GJLuNLSo IZRdadkO fAUyGdCg itepCvRF JqYGYOUy MaQreTrJ KEJvwNZQ JJUfGtIJ mUpnLyjv hnedsshI IullspzX PHEzGIwy jmzEoPlm OtqOjDXf QKrYDXwR WFJjBgvo CwtpzmwI kjAPXefw ALHydaOP vmSyFHWn ALdwQAkL SFONTgnw ZaZyqipX VISaidxU oZRuJPvx BxQVlSbz PkXBhePK WOtgMigG rIirWiDY VPpujohp xAVCOELq tCoYCGxL RbwByBkJ SwumboxM bdBzyOKJ OhsWJHgK aUKIxtMg HcMHYJjy RBVXEUYE ATIzOWuX  }
+   { rank=same; yVtqOgzj  }
+   { rank=same; FmWsqkgS  }
+   
+
+   eSHeteZO -- fySkfyUi
+   eSHeteZO -- RGIPRnqh
+   ATIzOWuX -- yVtqOgzj
+   CZUuvBEk -- jqSKGYeI
+   CObYgLTX -- eSHeteZO
+   CObYgLTX -- CZUuvBEk
+   RGIPRnqh -- StUeUIWo
+   RGIPRnqh -- tCkytGRp
+   RGIPRnqh -- BNSeQxMA
+   RGIPRnqh -- NYlZtOcK
+   RGIPRnqh -- ApgIxDid
+   RGIPRnqh -- YUrgXhSr
+   RGIPRnqh -- aqOMOyVJ
+   RGIPRnqh -- YeEGlkKZ
+   RGIPRnqh -- oJCCfmSF
+   RGIPRnqh -- GJLuNLSo
+   RGIPRnqh -- IZRdadkO
+   RGIPRnqh -- fAUyGdCg
+   RGIPRnqh -- itepCvRF
+   RGIPRnqh -- JqYGYOUy
+   RGIPRnqh -- MaQreTrJ
+   RGIPRnqh -- KEJvwNZQ
+   RGIPRnqh -- JJUfGtIJ
+   RGIPRnqh -- mUpnLyjv
+   RGIPRnqh -- hnedsshI
+   RGIPRnqh -- IullspzX
+   RGIPRnqh -- PHEzGIwy
+   RGIPRnqh -- jmzEoPlm
+   RGIPRnqh -- OtqOjDXf
+   RGIPRnqh -- QKrYDXwR
+   RGIPRnqh -- WFJjBgvo
+   RGIPRnqh -- CwtpzmwI
+   RGIPRnqh -- kjAPXefw
+   RGIPRnqh -- ALHydaOP
+   RGIPRnqh -- vmSyFHWn
+   RGIPRnqh -- ALdwQAkL
+   RGIPRnqh -- SFONTgnw
+   RGIPRnqh -- ZaZyqipX
+   RGIPRnqh -- VISaidxU
+   RGIPRnqh -- oZRuJPvx
+   RGIPRnqh -- BxQVlSbz
+   RGIPRnqh -- PkXBhePK
+   RGIPRnqh -- WOtgMigG
+   RGIPRnqh -- rIirWiDY
+   RGIPRnqh -- VPpujohp
+   RGIPRnqh -- xAVCOELq
+   RGIPRnqh -- tCoYCGxL
+   RGIPRnqh -- RbwByBkJ
+   RGIPRnqh -- SwumboxM
+   RGIPRnqh -- bdBzyOKJ
+   RGIPRnqh -- OhsWJHgK
+   RGIPRnqh -- aUKIxtMg
+   RGIPRnqh -- HcMHYJjy
+   RGIPRnqh -- RBVXEUYE
+   yVtqOgzj -- FmWsqkgS
+   jqSKGYeI -- ATIzOWuX
+   
+}

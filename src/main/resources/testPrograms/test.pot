@@ -1,0 +1,2 @@
+string teststr = "aaa";
+teststr[1] = 'b';

@@ -1,0 +1,25 @@
+string alphabet = "abcdefghijklmnopqrstuvwxyz";
+int lengthAlphabet = length alphabet;
+int index = 0;
+int cycleLength = 26;
+char[] alphabetCycle = new char(26);
+int alphabetIndex = 0;
+
+while (index<cycleLength){
+    alphabetCycle[index] = alphabet[index];
+    index = index + 1;
+    alphabetIndex = alphabetIndex + 1;
+    if (alphabetIndex == lengthAlphabet){
+        alphabetIndex = alphabetIndex - lengthAlphabet;
+    }
+}
+
+char[] reversed = new char(26);
+int i = 0;
+while (i < 26){
+    reversed[i] = alphabetCycle[lengthAlphabet-(i+1)];
+    i = i - 1;
+}
+
+char[] output = alphabet ++ " | " ++ reversed;
+printNL output;

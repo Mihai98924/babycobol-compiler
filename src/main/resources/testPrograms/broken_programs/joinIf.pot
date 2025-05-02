@@ -1,0 +1,4 @@
+if (true){
+    join;
+    printNL "this won't compile";
+}

@@ -1,0 +1,7 @@
+int[] test = [1,2,3];
+int[] testCopy = test;
+int blub = testCopy[0];
+char a = 'a';
+char[] str = "ABCDE";
+string str2 = "abcdefghij";
+printNL 3*3 == 4+5;

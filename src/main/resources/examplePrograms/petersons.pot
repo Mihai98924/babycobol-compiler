@@ -1,0 +1,24 @@
+shared bool[] flag = [false, false];
+shared int turn = 0;
+
+fork {
+    flag[0] = true;
+    turn = 1;
+    while (flag[1] && (turn == 1)) {
+    }
+
+    // end of critical section
+    flag[0] = false;
+}
+
+flag[1] = true;
+turn = 0;
+while (flag[0] && (turn == 0)) {
+}
+
+// end of critical section
+flag[1] = false;
+
+join;
+
+
