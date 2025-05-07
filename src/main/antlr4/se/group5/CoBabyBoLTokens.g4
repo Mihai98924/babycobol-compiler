@@ -61,7 +61,6 @@ PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
 IS: I WS* S;
 LIKE: L WS* I WS* K WS* E;
 OCCURS: O WS* C WS* C WS* U WS* R WS* S;
-DOT: D WS* O WS* T;
 ALSO: A WS* L WS* S WS* O;
 VARYING: V WS* A WS* R WS* Y WS* I WS* N WS* G;
 WHILE: W WS* H WS* I WS* L WS* E;
@@ -69,65 +68,24 @@ UNTIL: U WS* N WS* T WS* I WS* L;
 WHEN: W WS* H WS* E WS* N;
 OTHER: O WS* T WS* H WS* E WS* R;
 STOP: S WS* T WS* O WS* P;
+PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 
 // === LITERALS ===============================================================
 fragment LETTER     : [a-zA-Z];
 fragment DIGIT      : [0-9];
 fragment CHARACTER  : ~['"\r\n];
 fragment ALPHANUMERIC : [a-zA-Z0-9];
-TEXT_UNTIL_DOT : ~[.\r\n]+ ;
 
-LEVEL
-    : DIGIT+
-    ;
+LEVEL: SOL DIGIT{2} SOL;
 
-ATOMIC
-    : IDENTIFIER
-    ;
+IDENTIFIER: LETTER ( ALPHANUMERIC | '-' ALPHANUMERIC )*;
 
-REPRESENTATION
-    : IDENTIFIER
-    ;
+LITERAL: INTEGER_LITERAL | NUMERIC_LITERAL | ALPHANUMERIC_LITERAL | ALPHABETIC_LITERAL;
 
-FILE_NAME
-    : IDENTIFIER
-    ;
-
-IDENTIFIER
-    : LETTER ( ALPHANUMERIC | '-' ALPHANUMERIC )*
-    ;
-
-LITERAL
-    : INTEGER_LITERAL | NUMERIC_LITERAL | ALPHANUMERIC_LITERAL | ALPHABETIC_LITERAL
-    ;
-
-PROCEDURE_NAME
-    : IDENTIFIER
-    ;
-
-FUNCTION_NAME
-    : IDENTIFIER
-    ;
-
-PROGRAM_NAME
-    : IDENTIFIER
-    ;
-
-INTEGER_LITERAL
-    : SIGN? DIGIT+
-    ;
-
-NUMERIC_LITERAL
-    : SIGN? DIGIT* DEC_POINT DIGIT+ ( E SIGN? DIGIT+ )?
-    ;
-
-ALPHANUMERIC_LITERAL
-    : ALPHANUMERIC+
-    ;
-
-ALPHABETIC_LITERAL
-    : LETTER+
-    ;
+INTEGER_LITERAL: SIGN? DIGIT+;
+NUMERIC_LITERAL: SIGN? DIGIT* (DOT | COMMA) DIGIT+ ( E SIGN? DIGIT+ )?;
+ALPHANUMERIC_LITERAL: ALPHANUMERIC+;
+ALPHABETIC_LITERAL: LETTER+;
 
 // === LOGICAL OPERATORS ===============================================================
 AND: A WS* N WS* D;
@@ -148,12 +106,13 @@ LT: '<';
 
 // === MISCELLANEOUS ===============================================================
 
-WS: [ \n\t\r] -> skip;
-DEC_POINT : '.' | ',';
+fragment WS: [ \n\t\r] -> skip;
+fragment DOT: '.';
+fragment COMMA: ',';
 SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
-EOL : '.';
+EOL : DOT WS*;
 SIGN : '+' | '-';
-LQ: (SOL '-' WS*) | WS+;
+//LQ: (SOL '-' WS*) | WS+;
 
 
 

@@ -2,47 +2,52 @@ grammar CoBabyBoL;
 
 import CoBabyBoLTokens;
 
-program
-    : identification_division
-      statement* EOF
-    ;
+program: identification_division data_division? procedure_division EOF;
 
+
+// Divisions
 identification_division: SOL IDENTIFICATION_DIVISION EOL clause*;
+procedure_division: PROCEDURE_DIVISION EOL statement*;
+data_division: SOL DATA_DIVISION (LEVEL IDENTIFIER (((PICTURE IS REPRESENTATION) | (LIKE IDENTIFIER)))? (OCCURS INTEGER_LITERAL TIMES)? EOL)* EOL;
 
-statement: SOL (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | data_division | evaluate | next_sentence | stop) EOL;
+statement: (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop) EOL;
 
-accept: ACCEPT WS+ IDENTIFIER;
-alter: ALTER WS+ PROCEDURE_NAME WS+ TO WS+ PROCEED WS+ TO WS+ PROCEDURE_NAME;
-goto: GOTO WS+ PROCEDURE_NAME;
-if: IF WS+ boolean_expression WS+ THEN WS+ statement+ (WS+ ELSE WS+ statement+)? (WS+ END)+;
-perform: PERFORM WS+ PROCEDURE_NAME (WS+ THROUGH WS+ PROCEDURE_NAME)? (WS+ ATOMIC WS+ TIMES)?;
-signal: SIGNAL WS+ (PROCEDURE_NAME | OFF) WS+ ON_ERROR;
-copy: COPY WS+ FILE_NAME (WS+ REPLACING (WS+ argument_literal WS+ BY WS+ argument_literal)+)?;
-display: DISPLAY (WS+ ATOMIC (WS+ DELIMITED_BY WS+ (SIZE | SPACE | LITERAL))?)+ (WS+ WITH_NO_ADVANCING)?;
-add: ADD WS+ ATOMIC+ WS+ TO WS+ ATOMIC (WS+ GIVING WS+ IDENTIFIER)*;
-call: CALL WS+ FILE_NAME (WS+ USING (BY_REFERENCE IDENTIFIER | BY_CONTENT ATOMIC | BY_VALUE ATOMIC)+)*
-      CALL WS+ (FUNCTION_NAME WS+ OF + WS+)* PROGRAM_NAME (WS+ USING WS+ ((BY_REFERENCE | BY_CONTENT | BY_VALUE) WS+ ATOMIC WS+ (AS_PRIMITIVE | AS_STRUCT))+ WS+)* (RETURNING WS+ ((BY_REFERENCE | BY_CONTENT | BY_VALUE) WS+ ATOMIC WS+ (AS_PRIMITIVE | AS_STRUCT)))*;
-divide: DIVIDE WS+ ATOMIC WS+ INTO WS+ ATOMIC+ (WS+ GIVING WS+ IDENTIFIER+ (WS+ REMAINDER IDENTIFIER)?)?;
-move: MOVE WS+ (ATOMIC | HIGH_VALUES | LOW_VALUES | SPACES) WS+ TO IDENTIFIER+;
-multiply: MULTIPLY WS+ ATOMIC WS+ BY WS+ ATOMIC+ (WS+ GIVING WS+ IDENTIFIER)?;
-subtract: SUBTRACT WS+ ATOMIC+ WS+ FROM WS+ ATOMIC+ (WS+ GIVING WS+ IDENTIFIER)*;
-loop: LOOP WS+ ((WHILE WS+ boolean_expression | UNTIL WS+ boolean_expression | statement) WS+ VARYING WS+ IDENTIFIER* (FROM WS+ ATOMIC)* (TO WS+ ATOMIC)* (BY WS+ ATOMIC)*)+ WS+ END;
-data_division: DATA_DIVISION WS* DOT (WS+ LEVEL WS+ IDENTIFIER (WS+ ((PICTURE WS+ IS WS+ REPRESENTATION) | (LIKE IDENTIFIER)))? (OCCURS INTEGER_LITERAL TIMES)? DOT)+;
-evaluate: EVALUATE WS+ any_expression (WS+ ALSO WS+ any_expression)* (WS+ when_clause WS+ statement+)+ WS+ END;
+accept: ACCEPT IDENTIFIER;
+alter: ALTER procedure_name TO PROCEED TO procedure_name;
+goto: GOTO procedure_name;
+if: IF boolean_expression THEN statement+ (ELSE statement+)? END+;
+perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
+signal: SIGNAL (procedure_name | OFF) ON_ERROR;
+copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
+
+
+display: DISPLAY (atomic (DELIMITED_BY (SIZE | SPACE | LITERAL))?)+ WITH_NO_ADVANCING?;
+
+
+add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
+call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)*
+      CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
+divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER IDENTIFIER)?)?;
+move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+;
+multiply: MULTIPLY atomic BY atomic+ (GIVING IDENTIFIER)?;
+subtract: SUBTRACT atomic+ FROM atomic+ (GIVING IDENTIFIER)*;
+loop: LOOP ((WHILE  boolean_expression | UNTIL  boolean_expression | statement) VARYING IDENTIFIER* (FROM atomic)* (TO atomic)* (BY atomic)*)+ END;
+evaluate: EVALUATE any_expression (ALSO any_expression)* (when_clause statement+)+  END;
 next_sentence: NEXT_SENTENCE;
 stop: STOP;
 
 // Parts
-atomic_through: ATOMIC (WS+ THROUGH WS+ ATOMIC)? (WS+ ALSO WS+ atomic_through)?;
-when_clause: WHEN ((WS+ atomic_through | (WS+ OTHER)));
-clause
-    : clause_name  EOL
-      clause_value EOL
-    ;
-clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | TEXT_UNTIL_DOT;
-clause_value: TEXT_UNTIL_DOT;
+atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
+when_clause: WHEN (( atomic_through | ( OTHER)));
+clause: clause_name EOL clause_value EOL;
+clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY;
+clause_value: atomic;
 argument_literal: '≡≡≡' LITERAL '≡≡≡';
 any_expression: boolean_expression;
-boolean_expression
-    : (NOT WS+)* ( LITERAL | IDENTIFIER ) WS+ EQ_OP WS+ ( LITERAL | IDENTIFIER ) ((AND | OR) boolean_expression)*
-    ;
+boolean_expression: (NOT)* (LITERAL | IDENTIFIER) EQ_OP (LITERAL | IDENTIFIER) ((AND | OR) boolean_expression)*;
+atomic: IDENTIFIER | LITERAL;
+
+file_name: ALPHANUMERIC_LITERAL;
+procedure_name: IDENTIFIER;
+function_name: IDENTIFIER;
+program_name: IDENTIFIER;
