@@ -76,7 +76,7 @@ fragment DIGIT      : [0-9];
 fragment CHARACTER  : ~['"\r\n];
 fragment ALPHANUMERIC : [a-zA-Z0-9];
 
-LEVEL: SOL DIGIT{2} SOL;
+//LEVEL: SOL DIGIT{2} SOL;
 
 IDENTIFIER: LETTER ( ALPHANUMERIC | '-' ALPHANUMERIC )*;
 
@@ -106,7 +106,7 @@ LT: '<';
 
 // === MISCELLANEOUS ===============================================================
 
-fragment WS: [ \n\t\r] -> skip;
+WS: [ \n\t\r] ('-')* -> skip;
 fragment DOT: '.';
 fragment COMMA: ',';
 SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
