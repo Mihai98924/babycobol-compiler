@@ -28,6 +28,36 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * @param ctx the parse tree
+	 */
+	void enterClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * @param ctx the parse tree
+	 */
+	void exitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * @param ctx the parse tree
+	 */
+	void enterClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * @param ctx the parse tree
+	 */
+	void exitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#procedure_division}.
 	 * @param ctx the parse tree
 	 */
@@ -37,6 +67,26 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * @param ctx the parse tree
+	 */
+	void enterSentence(CoBabyBoLParser.SentenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * @param ctx the parse tree
+	 */
+	void exitSentence(CoBabyBoLParser.SentenceContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement(CoBabyBoLParser.StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement(CoBabyBoLParser.StatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#data_division}.
 	 * @param ctx the parse tree
@@ -97,26 +147,6 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunction(CoBabyBoLParser.FunctionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#sentence}.
-	 * @param ctx the parse tree
-	 */
-	void enterSentence(CoBabyBoLParser.SentenceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#sentence}.
-	 * @param ctx the parse tree
-	 */
-	void exitSentence(CoBabyBoLParser.SentenceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatement(CoBabyBoLParser.StatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatement(CoBabyBoLParser.StatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#accept}.
 	 * @param ctx the parse tree
@@ -317,36 +347,6 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWhen_clause(CoBabyBoLParser.When_clauseContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause}.
-	 * @param ctx the parse tree
-	 */
-	void enterClause(CoBabyBoLParser.ClauseContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause}.
-	 * @param ctx the parse tree
-	 */
-	void exitClause(CoBabyBoLParser.ClauseContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_name}.
-	 * @param ctx the parse tree
-	 */
-	void enterClause_name(CoBabyBoLParser.Clause_nameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
-	 * @param ctx the parse tree
-	 */
-	void exitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_value}.
-	 * @param ctx the parse tree
-	 */
-	void enterClause_value(CoBabyBoLParser.Clause_valueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
-	 * @param ctx the parse tree
-	 */
-	void exitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#argument_literal}.
 	 * @param ctx the parse tree

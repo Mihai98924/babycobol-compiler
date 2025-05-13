@@ -2,23 +2,30 @@ grammar CoBabyBoL;
 
 import CoBabyBoLTokens;
 
-//options { caseInsensitive = true; }
+program: identification_division data_division? procedure_division? function* EOF;
 
-program: identification_division data_division? procedure_division function* EOF;
+// Identification division
+identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
+identification_clause: clause_name EOL clause_value EOL;
+clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
+clause_value: atomic;
 
-// Divisions
-identification_division: SOL IDENTIFICATION_DIVISION EOL clause*;
+// Procedure division
 procedure_division: PROCEDURE_DIVISION EOL sentence*;
+sentence: statement* EOL;
+statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
+
+
+// Data division
 data_division: DATA_DIVISION EOL data_item*;
 data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
+
 picture_clause: PICTURE IS representation;
 like_clause: LIKE IDENTIFIER;
 occurs_clause: OCCURS integer_literal TIMES;
 function: IDENTIFIER EOL sentence*;
 
-sentence: statement* EOL;
-statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
-
+// Statements
 accept: ACCEPT IDENTIFIER+;
 alter: ALTER procedure_name TO PROCEED TO procedure_name;
 goto: GOTO procedure_name;
@@ -39,12 +46,11 @@ evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause 
 next_sentence: NEXT_SENTENCE;
 stop: STOP;
 
+
 // Parts
 atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
 when_clause: WHEN ((atomic_through | ( OTHER)));
-clause: clause_name EOL clause_value EOL;
-clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY;
-clause_value: atomic;
+
 argument_literal: '≡≡≡' literal '≡≡≡';
 any_expression: boolean_expression;
 boolean_expression: (NOT)* (literal | IDENTIFIER) (EQ_OP (literal | IDENTIFIER) ((AND | OR) boolean_expression)*)?;

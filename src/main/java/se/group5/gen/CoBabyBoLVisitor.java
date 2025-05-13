@@ -23,11 +23,41 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#procedure_division}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSentence(CoBabyBoLParser.SentenceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement(CoBabyBoLParser.StatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#data_division}.
 	 * @param ctx the parse tree
@@ -64,18 +94,6 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunction(CoBabyBoLParser.FunctionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#sentence}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSentence(CoBabyBoLParser.SentenceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatement(CoBabyBoLParser.StatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#accept}.
 	 * @param ctx the parse tree
@@ -196,24 +214,6 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhen_clause(CoBabyBoLParser.When_clauseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClause(CoBabyBoLParser.ClauseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#argument_literal}.
 	 * @param ctx the parse tree
