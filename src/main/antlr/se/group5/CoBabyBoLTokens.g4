@@ -31,7 +31,7 @@ PROCEED : P WS* R WS* O WS* C WS* E WS* E WS* D;
 REPLACING: R WS* E WS* P WS* L WS* A WS* C WS* I WS* N WS* G;
 SIGNAL: S WS* I WS* G WS* N WS* A WS* L;
 SUBTRACT: S WS* U WS* B WS* T WS* R WS* A WS* C WS* T;
-THEN: I WS* F WS+ T WS* H WS* E WS* N;
+THEN: T WS* H WS* E WS* N;
 TO: T WS* O;
 WITH_NO_ADVANCING: W WS* I WS* T WS* H WS+ N WS* O WS+ A WS* D WS* V WS* A WS* N WS* C WS* I WS* N WS* G;
 SIZE: S WS* I WS* Z WS* E;
@@ -71,6 +71,29 @@ STOP: S WS* T WS* O WS* P;
 PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 ZERO: Z WS* E WS* R WS* O;
 
+// === LOGICAL OPERATORS ===============================================================
+AND: A WS* N WS* D;
+OR: O WS* R;
+NOT: N WS* O WS* T;
+
+// === ARITHMATIC OPERATORS ===============================================================
+MATH_OP: ADD_OP | SUB_OP | MULT_OP | DIV_OP | EXP_OP;
+
+fragment ADD_OP: '+';
+fragment SUB_OP: '-';
+fragment MULT_OP: '*';
+fragment DIV_OP: '/';
+fragment EXP_OP: '**';
+
+// === EQUALITY OPERATORS ===============================================================
+EQ_OP : EQ | NEQ | LEQ | GEQ | GT | LT;
+
+EQ: '=';
+NEQ: '<>';
+LEQ: '<=';
+GEQ: '>=';
+GT: '>';
+LT: '<';
 
 // === LITERALS ===============================================================
 fragment STRINGLITERAL: '"' (~["\n\r] | '""' | '\'')* '"'
@@ -87,34 +110,12 @@ DIGIT      : [0-9];
 ALPHANUMERIC : [a-zA-Z0-9];
 NONNUMERICLITERAL: STRINGLITERAL;
 
-
-
-//LEVEL: SOL DIGIT{2} SOL;
-
-
-// === LOGICAL OPERATORS ===============================================================
-AND: A WS* N WS* D;
-OR: O WS* R;
-NOT: N WS* O WS* T;
-
-
-// === EQUALITY OPERATORS ===============================================================
-EQ_OP : EQ | NEQ | LEQ | GEQ | GT | LT;
-
-EQ: '=';
-NEQ: '<>';
-LEQ: '<=';
-GEQ: '>=';
-GT: '>';
-LT: '<';
-
-
 // === MISCELLANEOUS ===============================================================
 
 WS: [ \n\t\r] ('-')* -> skip;
 DOT: '.';
 COMMA: ',';
-SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
+SOL : WS+ ('-' WS*)?;
 EOL : DOT WS*;
 SIGN : '+' | '-';
 LPAREN: '(';

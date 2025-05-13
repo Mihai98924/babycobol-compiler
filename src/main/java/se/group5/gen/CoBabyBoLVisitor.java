@@ -227,6 +227,12 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAny_expression(CoBabyBoLParser.Any_expressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#boolean_expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

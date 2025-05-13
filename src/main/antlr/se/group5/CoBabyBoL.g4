@@ -29,7 +29,7 @@ function: IDENTIFIER EOL sentence*;
 accept: ACCEPT IDENTIFIER+;
 alter: ALTER procedure_name TO PROCEED TO procedure_name;
 goto: GOTO procedure_name;
-if: IF boolean_expression THEN statement+ (ELSE statement+)? SOL? END+;
+if: IF boolean_expression SOL? THEN SOL? statement+ (SOL? ELSE statement+)? SOL? END?;
 perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
 signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
@@ -52,8 +52,11 @@ atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
 when_clause: WHEN ((atomic_through | ( OTHER)));
 
 argument_literal: '≡≡≡' literal '≡≡≡';
-any_expression: boolean_expression;
-boolean_expression: (NOT)* (literal | IDENTIFIER) (EQ_OP (literal | IDENTIFIER) ((AND | OR) boolean_expression)*)?;
+any_expression: boolean_expression | math_expr;
+math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
+
+boolean_expression: NOT boolean_expression | (atomic EQ_OP atomic ((OR | AND) boolean_expression)*);
+
 atomic: IDENTIFIER | literal;
 
 file_name: NONNUMERICLITERAL;

@@ -368,6 +368,16 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitAny_expression(CoBabyBoLParser.Any_expressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#boolean_expression}.
 	 * @param ctx the parse tree
 	 */

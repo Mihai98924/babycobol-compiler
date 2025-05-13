@@ -90,7 +90,7 @@ public class Processor {
                      new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.charAt(6) == '*' || line.length() > 80) {
+                if (line.length() > 6 && (line.replace(" ", "").startsWith("*") || line.length() > 80)) {
                     continue;
                 }
 
