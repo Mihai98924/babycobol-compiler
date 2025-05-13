@@ -1,28 +1,53 @@
-grammar CoBabyBoL;
+parser grammar CoBabyBoL;
 
-import CoBabyBoLTokens;
+options { tokenVocab=CoBabyBoLLexer; }
 
 program: identification_division data_division? procedure_division? function* EOF;
 
-// Identification division
-identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
-identification_clause: clause_name EOL clause_value EOL;
-clause_name: (~EOL)+;
-clause_value: (~EOL)+;
+// Identification division mode
+identification_division: SOL IDENTIFICATION_DIVISION identification_clause*;
+identification_clause: clause_name clause_value;
+clause_name: ID_NAME;
+clause_value: ID_VALUE;
 
-// Procedure division
+// Data division mode
+data_division: DATA_DIVISION EOL data_item*;
+data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
+picture_clause: PICTURE IS representation;
+like_clause: LIKE IDENTIFIER;
+occurs_clause: OCCURS INTEGERLITERAL TIMES;
+representation: IDENTIFIER;
+
+//pic_symbol
+//    : sign
+//    | digit
+//    | scale
+//    | decimal
+//    | edit_char
+//    ;
+
+//sign       : 'S';
+//digit      : '9' (LPAREN INTEGERLITERAL RPAREN)?;
+//scale      : 'P'+;
+//decimal    : 'V';
+//edit_char  : 'Z' (LPAREN INTEGERLITERAL RPAREN)?
+//           | '*' (LPAREN INTEGERLITERAL RPAREN)?
+//           | ',' | '.' | '$'
+//           | '+' | '-'
+//           ;
+
+
+
+
+// Procedure division mode
 procedure_division: PROCEDURE_DIVISION EOL sentence*;
 sentence: statement* EOL;
 statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
 
-// Data division
-data_division: DATA_DIVISION EOL data_item*;
-data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
 
-picture_clause: PICTURE IS representation;
-like_clause: LIKE IDENTIFIER;
-occurs_clause: OCCURS INTEGERLITERAL TIMES;
+
+// DUNNO YET
 function: IDENTIFIER EOL sentence*;
 
 // Statements
@@ -51,7 +76,7 @@ stop: STOP;
 atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
 when_clause: WHEN ((atomic_through | ( OTHER)));
 
-argument_literal: '≡≡≡' literal '≡≡≡';
+argument_literal: ARG literal ARG;
 any_expression: boolean_expression | math_expr;
 math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 
@@ -70,24 +95,3 @@ level: INTEGERLITERAL;
 literal: numeric_literal | alphanumeric_literal;
 numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
 alphanumeric_literal: STRINGLITERAL;
-
-representation: pic_symbol+;
-
-pic_symbol
-    : sign
-    | digit
-    | scale
-    | decimal
-    | edit_char
-    ;
-
-sign       : 'S';
-digit      : '9' (LPAREN INTEGERLITERAL RPAREN)?;
-scale      : 'P'+; // Scaling positions
-decimal    : 'V';  // Implied decimal
-edit_char  : 'Z' (LPAREN INTEGERLITERAL RPAREN)?
-           | '*' (LPAREN INTEGERLITERAL RPAREN)?
-           | ',' | '.' | '$'
-           | 'CR' | 'DB'
-           | '+' | '-'
-           ;

@@ -4,310 +4,304 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
- * by {@link CoBabyBoLParser}.
+ * by {@link CoBabyBoL}.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
 public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#program}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProgram(CoBabyBoLParser.ProgramContext ctx);
+	T visitProgram(CoBabyBoL.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#identification_division}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#identification_division}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx);
+	T visitIdentification_division(CoBabyBoL.Identification_divisionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#identification_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	T visitIdentification_clause(CoBabyBoL.Identification_clauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#clause_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	T visitClause_name(CoBabyBoL.Clause_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#clause_value}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	T visitClause_value(CoBabyBoL.Clause_valueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#procedure_division}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#data_division}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx);
+	T visitData_division(CoBabyBoL.Data_divisionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#data_item}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSentence(CoBabyBoLParser.SentenceContext ctx);
+	T visitData_item(CoBabyBoL.Data_itemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#procedure_division}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatement(CoBabyBoLParser.StatementContext ctx);
+	T visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#data_division}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#sentence}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitData_division(CoBabyBoLParser.Data_divisionContext ctx);
+	T visitSentence(CoBabyBoL.SentenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#data_item}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitData_item(CoBabyBoLParser.Data_itemContext ctx);
+	T visitStatement(CoBabyBoL.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#picture_clause}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#picture_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPicture_clause(CoBabyBoLParser.Picture_clauseContext ctx);
+	T visitPicture_clause(CoBabyBoL.Picture_clauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#like_clause}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#like_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLike_clause(CoBabyBoLParser.Like_clauseContext ctx);
+	T visitLike_clause(CoBabyBoL.Like_clauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#occurs_clause}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#occurs_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOccurs_clause(CoBabyBoLParser.Occurs_clauseContext ctx);
+	T visitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#function}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunction(CoBabyBoLParser.FunctionContext ctx);
+	T visitFunction(CoBabyBoL.FunctionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#accept}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#accept}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAccept(CoBabyBoLParser.AcceptContext ctx);
+	T visitAccept(CoBabyBoL.AcceptContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#alter}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#alter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAlter(CoBabyBoLParser.AlterContext ctx);
+	T visitAlter(CoBabyBoL.AlterContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#goto}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#goto}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitGoto(CoBabyBoLParser.GotoContext ctx);
+	T visitGoto(CoBabyBoL.GotoContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#if}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#if}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIf(CoBabyBoLParser.IfContext ctx);
+	T visitIf(CoBabyBoL.IfContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#perform}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#perform}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPerform(CoBabyBoLParser.PerformContext ctx);
+	T visitPerform(CoBabyBoL.PerformContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#signal}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#signal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSignal(CoBabyBoLParser.SignalContext ctx);
+	T visitSignal(CoBabyBoL.SignalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#copy}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#copy}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCopy(CoBabyBoLParser.CopyContext ctx);
+	T visitCopy(CoBabyBoL.CopyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#display}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#display}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDisplay(CoBabyBoLParser.DisplayContext ctx);
+	T visitDisplay(CoBabyBoL.DisplayContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#add}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#add}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAdd(CoBabyBoLParser.AddContext ctx);
+	T visitAdd(CoBabyBoL.AddContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#call}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#call}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCall(CoBabyBoLParser.CallContext ctx);
+	T visitCall(CoBabyBoL.CallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#divide}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#divide}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDivide(CoBabyBoLParser.DivideContext ctx);
+	T visitDivide(CoBabyBoL.DivideContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#move}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#move}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMove(CoBabyBoLParser.MoveContext ctx);
+	T visitMove(CoBabyBoL.MoveContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#multiply}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#multiply}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMultiply(CoBabyBoLParser.MultiplyContext ctx);
+	T visitMultiply(CoBabyBoL.MultiplyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#subtract}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#subtract}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSubtract(CoBabyBoLParser.SubtractContext ctx);
+	T visitSubtract(CoBabyBoL.SubtractContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#loop}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#loop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLoop(CoBabyBoLParser.LoopContext ctx);
+	T visitLoop(CoBabyBoL.LoopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#evaluate}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#evaluate}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEvaluate(CoBabyBoLParser.EvaluateContext ctx);
+	T visitEvaluate(CoBabyBoL.EvaluateContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#next_sentence}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#next_sentence}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNext_sentence(CoBabyBoLParser.Next_sentenceContext ctx);
+	T visitNext_sentence(CoBabyBoL.Next_sentenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#stop}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#stop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStop(CoBabyBoLParser.StopContext ctx);
+	T visitStop(CoBabyBoL.StopContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#atomic_through}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#atomic_through}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtomic_through(CoBabyBoLParser.Atomic_throughContext ctx);
+	T visitAtomic_through(CoBabyBoL.Atomic_throughContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#when_clause}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#when_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhen_clause(CoBabyBoLParser.When_clauseContext ctx);
+	T visitWhen_clause(CoBabyBoL.When_clauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#argument_literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#argument_literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgument_literal(CoBabyBoLParser.Argument_literalContext ctx);
+	T visitArgument_literal(CoBabyBoL.Argument_literalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#any_expression}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#any_expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAny_expression(CoBabyBoLParser.Any_expressionContext ctx);
+	T visitAny_expression(CoBabyBoL.Any_expressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#math_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	T visitMath_expr(CoBabyBoL.Math_exprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#boolean_expression}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#boolean_expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBoolean_expression(CoBabyBoLParser.Boolean_expressionContext ctx);
+	T visitBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#atomic}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#atomic}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtomic(CoBabyBoLParser.AtomicContext ctx);
+	T visitAtomic(CoBabyBoL.AtomicContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	T visitIdentifier(CoBabyBoL.IdentifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#file_name}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#file_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFile_name(CoBabyBoLParser.File_nameContext ctx);
+	T visitFile_name(CoBabyBoL.File_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#procedure_name}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#procedure_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProcedure_name(CoBabyBoLParser.Procedure_nameContext ctx);
+	T visitProcedure_name(CoBabyBoL.Procedure_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#function_name}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#function_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunction_name(CoBabyBoLParser.Function_nameContext ctx);
+	T visitFunction_name(CoBabyBoL.Function_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#program_name}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#program_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProgram_name(CoBabyBoLParser.Program_nameContext ctx);
+	T visitProgram_name(CoBabyBoL.Program_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#level}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#level}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLevel(CoBabyBoLParser.LevelContext ctx);
+	T visitLevel(CoBabyBoL.LevelContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	T visitLiteral(CoBabyBoL.LiteralContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#numeric_literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	T visitNumeric_literal(CoBabyBoL.Numeric_literalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	T visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#representation}.
+	 * Visit a parse tree produced by {@link CoBabyBoL#representation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#precision}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrecision(CoBabyBoLParser.PrecisionContext ctx);
+	T visitRepresentation(CoBabyBoL.RepresentationContext ctx);
 }

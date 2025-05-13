@@ -17,601 +17,589 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(CoBabyBoLParser.ProgramContext ctx) { }
+	@Override public void enterProgram(CoBabyBoL.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram(CoBabyBoLParser.ProgramContext ctx) { }
+	@Override public void exitProgram(CoBabyBoL.ProgramContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx) { }
+	@Override public void enterIdentification_division(CoBabyBoL.Identification_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx) { }
+	@Override public void exitIdentification_division(CoBabyBoL.Identification_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx) { }
+	@Override public void enterIdentification_clause(CoBabyBoL.Identification_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx) { }
+	@Override public void exitIdentification_clause(CoBabyBoL.Identification_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClause_name(CoBabyBoLParser.Clause_nameContext ctx) { }
+	@Override public void enterClause_name(CoBabyBoL.Clause_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClause_name(CoBabyBoLParser.Clause_nameContext ctx) { }
+	@Override public void exitClause_name(CoBabyBoL.Clause_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClause_value(CoBabyBoLParser.Clause_valueContext ctx) { }
+	@Override public void enterClause_value(CoBabyBoL.Clause_valueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClause_value(CoBabyBoLParser.Clause_valueContext ctx) { }
+	@Override public void exitClause_value(CoBabyBoL.Clause_valueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx) { }
+	@Override public void enterData_division(CoBabyBoL.Data_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx) { }
+	@Override public void exitData_division(CoBabyBoL.Data_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSentence(CoBabyBoLParser.SentenceContext ctx) { }
+	@Override public void enterData_item(CoBabyBoL.Data_itemContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSentence(CoBabyBoLParser.SentenceContext ctx) { }
+	@Override public void exitData_item(CoBabyBoL.Data_itemContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatement(CoBabyBoLParser.StatementContext ctx) { }
+	@Override public void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatement(CoBabyBoLParser.StatementContext ctx) { }
+	@Override public void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterData_division(CoBabyBoLParser.Data_divisionContext ctx) { }
+	@Override public void enterSentence(CoBabyBoL.SentenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitData_division(CoBabyBoLParser.Data_divisionContext ctx) { }
+	@Override public void exitSentence(CoBabyBoL.SentenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterData_item(CoBabyBoLParser.Data_itemContext ctx) { }
+	@Override public void enterStatement(CoBabyBoL.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitData_item(CoBabyBoLParser.Data_itemContext ctx) { }
+	@Override public void exitStatement(CoBabyBoL.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPicture_clause(CoBabyBoLParser.Picture_clauseContext ctx) { }
+	@Override public void enterPicture_clause(CoBabyBoL.Picture_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPicture_clause(CoBabyBoLParser.Picture_clauseContext ctx) { }
+	@Override public void exitPicture_clause(CoBabyBoL.Picture_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLike_clause(CoBabyBoLParser.Like_clauseContext ctx) { }
+	@Override public void enterLike_clause(CoBabyBoL.Like_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLike_clause(CoBabyBoLParser.Like_clauseContext ctx) { }
+	@Override public void exitLike_clause(CoBabyBoL.Like_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOccurs_clause(CoBabyBoLParser.Occurs_clauseContext ctx) { }
+	@Override public void enterOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOccurs_clause(CoBabyBoLParser.Occurs_clauseContext ctx) { }
+	@Override public void exitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunction(CoBabyBoLParser.FunctionContext ctx) { }
+	@Override public void enterFunction(CoBabyBoL.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunction(CoBabyBoLParser.FunctionContext ctx) { }
+	@Override public void exitFunction(CoBabyBoL.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAccept(CoBabyBoLParser.AcceptContext ctx) { }
+	@Override public void enterAccept(CoBabyBoL.AcceptContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAccept(CoBabyBoLParser.AcceptContext ctx) { }
+	@Override public void exitAccept(CoBabyBoL.AcceptContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAlter(CoBabyBoLParser.AlterContext ctx) { }
+	@Override public void enterAlter(CoBabyBoL.AlterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAlter(CoBabyBoLParser.AlterContext ctx) { }
+	@Override public void exitAlter(CoBabyBoL.AlterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGoto(CoBabyBoLParser.GotoContext ctx) { }
+	@Override public void enterGoto(CoBabyBoL.GotoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGoto(CoBabyBoLParser.GotoContext ctx) { }
+	@Override public void exitGoto(CoBabyBoL.GotoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf(CoBabyBoLParser.IfContext ctx) { }
+	@Override public void enterIf(CoBabyBoL.IfContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf(CoBabyBoLParser.IfContext ctx) { }
+	@Override public void exitIf(CoBabyBoL.IfContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPerform(CoBabyBoLParser.PerformContext ctx) { }
+	@Override public void enterPerform(CoBabyBoL.PerformContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPerform(CoBabyBoLParser.PerformContext ctx) { }
+	@Override public void exitPerform(CoBabyBoL.PerformContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSignal(CoBabyBoLParser.SignalContext ctx) { }
+	@Override public void enterSignal(CoBabyBoL.SignalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSignal(CoBabyBoLParser.SignalContext ctx) { }
+	@Override public void exitSignal(CoBabyBoL.SignalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCopy(CoBabyBoLParser.CopyContext ctx) { }
+	@Override public void enterCopy(CoBabyBoL.CopyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCopy(CoBabyBoLParser.CopyContext ctx) { }
+	@Override public void exitCopy(CoBabyBoL.CopyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDisplay(CoBabyBoLParser.DisplayContext ctx) { }
+	@Override public void enterDisplay(CoBabyBoL.DisplayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDisplay(CoBabyBoLParser.DisplayContext ctx) { }
+	@Override public void exitDisplay(CoBabyBoL.DisplayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAdd(CoBabyBoLParser.AddContext ctx) { }
+	@Override public void enterAdd(CoBabyBoL.AddContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAdd(CoBabyBoLParser.AddContext ctx) { }
+	@Override public void exitAdd(CoBabyBoL.AddContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCall(CoBabyBoLParser.CallContext ctx) { }
+	@Override public void enterCall(CoBabyBoL.CallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCall(CoBabyBoLParser.CallContext ctx) { }
+	@Override public void exitCall(CoBabyBoL.CallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDivide(CoBabyBoLParser.DivideContext ctx) { }
+	@Override public void enterDivide(CoBabyBoL.DivideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDivide(CoBabyBoLParser.DivideContext ctx) { }
+	@Override public void exitDivide(CoBabyBoL.DivideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMove(CoBabyBoLParser.MoveContext ctx) { }
+	@Override public void enterMove(CoBabyBoL.MoveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMove(CoBabyBoLParser.MoveContext ctx) { }
+	@Override public void exitMove(CoBabyBoL.MoveContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMultiply(CoBabyBoLParser.MultiplyContext ctx) { }
+	@Override public void enterMultiply(CoBabyBoL.MultiplyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMultiply(CoBabyBoLParser.MultiplyContext ctx) { }
+	@Override public void exitMultiply(CoBabyBoL.MultiplyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSubtract(CoBabyBoLParser.SubtractContext ctx) { }
+	@Override public void enterSubtract(CoBabyBoL.SubtractContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSubtract(CoBabyBoLParser.SubtractContext ctx) { }
+	@Override public void exitSubtract(CoBabyBoL.SubtractContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLoop(CoBabyBoLParser.LoopContext ctx) { }
+	@Override public void enterLoop(CoBabyBoL.LoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLoop(CoBabyBoLParser.LoopContext ctx) { }
+	@Override public void exitLoop(CoBabyBoL.LoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEvaluate(CoBabyBoLParser.EvaluateContext ctx) { }
+	@Override public void enterEvaluate(CoBabyBoL.EvaluateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEvaluate(CoBabyBoLParser.EvaluateContext ctx) { }
+	@Override public void exitEvaluate(CoBabyBoL.EvaluateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNext_sentence(CoBabyBoLParser.Next_sentenceContext ctx) { }
+	@Override public void enterNext_sentence(CoBabyBoL.Next_sentenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNext_sentence(CoBabyBoLParser.Next_sentenceContext ctx) { }
+	@Override public void exitNext_sentence(CoBabyBoL.Next_sentenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStop(CoBabyBoLParser.StopContext ctx) { }
+	@Override public void enterStop(CoBabyBoL.StopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStop(CoBabyBoLParser.StopContext ctx) { }
+	@Override public void exitStop(CoBabyBoL.StopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtomic_through(CoBabyBoLParser.Atomic_throughContext ctx) { }
+	@Override public void enterAtomic_through(CoBabyBoL.Atomic_throughContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtomic_through(CoBabyBoLParser.Atomic_throughContext ctx) { }
+	@Override public void exitAtomic_through(CoBabyBoL.Atomic_throughContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhen_clause(CoBabyBoLParser.When_clauseContext ctx) { }
+	@Override public void enterWhen_clause(CoBabyBoL.When_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhen_clause(CoBabyBoLParser.When_clauseContext ctx) { }
+	@Override public void exitWhen_clause(CoBabyBoL.When_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArgument_literal(CoBabyBoLParser.Argument_literalContext ctx) { }
+	@Override public void enterArgument_literal(CoBabyBoL.Argument_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArgument_literal(CoBabyBoLParser.Argument_literalContext ctx) { }
+	@Override public void exitArgument_literal(CoBabyBoL.Argument_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAny_expression(CoBabyBoLParser.Any_expressionContext ctx) { }
+	@Override public void enterAny_expression(CoBabyBoL.Any_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAny_expression(CoBabyBoLParser.Any_expressionContext ctx) { }
+	@Override public void exitAny_expression(CoBabyBoL.Any_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMath_expr(CoBabyBoLParser.Math_exprContext ctx) { }
+	@Override public void enterMath_expr(CoBabyBoL.Math_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMath_expr(CoBabyBoLParser.Math_exprContext ctx) { }
+	@Override public void exitMath_expr(CoBabyBoL.Math_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBoolean_expression(CoBabyBoLParser.Boolean_expressionContext ctx) { }
+	@Override public void enterBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBoolean_expression(CoBabyBoLParser.Boolean_expressionContext ctx) { }
+	@Override public void exitBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtomic(CoBabyBoLParser.AtomicContext ctx) { }
+	@Override public void enterAtomic(CoBabyBoL.AtomicContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtomic(CoBabyBoLParser.AtomicContext ctx) { }
+	@Override public void exitAtomic(CoBabyBoL.AtomicContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifier(CoBabyBoLParser.IdentifierContext ctx) { }
+	@Override public void enterIdentifier(CoBabyBoL.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifier(CoBabyBoLParser.IdentifierContext ctx) { }
+	@Override public void exitIdentifier(CoBabyBoL.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFile_name(CoBabyBoLParser.File_nameContext ctx) { }
+	@Override public void enterFile_name(CoBabyBoL.File_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFile_name(CoBabyBoLParser.File_nameContext ctx) { }
+	@Override public void exitFile_name(CoBabyBoL.File_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProcedure_name(CoBabyBoLParser.Procedure_nameContext ctx) { }
+	@Override public void enterProcedure_name(CoBabyBoL.Procedure_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProcedure_name(CoBabyBoLParser.Procedure_nameContext ctx) { }
+	@Override public void exitProcedure_name(CoBabyBoL.Procedure_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunction_name(CoBabyBoLParser.Function_nameContext ctx) { }
+	@Override public void enterFunction_name(CoBabyBoL.Function_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunction_name(CoBabyBoLParser.Function_nameContext ctx) { }
+	@Override public void exitFunction_name(CoBabyBoL.Function_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram_name(CoBabyBoLParser.Program_nameContext ctx) { }
+	@Override public void enterProgram_name(CoBabyBoL.Program_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram_name(CoBabyBoLParser.Program_nameContext ctx) { }
+	@Override public void exitProgram_name(CoBabyBoL.Program_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLevel(CoBabyBoLParser.LevelContext ctx) { }
+	@Override public void enterLevel(CoBabyBoL.LevelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLevel(CoBabyBoLParser.LevelContext ctx) { }
+	@Override public void exitLevel(CoBabyBoL.LevelContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLiteral(CoBabyBoLParser.LiteralContext ctx) { }
+	@Override public void enterLiteral(CoBabyBoL.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLiteral(CoBabyBoLParser.LiteralContext ctx) { }
+	@Override public void exitLiteral(CoBabyBoL.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx) { }
+	@Override public void enterNumeric_literal(CoBabyBoL.Numeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx) { }
+	@Override public void exitNumeric_literal(CoBabyBoL.Numeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx) { }
+	@Override public void enterAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx) { }
+	@Override public void exitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
+	@Override public void enterRepresentation(CoBabyBoL.RepresentationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPrecision(CoBabyBoLParser.PrecisionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrecision(CoBabyBoLParser.PrecisionContext ctx) { }
+	@Override public void exitRepresentation(CoBabyBoL.RepresentationContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

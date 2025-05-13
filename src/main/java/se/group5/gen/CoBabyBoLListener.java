@@ -4,507 +4,497 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * {@link CoBabyBoLParser}.
+ * {@link CoBabyBoL}.
  */
 public interface CoBabyBoLListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#program}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#program}.
 	 * @param ctx the parse tree
 	 */
-	void enterProgram(CoBabyBoLParser.ProgramContext ctx);
+	void enterProgram(CoBabyBoL.ProgramContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#program}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#program}.
 	 * @param ctx the parse tree
 	 */
-	void exitProgram(CoBabyBoLParser.ProgramContext ctx);
+	void exitProgram(CoBabyBoL.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#identification_division}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#identification_division}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx);
+	void enterIdentification_division(CoBabyBoL.Identification_divisionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#identification_division}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#identification_division}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentification_division(CoBabyBoLParser.Identification_divisionContext ctx);
+	void exitIdentification_division(CoBabyBoL.Identification_divisionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#identification_clause}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	void enterIdentification_clause(CoBabyBoL.Identification_clauseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#identification_clause}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#identification_clause}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentification_clause(CoBabyBoLParser.Identification_clauseContext ctx);
+	void exitIdentification_clause(CoBabyBoL.Identification_clauseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#clause_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	void enterClause_name(CoBabyBoL.Clause_nameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_name}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#clause_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitClause_name(CoBabyBoLParser.Clause_nameContext ctx);
+	void exitClause_name(CoBabyBoL.Clause_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#clause_value}.
 	 * @param ctx the parse tree
 	 */
-	void enterClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	void enterClause_value(CoBabyBoL.Clause_valueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#clause_value}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#clause_value}.
 	 * @param ctx the parse tree
 	 */
-	void exitClause_value(CoBabyBoLParser.Clause_valueContext ctx);
+	void exitClause_value(CoBabyBoL.Clause_valueContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#procedure_division}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#data_division}.
 	 * @param ctx the parse tree
 	 */
-	void enterProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx);
+	void enterData_division(CoBabyBoL.Data_divisionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#procedure_division}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#data_division}.
 	 * @param ctx the parse tree
 	 */
-	void exitProcedure_division(CoBabyBoLParser.Procedure_divisionContext ctx);
+	void exitData_division(CoBabyBoL.Data_divisionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#data_item}.
 	 * @param ctx the parse tree
 	 */
-	void enterSentence(CoBabyBoLParser.SentenceContext ctx);
+	void enterData_item(CoBabyBoL.Data_itemContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#sentence}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#data_item}.
 	 * @param ctx the parse tree
 	 */
-	void exitSentence(CoBabyBoLParser.SentenceContext ctx);
+	void exitData_item(CoBabyBoL.Data_itemContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#procedure_division}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatement(CoBabyBoLParser.StatementContext ctx);
+	void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#statement}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#procedure_division}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatement(CoBabyBoLParser.StatementContext ctx);
+	void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#data_division}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#sentence}.
 	 * @param ctx the parse tree
 	 */
-	void enterData_division(CoBabyBoLParser.Data_divisionContext ctx);
+	void enterSentence(CoBabyBoL.SentenceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#data_division}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#sentence}.
 	 * @param ctx the parse tree
 	 */
-	void exitData_division(CoBabyBoLParser.Data_divisionContext ctx);
+	void exitSentence(CoBabyBoL.SentenceContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#data_item}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterData_item(CoBabyBoLParser.Data_itemContext ctx);
+	void enterStatement(CoBabyBoL.StatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#data_item}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitData_item(CoBabyBoLParser.Data_itemContext ctx);
+	void exitStatement(CoBabyBoL.StatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#picture_clause}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#picture_clause}.
 	 * @param ctx the parse tree
 	 */
-	void enterPicture_clause(CoBabyBoLParser.Picture_clauseContext ctx);
+	void enterPicture_clause(CoBabyBoL.Picture_clauseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#picture_clause}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#picture_clause}.
 	 * @param ctx the parse tree
 	 */
-	void exitPicture_clause(CoBabyBoLParser.Picture_clauseContext ctx);
+	void exitPicture_clause(CoBabyBoL.Picture_clauseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#like_clause}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#like_clause}.
 	 * @param ctx the parse tree
 	 */
-	void enterLike_clause(CoBabyBoLParser.Like_clauseContext ctx);
+	void enterLike_clause(CoBabyBoL.Like_clauseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#like_clause}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#like_clause}.
 	 * @param ctx the parse tree
 	 */
-	void exitLike_clause(CoBabyBoLParser.Like_clauseContext ctx);
+	void exitLike_clause(CoBabyBoL.Like_clauseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#occurs_clause}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#occurs_clause}.
 	 * @param ctx the parse tree
 	 */
-	void enterOccurs_clause(CoBabyBoLParser.Occurs_clauseContext ctx);
+	void enterOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#occurs_clause}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#occurs_clause}.
 	 * @param ctx the parse tree
 	 */
-	void exitOccurs_clause(CoBabyBoLParser.Occurs_clauseContext ctx);
+	void exitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#function}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#function}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunction(CoBabyBoLParser.FunctionContext ctx);
+	void enterFunction(CoBabyBoL.FunctionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#function}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#function}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunction(CoBabyBoLParser.FunctionContext ctx);
+	void exitFunction(CoBabyBoL.FunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#accept}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#accept}.
 	 * @param ctx the parse tree
 	 */
-	void enterAccept(CoBabyBoLParser.AcceptContext ctx);
+	void enterAccept(CoBabyBoL.AcceptContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#accept}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#accept}.
 	 * @param ctx the parse tree
 	 */
-	void exitAccept(CoBabyBoLParser.AcceptContext ctx);
+	void exitAccept(CoBabyBoL.AcceptContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#alter}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#alter}.
 	 * @param ctx the parse tree
 	 */
-	void enterAlter(CoBabyBoLParser.AlterContext ctx);
+	void enterAlter(CoBabyBoL.AlterContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#alter}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#alter}.
 	 * @param ctx the parse tree
 	 */
-	void exitAlter(CoBabyBoLParser.AlterContext ctx);
+	void exitAlter(CoBabyBoL.AlterContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#goto}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#goto}.
 	 * @param ctx the parse tree
 	 */
-	void enterGoto(CoBabyBoLParser.GotoContext ctx);
+	void enterGoto(CoBabyBoL.GotoContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#goto}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#goto}.
 	 * @param ctx the parse tree
 	 */
-	void exitGoto(CoBabyBoLParser.GotoContext ctx);
+	void exitGoto(CoBabyBoL.GotoContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#if}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#if}.
 	 * @param ctx the parse tree
 	 */
-	void enterIf(CoBabyBoLParser.IfContext ctx);
+	void enterIf(CoBabyBoL.IfContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#if}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#if}.
 	 * @param ctx the parse tree
 	 */
-	void exitIf(CoBabyBoLParser.IfContext ctx);
+	void exitIf(CoBabyBoL.IfContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#perform}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#perform}.
 	 * @param ctx the parse tree
 	 */
-	void enterPerform(CoBabyBoLParser.PerformContext ctx);
+	void enterPerform(CoBabyBoL.PerformContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#perform}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#perform}.
 	 * @param ctx the parse tree
 	 */
-	void exitPerform(CoBabyBoLParser.PerformContext ctx);
+	void exitPerform(CoBabyBoL.PerformContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#signal}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#signal}.
 	 * @param ctx the parse tree
 	 */
-	void enterSignal(CoBabyBoLParser.SignalContext ctx);
+	void enterSignal(CoBabyBoL.SignalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#signal}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#signal}.
 	 * @param ctx the parse tree
 	 */
-	void exitSignal(CoBabyBoLParser.SignalContext ctx);
+	void exitSignal(CoBabyBoL.SignalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#copy}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#copy}.
 	 * @param ctx the parse tree
 	 */
-	void enterCopy(CoBabyBoLParser.CopyContext ctx);
+	void enterCopy(CoBabyBoL.CopyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#copy}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#copy}.
 	 * @param ctx the parse tree
 	 */
-	void exitCopy(CoBabyBoLParser.CopyContext ctx);
+	void exitCopy(CoBabyBoL.CopyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#display}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#display}.
 	 * @param ctx the parse tree
 	 */
-	void enterDisplay(CoBabyBoLParser.DisplayContext ctx);
+	void enterDisplay(CoBabyBoL.DisplayContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#display}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#display}.
 	 * @param ctx the parse tree
 	 */
-	void exitDisplay(CoBabyBoLParser.DisplayContext ctx);
+	void exitDisplay(CoBabyBoL.DisplayContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#add}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#add}.
 	 * @param ctx the parse tree
 	 */
-	void enterAdd(CoBabyBoLParser.AddContext ctx);
+	void enterAdd(CoBabyBoL.AddContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#add}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#add}.
 	 * @param ctx the parse tree
 	 */
-	void exitAdd(CoBabyBoLParser.AddContext ctx);
+	void exitAdd(CoBabyBoL.AddContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#call}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#call}.
 	 * @param ctx the parse tree
 	 */
-	void enterCall(CoBabyBoLParser.CallContext ctx);
+	void enterCall(CoBabyBoL.CallContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#call}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#call}.
 	 * @param ctx the parse tree
 	 */
-	void exitCall(CoBabyBoLParser.CallContext ctx);
+	void exitCall(CoBabyBoL.CallContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#divide}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#divide}.
 	 * @param ctx the parse tree
 	 */
-	void enterDivide(CoBabyBoLParser.DivideContext ctx);
+	void enterDivide(CoBabyBoL.DivideContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#divide}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#divide}.
 	 * @param ctx the parse tree
 	 */
-	void exitDivide(CoBabyBoLParser.DivideContext ctx);
+	void exitDivide(CoBabyBoL.DivideContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#move}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#move}.
 	 * @param ctx the parse tree
 	 */
-	void enterMove(CoBabyBoLParser.MoveContext ctx);
+	void enterMove(CoBabyBoL.MoveContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#move}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#move}.
 	 * @param ctx the parse tree
 	 */
-	void exitMove(CoBabyBoLParser.MoveContext ctx);
+	void exitMove(CoBabyBoL.MoveContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#multiply}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#multiply}.
 	 * @param ctx the parse tree
 	 */
-	void enterMultiply(CoBabyBoLParser.MultiplyContext ctx);
+	void enterMultiply(CoBabyBoL.MultiplyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#multiply}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#multiply}.
 	 * @param ctx the parse tree
 	 */
-	void exitMultiply(CoBabyBoLParser.MultiplyContext ctx);
+	void exitMultiply(CoBabyBoL.MultiplyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#subtract}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#subtract}.
 	 * @param ctx the parse tree
 	 */
-	void enterSubtract(CoBabyBoLParser.SubtractContext ctx);
+	void enterSubtract(CoBabyBoL.SubtractContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#subtract}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#subtract}.
 	 * @param ctx the parse tree
 	 */
-	void exitSubtract(CoBabyBoLParser.SubtractContext ctx);
+	void exitSubtract(CoBabyBoL.SubtractContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#loop}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#loop}.
 	 * @param ctx the parse tree
 	 */
-	void enterLoop(CoBabyBoLParser.LoopContext ctx);
+	void enterLoop(CoBabyBoL.LoopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#loop}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#loop}.
 	 * @param ctx the parse tree
 	 */
-	void exitLoop(CoBabyBoLParser.LoopContext ctx);
+	void exitLoop(CoBabyBoL.LoopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#evaluate}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#evaluate}.
 	 * @param ctx the parse tree
 	 */
-	void enterEvaluate(CoBabyBoLParser.EvaluateContext ctx);
+	void enterEvaluate(CoBabyBoL.EvaluateContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#evaluate}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#evaluate}.
 	 * @param ctx the parse tree
 	 */
-	void exitEvaluate(CoBabyBoLParser.EvaluateContext ctx);
+	void exitEvaluate(CoBabyBoL.EvaluateContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#next_sentence}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#next_sentence}.
 	 * @param ctx the parse tree
 	 */
-	void enterNext_sentence(CoBabyBoLParser.Next_sentenceContext ctx);
+	void enterNext_sentence(CoBabyBoL.Next_sentenceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#next_sentence}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#next_sentence}.
 	 * @param ctx the parse tree
 	 */
-	void exitNext_sentence(CoBabyBoLParser.Next_sentenceContext ctx);
+	void exitNext_sentence(CoBabyBoL.Next_sentenceContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#stop}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#stop}.
 	 * @param ctx the parse tree
 	 */
-	void enterStop(CoBabyBoLParser.StopContext ctx);
+	void enterStop(CoBabyBoL.StopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#stop}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#stop}.
 	 * @param ctx the parse tree
 	 */
-	void exitStop(CoBabyBoLParser.StopContext ctx);
+	void exitStop(CoBabyBoL.StopContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#atomic_through}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#atomic_through}.
 	 * @param ctx the parse tree
 	 */
-	void enterAtomic_through(CoBabyBoLParser.Atomic_throughContext ctx);
+	void enterAtomic_through(CoBabyBoL.Atomic_throughContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#atomic_through}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#atomic_through}.
 	 * @param ctx the parse tree
 	 */
-	void exitAtomic_through(CoBabyBoLParser.Atomic_throughContext ctx);
+	void exitAtomic_through(CoBabyBoL.Atomic_throughContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#when_clause}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#when_clause}.
 	 * @param ctx the parse tree
 	 */
-	void enterWhen_clause(CoBabyBoLParser.When_clauseContext ctx);
+	void enterWhen_clause(CoBabyBoL.When_clauseContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#when_clause}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#when_clause}.
 	 * @param ctx the parse tree
 	 */
-	void exitWhen_clause(CoBabyBoLParser.When_clauseContext ctx);
+	void exitWhen_clause(CoBabyBoL.When_clauseContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#argument_literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#argument_literal}.
 	 * @param ctx the parse tree
 	 */
-	void enterArgument_literal(CoBabyBoLParser.Argument_literalContext ctx);
+	void enterArgument_literal(CoBabyBoL.Argument_literalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#argument_literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#argument_literal}.
 	 * @param ctx the parse tree
 	 */
-	void exitArgument_literal(CoBabyBoLParser.Argument_literalContext ctx);
+	void exitArgument_literal(CoBabyBoL.Argument_literalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#any_expression}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#any_expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterAny_expression(CoBabyBoLParser.Any_expressionContext ctx);
+	void enterAny_expression(CoBabyBoL.Any_expressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#any_expression}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#any_expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitAny_expression(CoBabyBoLParser.Any_expressionContext ctx);
+	void exitAny_expression(CoBabyBoL.Any_expressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#math_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	void enterMath_expr(CoBabyBoL.Math_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#math_expr}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#math_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitMath_expr(CoBabyBoLParser.Math_exprContext ctx);
+	void exitMath_expr(CoBabyBoL.Math_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#boolean_expression}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#boolean_expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterBoolean_expression(CoBabyBoLParser.Boolean_expressionContext ctx);
+	void enterBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#boolean_expression}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#boolean_expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitBoolean_expression(CoBabyBoLParser.Boolean_expressionContext ctx);
+	void exitBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#atomic}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#atomic}.
 	 * @param ctx the parse tree
 	 */
-	void enterAtomic(CoBabyBoLParser.AtomicContext ctx);
+	void enterAtomic(CoBabyBoL.AtomicContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#atomic}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#atomic}.
 	 * @param ctx the parse tree
 	 */
-	void exitAtomic(CoBabyBoLParser.AtomicContext ctx);
+	void exitAtomic(CoBabyBoL.AtomicContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#identifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	void enterIdentifier(CoBabyBoL.IdentifierContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#identifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	void exitIdentifier(CoBabyBoL.IdentifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#file_name}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#file_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterFile_name(CoBabyBoLParser.File_nameContext ctx);
+	void enterFile_name(CoBabyBoL.File_nameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#file_name}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#file_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitFile_name(CoBabyBoLParser.File_nameContext ctx);
+	void exitFile_name(CoBabyBoL.File_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#procedure_name}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#procedure_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterProcedure_name(CoBabyBoLParser.Procedure_nameContext ctx);
+	void enterProcedure_name(CoBabyBoL.Procedure_nameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#procedure_name}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#procedure_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitProcedure_name(CoBabyBoLParser.Procedure_nameContext ctx);
+	void exitProcedure_name(CoBabyBoL.Procedure_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#function_name}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#function_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunction_name(CoBabyBoLParser.Function_nameContext ctx);
+	void enterFunction_name(CoBabyBoL.Function_nameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#function_name}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#function_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunction_name(CoBabyBoLParser.Function_nameContext ctx);
+	void exitFunction_name(CoBabyBoL.Function_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#program_name}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#program_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterProgram_name(CoBabyBoLParser.Program_nameContext ctx);
+	void enterProgram_name(CoBabyBoL.Program_nameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#program_name}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#program_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitProgram_name(CoBabyBoLParser.Program_nameContext ctx);
+	void exitProgram_name(CoBabyBoL.Program_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#level}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#level}.
 	 * @param ctx the parse tree
 	 */
-	void enterLevel(CoBabyBoLParser.LevelContext ctx);
+	void enterLevel(CoBabyBoL.LevelContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#level}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#level}.
 	 * @param ctx the parse tree
 	 */
-	void exitLevel(CoBabyBoLParser.LevelContext ctx);
+	void exitLevel(CoBabyBoL.LevelContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#literal}.
 	 * @param ctx the parse tree
 	 */
-	void enterLiteral(CoBabyBoLParser.LiteralContext ctx);
+	void enterLiteral(CoBabyBoL.LiteralContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#literal}.
 	 * @param ctx the parse tree
 	 */
-	void exitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	void exitLiteral(CoBabyBoL.LiteralContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#numeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void enterNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	void enterNumeric_literal(CoBabyBoL.Numeric_literalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#numeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void exitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	void exitNumeric_literal(CoBabyBoL.Numeric_literalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void enterAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	void enterAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void exitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	void exitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#representation}.
+	 * Enter a parse tree produced by {@link CoBabyBoL#representation}.
 	 * @param ctx the parse tree
 	 */
-	void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx);
+	void enterRepresentation(CoBabyBoL.RepresentationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#representation}.
+	 * Exit a parse tree produced by {@link CoBabyBoL#representation}.
 	 * @param ctx the parse tree
 	 */
-	void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#precision}.
-	 * @param ctx the parse tree
-	 */
-	void enterPrecision(CoBabyBoLParser.PrecisionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#precision}.
-	 * @param ctx the parse tree
-	 */
-	void exitPrecision(CoBabyBoLParser.PrecisionContext ctx);
+	void exitRepresentation(CoBabyBoL.RepresentationContext ctx);
 }
