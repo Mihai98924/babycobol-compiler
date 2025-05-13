@@ -427,4 +427,64 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLevel(CoBabyBoLParser.LevelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteral(CoBabyBoLParser.LiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#alphabetic_numeral}.
+	 * @param ctx the parse tree
+	 */
+	void enterAlphabetic_numeral(CoBabyBoLParser.Alphabetic_numeralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#alphabetic_numeral}.
+	 * @param ctx the parse tree
+	 */
+	void exitAlphabetic_numeral(CoBabyBoLParser.Alphabetic_numeralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
 }

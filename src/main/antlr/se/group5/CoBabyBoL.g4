@@ -2,19 +2,22 @@ grammar CoBabyBoL;
 
 import CoBabyBoLTokens;
 
-program: identification_division data_division? procedure_division EOF;
+//options { caseInsensitive = true; }
 
+program: identification_division data_division? procedure_division function* EOF;
 
 // Divisions
 identification_division: SOL IDENTIFICATION_DIVISION EOL clause*;
-procedure_division: PROCEDURE_DIVISION EOL statement*;
-data_division: DATA_DIVISION EOL data_item* EOL;
+procedure_division: PROCEDURE_DIVISION EOL sentence*;
+data_division: DATA_DIVISION EOL data_item*;
 data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
 picture_clause: PICTURE IS representation;
 like_clause: LIKE IDENTIFIER;
-occurs_clause: OCCURS INTEGER_LITERAL TIMES;
+occurs_clause: OCCURS integer_literal TIMES;
+function: IDENTIFIER EOL sentence*;
 
-statement: (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop) EOL;
+sentence: statement* EOL;
+statement: (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop) (SOL statement)?;
 
 accept: ACCEPT IDENTIFIER;
 alter: ALTER procedure_name TO PROCEED TO procedure_name;
@@ -23,7 +26,7 @@ if: IF boolean_expression THEN statement+ (ELSE statement+)? END+;
 perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
 signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
-display: DISPLAY ((atomic)+ (DELIMITED_BY (SIZE | SPACE | LITERAL))?)+ WITH_NO_ADVANCING?;
+display: DISPLAY ((atomic)+ (DELIMITED_BY (SIZE | SPACE | literal))?)+ WITH_NO_ADVANCING?;
 add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)*
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
@@ -42,14 +45,19 @@ when_clause: WHEN ((atomic_through | ( OTHER)));
 clause: clause_name EOL clause_value EOL;
 clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY;
 clause_value: atomic;
-argument_literal: '≡≡≡' LITERAL '≡≡≡';
+argument_literal: '≡≡≡' literal '≡≡≡';
 any_expression: boolean_expression;
-boolean_expression: (NOT)* (LITERAL | IDENTIFIER) EQ_OP (LITERAL | IDENTIFIER) ((AND | OR) boolean_expression)*;
-atomic: IDENTIFIER | LITERAL;
+boolean_expression: (NOT)* (literal | IDENTIFIER) EQ_OP (literal | IDENTIFIER) ((AND | OR) boolean_expression)*;
+atomic: IDENTIFIER | literal;
 
-file_name: ALPHANUMERIC_LITERAL;
+file_name: NONNUMERICLITERAL;
 procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
 representation: atomic;
-level: INTEGER_LITERAL;
+level: integer_literal;
+
+numeric_literal: NUMERICLITERAL | ZERO | integer_literal;
+integer_literal: INTEGERLITERAL;
+
+literal: numeric_literal | NONNUMERICLITERAL;

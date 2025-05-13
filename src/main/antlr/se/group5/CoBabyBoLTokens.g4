@@ -69,23 +69,28 @@ WHEN: W WS* H WS* E WS* N;
 OTHER: O WS* T WS* H WS* E WS* R;
 STOP: S WS* T WS* O WS* P;
 PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
+ZERO: Z WS* E WS* R WS* O;
+
 
 // === LITERALS ===============================================================
-fragment LETTER     : [a-zA-Z];
-fragment DIGIT      : [0-9];
-fragment CHARACTER  : ~['"\r\n];
-fragment ALPHANUMERIC : [a-zA-Z0-9];
+fragment STRINGLITERAL: '"' (~["\n\r] | '""' | '\'')* '"'
+                      | '\'' (~['\n\r] | '\'\'' | '"')* '\'';
+INTEGERLITERAL: (SIGN)? [0-9]+;
+NUMERICLITERAL
+    : (SIGN)? [0-9]* (DOT | COMMA) [0-9]+ (
+        ('e' | 'E') (SIGN)? [0-9]+
+    )?
+    ;
+IDENTIFIER: [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)*;
+LETTER     : [a-zA-Z];
+DIGIT      : [0-9];
+ALPHANUMERIC : [a-zA-Z0-9];
+NONNUMERICLITERAL: STRINGLITERAL;
+
+
 
 //LEVEL: SOL DIGIT{2} SOL;
 
-IDENTIFIER: LETTER ( ALPHANUMERIC | '-' ALPHANUMERIC )*;
-
-LITERAL: INTEGER_LITERAL | NUMERIC_LITERAL | ALPHANUMERIC_LITERAL | ALPHABETIC_LITERAL;
-
-INTEGER_LITERAL: SIGN? DIGIT+;
-NUMERIC_LITERAL: SIGN? DIGIT* (DOT | COMMA) DIGIT+ ( E SIGN? DIGIT+ )?;
-ALPHANUMERIC_LITERAL: ALPHANUMERIC+;
-ALPHABETIC_LITERAL: LETTER+;
 
 // === LOGICAL OPERATORS ===============================================================
 AND: A WS* N WS* D;
@@ -107,18 +112,16 @@ LT: '<';
 // === MISCELLANEOUS ===============================================================
 
 WS: [ \n\t\r] ('-')* -> skip;
-fragment DOT: '.';
-fragment COMMA: ',';
+DOT: '.';
+COMMA: ',';
 SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
 EOL : DOT WS*;
 SIGN : '+' | '-';
-//LQ: (SOL '-' WS*) | WS+;
 
-
-fragment A:[Aa]; fragment B:[Bb]; fragment C:[Cc]; fragment D:[Dd];
-fragment E:[Ee]; fragment F:[Ff]; fragment G:[Gg]; fragment H:[Hh];
-fragment I:[Ii]; fragment J:[Jj]; fragment K:[Kk]; fragment L:[Ll];
-fragment M:[Mm]; fragment N:[Nn]; fragment O:[Oo]; fragment P:[Pp];
-fragment Q:[Qq]; fragment R:[Rr]; fragment S:[Ss]; fragment T:[Tt];
-fragment U:[Uu]; fragment V:[Vv]; fragment W:[Ww]; fragment X:[Xx];
-fragment Y:[Yy]; fragment Z:[Zz];
+fragment A:[A]; fragment B:[B]; fragment C:[C]; fragment D:[D];
+fragment E:[E]; fragment F:[F]; fragment G:[G]; fragment H:[H];
+fragment I:[I]; fragment J:[J]; fragment K:[K]; fragment L:[L];
+fragment M:[M]; fragment N:[N]; fragment O:[O]; fragment P:[P];
+fragment Q:[Q]; fragment R:[R]; fragment S:[S]; fragment T:[T];
+fragment U:[U]; fragment V:[V]; fragment W:[W]; fragment X:[X];
+fragment Y:[Y]; fragment Z:[Z];

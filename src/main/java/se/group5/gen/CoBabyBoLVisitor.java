@@ -262,4 +262,40 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLevel(CoBabyBoLParser.LevelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#alphabetic_numeral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAlphabetic_numeral(CoBabyBoLParser.Alphabetic_numeralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
 }
