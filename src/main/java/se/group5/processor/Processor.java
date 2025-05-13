@@ -94,7 +94,7 @@ public class Processor {
                     continue;
                 }
 
-                builder.append(line).append("\r\n");
+                builder.append(line).append("\n");
             }
         }
         return builder.toString();

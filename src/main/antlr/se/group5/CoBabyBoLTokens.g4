@@ -117,7 +117,8 @@ COMMA: ',';
 SOL : WS+ ('*' ALPHANUMERIC | '-' WS*)?;
 EOL : DOT WS*;
 SIGN : '+' | '-';
-
+LPAREN: '(';
+RPAREN: ')';
 fragment A:[A]; fragment B:[B]; fragment C:[C]; fragment D:[D];
 fragment E:[E]; fragment F:[F]; fragment G:[G]; fragment H:[H];
 fragment I:[I]; fragment J:[J]; fragment K:[K]; fragment L:[L];

@@ -17,12 +17,12 @@ occurs_clause: OCCURS integer_literal TIMES;
 function: IDENTIFIER EOL sentence*;
 
 sentence: statement* EOL;
-statement: (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop) (SOL statement)?;
+statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
-accept: ACCEPT IDENTIFIER;
+accept: ACCEPT IDENTIFIER+;
 alter: ALTER procedure_name TO PROCEED TO procedure_name;
 goto: GOTO procedure_name;
-if: IF boolean_expression THEN statement+ (ELSE statement+)? END+;
+if: IF boolean_expression THEN statement+ (ELSE statement+)? SOL? END+;
 perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
 signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
@@ -34,8 +34,8 @@ divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER IDENTIFIER)?)?
 move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+;
 multiply: MULTIPLY atomic BY atomic+ (GIVING IDENTIFIER)?;
 subtract: SUBTRACT atomic+ FROM atomic+ (GIVING IDENTIFIER)*;
-loop: LOOP ((WHILE  boolean_expression | UNTIL  boolean_expression | statement) VARYING IDENTIFIER* (FROM atomic)* (TO atomic)* (BY atomic)*)+ END;
-evaluate: EVALUATE any_expression (ALSO any_expression)* (when_clause statement+)+  END;
+loop: LOOP ((WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
+evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause SOL? statement+)+ SOL? END;
 next_sentence: NEXT_SENTENCE;
 stop: STOP;
 
@@ -47,7 +47,7 @@ clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED |
 clause_value: atomic;
 argument_literal: '≡≡≡' literal '≡≡≡';
 any_expression: boolean_expression;
-boolean_expression: (NOT)* (literal | IDENTIFIER) EQ_OP (literal | IDENTIFIER) ((AND | OR) boolean_expression)*;
+boolean_expression: (NOT)* (literal | IDENTIFIER) (EQ_OP (literal | IDENTIFIER) ((AND | OR) boolean_expression)*)?;
 atomic: IDENTIFIER | literal;
 
 file_name: NONNUMERICLITERAL;
@@ -60,4 +60,4 @@ level: integer_literal;
 numeric_literal: NUMERICLITERAL | ZERO | integer_literal;
 integer_literal: INTEGERLITERAL;
 
-literal: numeric_literal | NONNUMERICLITERAL;
+literal: (numeric_literal | NONNUMERICLITERAL) (LPAREN (numeric_literal | NONNUMERICLITERAL) RPAREN)?;
