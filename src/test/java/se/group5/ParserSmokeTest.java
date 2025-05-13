@@ -14,9 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import se.group5.gen.*;
 
-import se.group5.CoBabyBoLParser;
-import se.group5.CoBabyBoLLexer;
 
 /**
  * Simple parser smoke-test:
@@ -62,21 +61,19 @@ public class ParserSmokeTest {
         // 1. Load input
         try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
             Assert.assertNotNull("Test resource not found: " + resourcePath, in);
+            System.out.println("Parsing " + in);
 
             CharStream chars = CharStreams.fromStream(in, StandardCharsets.UTF_8);
 
-            // 2. Run lexer
             CoBabyBoLLexer lexer = new CoBabyBoLLexer(chars);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-            // 3. Run parser
             CoBabyBoLParser parser = new CoBabyBoLParser(tokens);
 
             // Report errors through JUnit
             parser.removeErrorListeners();
             parser.addErrorListener(new BaseErrorListener() {
                 @Override
-                public void syntaxError(Recognizer<?,?> recognizer,
+                public void syntaxError(Recognizer<?, ?> recognizer,
                                         Object offendingSymbol,
                                         int line, int charPositionInLine,
                                         String msg, RecognitionException e) {
