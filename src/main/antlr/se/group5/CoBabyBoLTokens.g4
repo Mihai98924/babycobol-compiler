@@ -96,7 +96,7 @@ GT: '>';
 LT: '<';
 
 // === LITERALS ===============================================================
-fragment STRINGLITERAL: '"' (~["\n\r] | '""' | '\'')* '"'
+STRINGLITERAL: '"' (~["\n\r] | '""' | '\'')* '"'
                       | '\'' (~['\n\r] | '\'\'' | '"')* '\'';
 INTEGERLITERAL: (SIGN)? [0-9]+;
 NUMERICLITERAL
@@ -108,7 +108,6 @@ IDENTIFIER: [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)*;
 LETTER     : [a-zA-Z];
 DIGIT      : [0-9];
 ALPHANUMERIC : [a-zA-Z0-9];
-NONNUMERICLITERAL: STRINGLITERAL;
 
 // === MISCELLANEOUS ===============================================================
 

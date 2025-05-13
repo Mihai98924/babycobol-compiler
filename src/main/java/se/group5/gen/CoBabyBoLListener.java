@@ -398,6 +398,16 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitAtomic(CoBabyBoLParser.AtomicContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#file_name}.
 	 * @param ctx the parse tree
 	 */
@@ -438,16 +448,6 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitProgram_name(CoBabyBoLParser.Program_nameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#representation}.
-	 * @param ctx the parse tree
-	 */
-	void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#representation}.
-	 * @param ctx the parse tree
-	 */
-	void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#level}.
 	 * @param ctx the parse tree
 	 */
@@ -457,6 +457,16 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLevel(CoBabyBoLParser.LevelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteral(CoBabyBoLParser.LiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteral(CoBabyBoLParser.LiteralContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
 	 * @param ctx the parse tree
@@ -468,23 +478,33 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void enterInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	void enterAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 */
-	void exitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	void exitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#representation}.
 	 * @param ctx the parse tree
 	 */
-	void enterLiteral(CoBabyBoLParser.LiteralContext ctx);
+	void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#representation}.
 	 * @param ctx the parse tree
 	 */
-	void exitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoLParser#precision}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrecision(CoBabyBoLParser.PrecisionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoLParser#precision}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrecision(CoBabyBoLParser.PrecisionContext ctx);
 }

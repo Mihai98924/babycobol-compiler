@@ -7,8 +7,8 @@ program: identification_division data_division? procedure_division? function* EO
 // Identification division
 identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
 identification_clause: clause_name EOL clause_value EOL;
-clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
-clause_value: atomic;
+clause_name: (~EOL)+;
+clause_value: (~EOL)+;
 
 // Procedure division
 procedure_division: PROCEDURE_DIVISION EOL sentence*;
@@ -22,7 +22,7 @@ data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL
 
 picture_clause: PICTURE IS representation;
 like_clause: LIKE IDENTIFIER;
-occurs_clause: OCCURS integer_literal TIMES;
+occurs_clause: OCCURS INTEGERLITERAL TIMES;
 function: IDENTIFIER EOL sentence*;
 
 // Statements
@@ -55,18 +55,39 @@ argument_literal: '≡≡≡' literal '≡≡≡';
 any_expression: boolean_expression | math_expr;
 math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 
-boolean_expression: NOT boolean_expression | (atomic EQ_OP atomic ((OR | AND) boolean_expression)*);
+boolean_expression: NOT boolean_expression | (atomic (EQ_OP| AND | OR) atomic ((OR | AND) boolean_expression)*);
 
-atomic: IDENTIFIER | literal;
+atomic: identifier | literal;
+identifier: IDENTIFIER;
 
-file_name: NONNUMERICLITERAL;
+file_name: alphanumeric_literal;
 procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
-representation: atomic;
-level: integer_literal;
+//representation: ALPHANUMERIC LPAREN INTEGERLITERAL RPAREN;
+level: INTEGERLITERAL;
 
-numeric_literal: NUMERICLITERAL | ZERO | integer_literal;
-integer_literal: INTEGERLITERAL;
+literal: numeric_literal | alphanumeric_literal;
+numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
+alphanumeric_literal: STRINGLITERAL;
 
-literal: (numeric_literal | NONNUMERICLITERAL) (LPAREN (numeric_literal | NONNUMERICLITERAL) RPAREN)?;
+representation: pic_symbol+;
+
+pic_symbol
+    : sign
+    | digit
+    | scale
+    | decimal
+    | edit_char
+    ;
+
+sign       : 'S';
+digit      : '9' (LPAREN INTEGERLITERAL RPAREN)?;
+scale      : 'P'+; // Scaling positions
+decimal    : 'V';  // Implied decimal
+edit_char  : 'Z' (LPAREN INTEGERLITERAL RPAREN)?
+           | '*' (LPAREN INTEGERLITERAL RPAREN)?
+           | ',' | '.' | '$'
+           | 'CR' | 'DB'
+           | '+' | '-'
+           ;

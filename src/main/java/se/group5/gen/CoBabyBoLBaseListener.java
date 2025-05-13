@@ -485,6 +485,18 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIdentifier(CoBabyBoLParser.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifier(CoBabyBoLParser.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFile_name(CoBabyBoLParser.File_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -533,18 +545,6 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLevel(CoBabyBoLParser.LevelContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -552,6 +552,18 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLevel(CoBabyBoLParser.LevelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLiteral(CoBabyBoLParser.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLiteral(CoBabyBoLParser.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -569,25 +581,37 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInteger_literal(CoBabyBoLParser.Integer_literalContext ctx) { }
+	@Override public void enterAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx) { }
+	@Override public void exitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLiteral(CoBabyBoLParser.LiteralContext ctx) { }
+	@Override public void enterRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLiteral(CoBabyBoLParser.LiteralContext ctx) { }
+	@Override public void exitRepresentation(CoBabyBoLParser.RepresentationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrecision(CoBabyBoLParser.PrecisionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrecision(CoBabyBoLParser.PrecisionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -291,6 +291,13 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitIdentifier(CoBabyBoLParser.IdentifierContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitFile_name(CoBabyBoLParser.File_nameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -319,14 +326,14 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRepresentation(CoBabyBoLParser.RepresentationContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLevel(CoBabyBoLParser.LevelContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLevel(CoBabyBoLParser.LevelContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLiteral(CoBabyBoLParser.LiteralContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -340,12 +347,19 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLiteral(CoBabyBoLParser.LiteralContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRepresentation(CoBabyBoLParser.RepresentationContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPrecision(CoBabyBoLParser.PrecisionContext ctx) { return visitChildren(ctx); }
 }

@@ -245,6 +245,12 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAtomic(CoBabyBoLParser.AtomicContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifier(CoBabyBoLParser.IdentifierContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#file_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -269,17 +275,17 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram_name(CoBabyBoLParser.Program_nameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#representation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#level}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLevel(CoBabyBoLParser.LevelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteral(CoBabyBoLParser.LiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoBabyBoLParser#numeric_literal}.
 	 * @param ctx the parse tree
@@ -287,15 +293,21 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNumeric_literal(CoBabyBoLParser.Numeric_literalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#integer_literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#alphanumeric_literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInteger_literal(CoBabyBoLParser.Integer_literalContext ctx);
+	T visitAlphanumeric_literal(CoBabyBoLParser.Alphanumeric_literalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoLParser#literal}.
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#representation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLiteral(CoBabyBoLParser.LiteralContext ctx);
+	T visitRepresentation(CoBabyBoLParser.RepresentationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoLParser#precision}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrecision(CoBabyBoLParser.PrecisionContext ctx);
 }
