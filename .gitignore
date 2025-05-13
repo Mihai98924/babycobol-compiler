@@ -1,1 +1,4 @@
 src/antlr/se/gen
+target
+.idea
+gen
