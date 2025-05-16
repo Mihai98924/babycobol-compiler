@@ -1,4 +1,4 @@
-// Generated from /home/extratoast/IdeaProjects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
+// Generated from /home/mpop/Projects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
 package se.group5.gen;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -67,27 +67,6 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitSentence(CoBabyBoL.SentenceContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitStatement(CoBabyBoL.StatementContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitPicture_clause(CoBabyBoL.Picture_clauseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -103,6 +82,34 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitRepresentation(CoBabyBoL.RepresentationContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSentence(CoBabyBoL.SentenceContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitStatement(CoBabyBoL.StatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -348,11 +355,4 @@ public class CoBabyBoLBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitRepresentation(CoBabyBoL.RepresentationContext ctx) { return visitChildren(ctx); }
 }

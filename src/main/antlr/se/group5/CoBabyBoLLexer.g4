@@ -1,7 +1,8 @@
 lexer grammar CoBabyBoLLexer;
 
-IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT-> mode(IdentificationDivision);
-
+IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT-> pushMode(IdentificationDivision);
+//DATA_DIVISION: D WS* A WS* T WS* A WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N -> popMode, pushMode(DataDivision);
+PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 
 
 // === KEYWORDS ===============================================================
@@ -11,7 +12,6 @@ ALTER: A WS* L WS* T WS* E WS* R;
 BY: B WS* Y;
 CALL: C WS* A WS* L WS* L;
 COPY: C WS* O WS* P WS* Y;
-DATA_DIVISION: D WS* A WS* T WS* A WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 DELIMITED_BY: D WS* E WS* L WS* I WS* M WS* I WS* T WS* E WS* D WS+ B WS* Y;
 DISPLAY: D WS* I WS* S WS* P WS* L WS* A WS* Y;
 DIVIDE: D WS* I WS* V WS* I WS* D WS* E;
@@ -67,7 +67,6 @@ UNTIL: U WS* N WS* T WS* I WS* L;
 WHEN: W WS* H WS* E WS* N;
 OTHER: O WS* T WS* H WS* E WS* R;
 STOP: S WS* T WS* O WS* P;
-PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 ZERO: Z WS* E WS* R WS* O;
 
 // === LOGICAL OPERATORS ===============================================================
@@ -106,7 +105,7 @@ NUMERICLITERAL
     ;
 IDENTIFIER: [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)*;
 LETTER     : [a-zA-Z];
-DIGIT      : [0-9];
+fragment DIGIT      : [0-9];
 ALPHANUMERIC : [a-zA-Z0-9];
 
 // === MISCELLANEOUS ===============================================================
@@ -130,16 +129,20 @@ fragment Y:[Y]; fragment Z:[Z];
 
 mode IdentificationDivision;
 
-ID_SOL: '\n           ';
-ID_DATA_DIVISION: DATA_DIVISION -> mode(DataDivision);
-ID_NAME: SOL (~[.])+ . [ \n\t\r]*;
+ID_SOL: '\n' [ ]+;
+ID_DATA_DIVISION: ID_SOL* D WS* A WS* T WS* A WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT ID_SOL? -> popMode, pushMode(DataDivision);
+ID_PROCEDURE_DIVISION: ID_SOL* P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT ID_SOL?-> popMode;
+ID_NAME: ID_SOL (~[.])+ . [ \n\t\r]*;
 ID_VALUE: (~[.])+ .;
-ID_END: . -> mode(DEFAULT_MODE);
 
 mode DataDivision;
 
-DD_SOL: '\n         ';
+DD_SOL: '\n' [ ]+;
 OCCURS: O WS* C WS* C WS* U WS* R WS* S;
 LIKE: L WS* I WS* K WS* E;
-PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
-IS: I WS* S;
+PICTURE_IS: P WS* I WS* C WS* T WS* U WS* R WS* E WS+ I WS* S;
+DD_EOL: EOL;
+DD_PROCEDURE_DIVISION: ID_SOL* P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT ID_SOL?-> popMode;
+DD_LEVEL: (DD_SOL* | WS*) INTEGERLITERAL WS*;
+DD_IDENTIFIER: IDENTIFIER WS*;
+//DD_ALL: . -> skip;

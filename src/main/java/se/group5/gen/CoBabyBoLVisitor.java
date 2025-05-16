@@ -1,4 +1,4 @@
-// Generated from /home/extratoast/IdeaProjects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
+// Generated from /home/mpop/Projects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
 package se.group5.gen;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -53,24 +53,6 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitData_item(CoBabyBoL.Data_itemContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoBabyBoL#procedure_division}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoL#sentence}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSentence(CoBabyBoL.SentenceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoL#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatement(CoBabyBoL.StatementContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CoBabyBoL#picture_clause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -88,6 +70,30 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoL#representation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRepresentation(CoBabyBoL.RepresentationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoL#procedure_division}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoL#sentence}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSentence(CoBabyBoL.SentenceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoBabyBoL#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement(CoBabyBoL.StatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoBabyBoL#function}.
 	 * @param ctx the parse tree
@@ -298,10 +304,4 @@ public interface CoBabyBoLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CoBabyBoL#representation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRepresentation(CoBabyBoL.RepresentationContext ctx);
 }

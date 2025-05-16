@@ -1,4 +1,4 @@
-// Generated from /home/extratoast/IdeaProjects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
+// Generated from /home/mpop/Projects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
 package se.group5.gen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -101,42 +101,6 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSentence(CoBabyBoL.SentenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSentence(CoBabyBoL.SentenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStatement(CoBabyBoL.StatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStatement(CoBabyBoL.StatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPicture_clause(CoBabyBoL.Picture_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -168,6 +132,54 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRepresentation(CoBabyBoL.RepresentationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRepresentation(CoBabyBoL.RepresentationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSentence(CoBabyBoL.SentenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSentence(CoBabyBoL.SentenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStatement(CoBabyBoL.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStatement(CoBabyBoL.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -588,18 +600,6 @@ public class CoBabyBoLBaseListener implements CoBabyBoLListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRepresentation(CoBabyBoL.RepresentationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRepresentation(CoBabyBoL.RepresentationContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

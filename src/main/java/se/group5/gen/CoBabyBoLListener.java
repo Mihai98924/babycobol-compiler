@@ -1,4 +1,4 @@
-// Generated from /home/extratoast/IdeaProjects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
+// Generated from /home/mpop/Projects/babycobol-compiler/src/main/antlr/se/group5/CoBabyBoL.g4 by ANTLR 4.13.2
 package se.group5.gen;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -78,36 +78,6 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 */
 	void exitData_item(CoBabyBoL.Data_itemContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoBabyBoL#procedure_division}.
-	 * @param ctx the parse tree
-	 */
-	void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoL#procedure_division}.
-	 * @param ctx the parse tree
-	 */
-	void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoL#sentence}.
-	 * @param ctx the parse tree
-	 */
-	void enterSentence(CoBabyBoL.SentenceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoL#sentence}.
-	 * @param ctx the parse tree
-	 */
-	void exitSentence(CoBabyBoL.SentenceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoL#statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatement(CoBabyBoL.StatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoL#statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatement(CoBabyBoL.StatementContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CoBabyBoL#picture_clause}.
 	 * @param ctx the parse tree
 	 */
@@ -137,6 +107,46 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOccurs_clause(CoBabyBoL.Occurs_clauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoL#representation}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepresentation(CoBabyBoL.RepresentationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoL#representation}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepresentation(CoBabyBoL.RepresentationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoL#procedure_division}.
+	 * @param ctx the parse tree
+	 */
+	void enterProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoL#procedure_division}.
+	 * @param ctx the parse tree
+	 */
+	void exitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoL#sentence}.
+	 * @param ctx the parse tree
+	 */
+	void enterSentence(CoBabyBoL.SentenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoL#sentence}.
+	 * @param ctx the parse tree
+	 */
+	void exitSentence(CoBabyBoL.SentenceContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoBabyBoL#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement(CoBabyBoL.StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoBabyBoL#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement(CoBabyBoL.StatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoBabyBoL#function}.
 	 * @param ctx the parse tree
@@ -487,14 +497,4 @@ public interface CoBabyBoLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CoBabyBoL#representation}.
-	 * @param ctx the parse tree
-	 */
-	void enterRepresentation(CoBabyBoL.RepresentationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CoBabyBoL#representation}.
-	 * @param ctx the parse tree
-	 */
-	void exitRepresentation(CoBabyBoL.RepresentationContext ctx);
 }
