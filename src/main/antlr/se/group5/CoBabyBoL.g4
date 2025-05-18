@@ -11,13 +11,12 @@ clause_name: ID_NAME;
 clause_value: ID_VALUE;
 
 // Data division mode
-data_division: ID_DATA_DIVISION data_item*;
-data_item: level DD_IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* DD_EOL;
-picture_clause: PICTURE_IS representation;
+data_division: DATA_DIVISION EOL data_item*;
+data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
+picture_clause: PICTURE IS representation;
 like_clause: LIKE IDENTIFIER;
 occurs_clause: OCCURS INTEGERLITERAL TIMES;
-representation: DD_LEVEL;
-level: DD_LEVEL;
+representation: IDENTIFIER;
 
 //pic_symbol
 //    : sign
@@ -41,7 +40,7 @@ level: DD_LEVEL;
 
 
 // Procedure division mode
-procedure_division: (ID_PROCEDURE_DIVISION ID_SOL? |DD_PROCEDURE_DIVISION DD_SOL?) sentence*;
+procedure_division: PROCEDURE_DIVISION EOL sentence*;
 sentence: statement* EOL;
 statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
@@ -91,6 +90,7 @@ procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
 //representation: ALPHANUMERIC LPAREN INTEGERLITERAL RPAREN;
+level: INTEGERLITERAL;
 
 literal: numeric_literal | alphanumeric_literal;
 numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
