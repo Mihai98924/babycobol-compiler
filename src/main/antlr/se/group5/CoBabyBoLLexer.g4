@@ -116,8 +116,7 @@ COMMA: ',';
 SOL : WS+ ('-' WS*)?;
 EOL : DOT WS*;
 SIGN : '+' | '-';
-LPAREN: '(';
-RPAREN: ')';
+
 fragment A:[A]; fragment B:[B]; fragment C:[C]; fragment D:[D];
 fragment E:[E]; fragment F:[F]; fragment G:[G]; fragment H:[H];
 fragment I:[I]; fragment J:[J]; fragment K:[K]; fragment L:[L];
@@ -128,13 +127,14 @@ fragment Y:[Y]; fragment Z:[Z];
 
 mode PIC_REP;
 
-REPRESENTATION: PR_SIGN? CHUNK ( PR_DECSEP CHUNK )? PR_SIGN? -> popMode;
-CHUNK: ( PR_DIGIT | PR_ALPHA | PR_CHAR | PR_LEADZ )+;
+REPRESENTATION: PR_SIGN? CHUNK ( PR_DECSEP CHUNK )? PRECISION? -> popMode;
+CHUNK: ( '9' | 'A' | 'X' | 'Z' )+;
+
+
+LPAREN: '(';
+RPAREN: ')';
+PRECISION           : LPAREN [0-9]+ RPAREN;
 
 PR_WS               : [ \t\r\n]+ -> skip ;
-PR_DIGIT            : '9';   // any digit
-PR_ALPHA            : 'A';   // alphabetic or space
-PR_CHAR             : 'X';   // any single character
-PR_LEADZ            : 'Z';   // leading digit, blank if zero
 PR_SIGN             : 'S';   // operational sign
 PR_DECSEP           : 'V';   // decimal separator
