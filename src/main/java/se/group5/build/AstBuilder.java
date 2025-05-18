@@ -10,6 +10,7 @@ import se.group5.ast.data_division.DataGroup;
 import se.group5.ast.data_division.Representation;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.NumericLiteral;
+import se.group5.ast.statement.Accept;
 import se.group5.gen.CoBabyBoL;
 import se.group5.gen.CoBabyBoLBaseVisitor;
 
@@ -95,6 +96,20 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     @Override
     public Node visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) {
         return new AlphanumericLiteral(ctx.STRINGLITERAL().getText());
+    }
+
+    @Override
+    public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Node visitAccept(CoBabyBoL.AcceptContext ctx) {
+        List<Identifier> targets = ctx.IDENTIFIER()
+                .stream()
+                .map(t -> new Identifier(t.getText()))
+                .toList();
+        return new Accept(targets);
     }
 
     @Override

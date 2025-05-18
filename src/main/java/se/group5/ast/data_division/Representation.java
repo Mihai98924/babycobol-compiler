@@ -2,6 +2,7 @@ package se.group5.ast.data_division;
 
 import se.group5.ast.Node;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,12 +13,38 @@ public final class Representation implements Node {
     private final List<PictureSymbol> pattern;
 
     public Representation(String raw) {
-        // strip surrounding whitespace and parse symbol by symbol
         raw = raw.trim();
-        if (raw.isEmpty()) throw new IllegalArgumentException("Empty PICTURE");
-        this.pattern = raw.chars()
+        if (raw.isEmpty())
+            throw new IllegalArgumentException("Empty PICTURE");
+
+        int repeat = 1;                 // default: no repetition
+        String picturePart = raw;       // default: whole string is picture
+
+        if (raw.contains("(")) {
+            int open  = raw.indexOf('(');
+            int close = raw.indexOf(')', open + 1);
+            if (close == -1)
+                throw new IllegalArgumentException("Found '(' without ')'");
+
+            picturePart = raw.substring(0, open).trim();
+            String digits = raw.substring(open + 1, close).trim();
+            if (digits.isEmpty())
+                throw new IllegalArgumentException("Empty precision in PICTURE");
+
+            repeat = Integer.parseInt(digits);
+            if (repeat < 1)
+                throw new IllegalArgumentException("Precision must be ≥ 1");
+        }
+
+        List<PictureSymbol> unit = picturePart.chars()
                 .mapToObj(c -> PictureSymbol.fromGlyph((char) c))
                 .toList();
+
+        List<PictureSymbol> out = new ArrayList<>(unit.size() * repeat);
+        for (int i = 0; i < repeat; i++)
+            out.addAll(unit);
+
+        this.pattern = List.copyOf(out);
     }
 
     public int length() {
