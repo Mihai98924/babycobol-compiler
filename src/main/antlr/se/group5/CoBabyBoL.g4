@@ -1,14 +1,16 @@
-grammar CoBabyBoL;
+parser grammar CoBabyBoL;
 
-import CoBabyBoLTokens;
+options { tokenVocab=CoBabyBoLLexer; }
+
 
 program: identification_division data_division? procedure_division? function* EOF;
+function: IDENTIFIER EOL sentence*;
 
 // Identification division
 identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
 identification_clause: clause_name EOL clause_value EOL;
-clause_name: (~EOL)+;
-clause_value: (~EOL)+;
+clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
+clause_value: atomic;
 
 // Procedure division
 procedure_division: PROCEDURE_DIVISION EOL sentence*;
@@ -19,11 +21,9 @@ statement: SOL? (accept | alter | goto | if | perform | signal | copy | display 
 // Data division
 data_division: DATA_DIVISION EOL data_item*;
 data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
-
-picture_clause: PICTURE IS representation;
+picture_clause: PICTURE_IS REPRESENTATION;
 like_clause: LIKE IDENTIFIER;
 occurs_clause: OCCURS INTEGERLITERAL TIMES;
-function: IDENTIFIER EOL sentence*;
 
 // Statements
 accept: ACCEPT IDENTIFIER+;
@@ -51,7 +51,7 @@ stop: STOP;
 atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
 when_clause: WHEN ((atomic_through | ( OTHER)));
 
-argument_literal: '≡≡≡' literal '≡≡≡';
+argument_literal: ARG_LIT literal ARG_LIT;
 any_expression: boolean_expression | math_expr;
 math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 
@@ -64,30 +64,8 @@ file_name: alphanumeric_literal;
 procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
-//representation: ALPHANUMERIC LPAREN INTEGERLITERAL RPAREN;
 level: INTEGERLITERAL;
 
 literal: numeric_literal | alphanumeric_literal;
 numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
 alphanumeric_literal: STRINGLITERAL;
-
-representation: pic_symbol+;
-
-pic_symbol
-    : sign
-    | digit
-    | scale
-    | decimal
-    | edit_char
-    ;
-
-sign       : 'S';
-digit      : '9' (LPAREN INTEGERLITERAL RPAREN)?;
-scale      : 'P'+; // Scaling positions
-decimal    : 'V';  // Implied decimal
-edit_char  : 'Z' (LPAREN INTEGERLITERAL RPAREN)?
-           | '*' (LPAREN INTEGERLITERAL RPAREN)?
-           | ',' | '.' | '$'
-           | 'CR' | 'DB'
-           | '+' | '-'
-           ;
