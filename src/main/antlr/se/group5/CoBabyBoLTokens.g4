@@ -1,8 +1,4 @@
-lexer grammar CoBabyBoLLexer;
-
-IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N WS* DOT-> mode(IdentificationDivision);
-
-
+lexer grammar CoBabyBoLTokens;
 
 // === KEYWORDS ===============================================================
 ACCEPT: A WS* C WS* C WS* E WS* P WS* T;
@@ -21,6 +17,7 @@ EVALUATE: E WS* V WS* A WS* L WS* U WS* A WS* T WS* E;
 GIVING: G WS* I WS* V WS* I WS* N WS* G;
 GO: G WS* O;
 GOTO: G WS* O WS+ T WS* O;
+IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 IF: I WS* F;
 LOOP: L WS* O WS* O WS* P;
 MOVE: M WS* O WS* V WS* E;
@@ -60,6 +57,10 @@ TIMES: T WS* I WS* M WS* E WS* S;
 RETURNING: R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
 AS_PRIMITIVE: A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
 AS_STRUCT: A WS* S WS+ S WS* T WS* R WS* U WS* C WS* T;
+PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
+IS: I WS* S;
+LIKE: L WS* I WS* K WS* E;
+OCCURS: O WS* C WS* C WS* U WS* R WS* S;
 ALSO: A WS* L WS* S WS* O;
 VARYING: V WS* A WS* R WS* Y WS* I WS* N WS* G;
 WHILE: W WS* H WS* I WS* L WS* E;
@@ -77,7 +78,6 @@ NOT: N WS* O WS* T;
 
 // === ARITHMATIC OPERATORS ===============================================================
 MATH_OP: ADD_OP | SUB_OP | MULT_OP | DIV_OP | EXP_OP;
-ARG: '≡≡≡';
 
 fragment ADD_OP: '+';
 fragment SUB_OP: '-';
@@ -126,20 +126,3 @@ fragment M:[M]; fragment N:[N]; fragment O:[O]; fragment P:[P];
 fragment Q:[Q]; fragment R:[R]; fragment S:[S]; fragment T:[T];
 fragment U:[U]; fragment V:[V]; fragment W:[W]; fragment X:[X];
 fragment Y:[Y]; fragment Z:[Z];
-
-
-mode IdentificationDivision;
-
-ID_SOL: '\n           ';
-ID_DATA_DIVISION: DATA_DIVISION -> mode(DataDivision);
-ID_NAME: SOL (~[.])+ . [ \n\t\r]*;
-ID_VALUE: (~[.])+ .;
-ID_END: . -> mode(DEFAULT_MODE);
-
-mode DataDivision;
-
-DD_SOL: '\n         ';
-OCCURS: O WS* C WS* C WS* U WS* R WS* S;
-LIKE: L WS* I WS* K WS* E;
-PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
-IS: I WS* S;
