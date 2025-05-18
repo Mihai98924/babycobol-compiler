@@ -1,57 +1,100 @@
 package se.group5.build;
 
-import se.group5.ast.IdentificationDivision;
+import lombok.Getter;
 import se.group5.ast.Identifier;
 import se.group5.ast.Node;
+import se.group5.ast.SymbolTable;
+import se.group5.ast.data_division.DataDefinition;
+import se.group5.ast.data_division.DataElement;
+import se.group5.ast.data_division.DataGroup;
+import se.group5.ast.data_division.Representation;
 import se.group5.ast.literal.AlphanumericLiteral;
-import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
-import se.group5.gen.CoBabyBoLBaseVisitor;
 import se.group5.gen.CoBabyBoL;
+import se.group5.gen.CoBabyBoLBaseVisitor;
 
-import java.util.HashMap;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
+/**
+ * Visits the parse‑tree and constructs a hierarchical AST using the new model
+ */
 public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
+    @Getter
+    private final SymbolTable symbols = new SymbolTable();
+    private final Deque<DataGroup> groupStack = new ArrayDeque<>();
 
     @Override
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
-        Node id = visit(ctx.identification_division());
-        return id;
+        return visitChildren(ctx);
     }
 
+    // === DATA DIVISION =======================================================
     @Override
-    public IdentificationDivision visitIdentification_division(CoBabyBoL.Identification_divisionContext ctx) {
-        HashMap<String, String> properties = new HashMap<>();
+    public Node visitData_item(CoBabyBoL.Data_itemContext ctx) {
+        // level number & identifier
+        int level = Integer.parseInt(ctx.level().INTEGERLITERAL().getText());
+        Identifier id = new Identifier(ctx.IDENTIFIER().getText());
 
-        for (var clause : ctx.identification_clause()) {
-            properties.put(clause.clause_name().getText(), clause.clause_value().getText());
+        // Determine the picture (may come from LIKE, or explicit PIC, or none)
+        Representation pic = null;
+
+        if (ctx.picture_clause(0) != null) {
+            pic = (Representation) visit(ctx.picture_clause(0));
+
+        } else if (ctx.like_clause(0) != null) {
+            Identifier ref = new Identifier(ctx.like_clause(0).IDENTIFIER().getText());
+
+            pic = symbols.resolve(ref.value())
+                    .filter(DataElement.class::isInstance)
+                    .map(DataElement.class::cast).map(DataElement::picture)
+                    .orElseThrow(() -> new IllegalStateException("LIKE reference '" + ref + "' is not an element or not declared"));
         }
-        return new IdentificationDivision(properties);
+
+        // Instantiate either an element or a group
+        DataDefinition def;
+        if (pic == null) {                 // GROUP
+            def = new DataGroup(level, id);
+        } else {                           // ELEMENT (maybe OCCURS array)
+            int occurs = ctx.occurs_clause(0) == null ? 0 : Integer.parseInt(ctx.occurs_clause(0).INTEGERLITERAL().getText());
+            def = new DataElement(level, id, pic, occurs);
+        }
+
+        // Maintain the group-stack  (pop until parent is found, then push)
+        while (!groupStack.isEmpty() && groupStack.peek().level() >= level) {
+            groupStack.pop();
+        }
+        if (!groupStack.isEmpty()) {
+            groupStack.peek().addChild(def);
+        }
+        if (def instanceof DataGroup g) {
+            groupStack.push(g);
+        }
+
+        // Register fully-qualified name in the symbol table
+        List<Identifier> qualification = new ArrayList<>();
+        groupStack.descendingIterator().forEachRemaining(g -> qualification.add(g.name()));
+        qualification.add(id);
+        symbols.register(qualification, def);
+
+        return def;
     }
 
-
     @Override
-    public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
-        return visit(ctx.getChild(0));
+    public Representation visitPicture_clause(CoBabyBoL.Picture_clauseContext ctx) {
+        return new Representation(ctx.REPRESENTATION().getText());
     }
 
     @Override
-    public Literal visitLiteral(CoBabyBoL.LiteralContext ctx) {
-        return (Literal) visit(ctx.getChild(0));
+    public Node visitNumeric_literal(CoBabyBoL.Numeric_literalContext ctx) {
+        return new NumericLiteral(ctx.getText());
     }
 
     @Override
-    public NumericLiteral visitNumeric_literal(CoBabyBoL.Numeric_literalContext ctx) {
-        return new NumericLiteral(ctx.NUMERICLITERAL().getText());
-    }
-
-    @Override
-    public AlphanumericLiteral visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) {
+    public Node visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) {
         return new AlphanumericLiteral(ctx.STRINGLITERAL().getText());
-    }
-
-    @Override public Identifier visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
-        return new Identifier(ctx.getText());
     }
 
     @Override
@@ -60,7 +103,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     }
 
     @Override
-    protected Node aggregateResult(Node aggregate, Node nextResult) {
-        return nextResult != null ? nextResult : aggregate;
+    protected Node aggregateResult(Node aggregate, Node next) {
+        return next != null ? next : aggregate;
     }
 }
