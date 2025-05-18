@@ -1,4 +1,4 @@
-lexer grammar CoBabyBoLTokens;
+lexer grammar CoBabyBoLLexer;
 
 // === KEYWORDS ===============================================================
 ACCEPT: A WS* C WS* C WS* E WS* P WS* T;
@@ -57,8 +57,7 @@ TIMES: T WS* I WS* M WS* E WS* S;
 RETURNING: R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
 AS_PRIMITIVE: A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
 AS_STRUCT: A WS* S WS+ S WS* T WS* R WS* U WS* C WS* T;
-PICTURE: P WS* I WS* C WS* T WS* U WS* R WS* E;
-IS: I WS* S;
+PICTURE_IS: P WS* I WS* C WS* T WS* U WS* R WS* E WS* I WS* S -> pushMode(PIC_REP);
 LIKE: L WS* I WS* K WS* E;
 OCCURS: O WS* C WS* C WS* U WS* R WS* S;
 ALSO: A WS* L WS* S WS* O;
@@ -108,7 +107,7 @@ IDENTIFIER: [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)*;
 LETTER     : [a-zA-Z];
 DIGIT      : [0-9];
 ALPHANUMERIC : [a-zA-Z0-9];
-
+ARG_LIT : '≡≡≡';
 // === MISCELLANEOUS ===============================================================
 
 WS: [ \n\t\r] ('-')* -> skip;
@@ -126,3 +125,16 @@ fragment M:[M]; fragment N:[N]; fragment O:[O]; fragment P:[P];
 fragment Q:[Q]; fragment R:[R]; fragment S:[S]; fragment T:[T];
 fragment U:[U]; fragment V:[V]; fragment W:[W]; fragment X:[X];
 fragment Y:[Y]; fragment Z:[Z];
+
+mode PIC_REP;
+
+REPRESENTATION: PR_SIGN? CHUNK ( PR_DECSEP CHUNK )? PR_SIGN? -> popMode;
+CHUNK: ( PR_DIGIT | PR_ALPHA | PR_CHAR | PR_LEADZ )+;
+
+PR_WS               : [ \t\r\n]+ -> skip ;
+PR_DIGIT            : '9';   // any digit
+PR_ALPHA            : 'A';   // alphabetic or space
+PR_CHAR             : 'X';   // any single character
+PR_LEADZ            : 'Z';   // leading digit, blank if zero
+PR_SIGN             : 'S';   // operational sign
+PR_DECSEP           : 'V';   // decimal separator
