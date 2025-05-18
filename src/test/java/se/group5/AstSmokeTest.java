@@ -5,8 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import se.group5.ast.IdentificationDivision;
 import se.group5.ast.Node;
+import se.group5.ast.SymbolTable;
 import se.group5.build.AstBuilder;
 import se.group5.processor.Processor;
 
@@ -42,7 +42,7 @@ public class AstSmokeTest {
                     .sorted(Comparator.comparingInt(AstSmokeTest::extractIndex))
                     .limit(MAX_TESTS)                                 // ← cap at MAX_TESTS
                     .map(p -> new Object[]{ "/programs/" + p.getFileName() })
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (tests.isEmpty()) {
                 throw new IOException("No .baby test files found in /programs");
@@ -55,7 +55,7 @@ public class AstSmokeTest {
     }
 
     private static int extractIndex(Path p) {
-        String name = p.getFileName().toString();   // e.g. “test_17.baby”
+        String name = p.getFileName().toString();
         int underscore = name.indexOf('_');
         int dot        = name.lastIndexOf('.');
         if (underscore >= 0 && dot > underscore) {
@@ -73,9 +73,11 @@ public class AstSmokeTest {
         Assert.assertNotNull("ParseTree should not be null", tree);
 
         AstBuilder builder = new AstBuilder();
-        IdentificationDivision id = (IdentificationDivision) builder.visit(tree);
-        Assert.assertNotNull("AST should not be null", id);
+        Node rootNode = builder.visit(tree);
+        SymbolTable symbolTable = builder.getSymbols();
 
-        System.out.println(id.properties);
+        Assert.assertNotNull("AST should not be null", symbolTable);
+
+        System.out.println(symbolTable.table);
     }
 }

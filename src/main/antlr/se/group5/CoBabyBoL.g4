@@ -18,7 +18,6 @@ procedure_division: PROCEDURE_DIVISION EOL sentence*;
 sentence: statement* EOL;
 statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
-
 // Data division
 data_division: DATA_DIVISION EOL data_item*;
 data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;

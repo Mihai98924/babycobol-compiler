@@ -1,4 +1,4 @@
-package se.group5.ast;
+package se.group5.ast.literal;
 
 public enum LiteralType {
     NUMERIC('9'),
@@ -8,6 +8,7 @@ public enum LiteralType {
     ASSUMED_DECIMAL('P');
 
     public final Character symbol;
+
     LiteralType(Character symbol) {
         this.symbol = symbol;
     }
