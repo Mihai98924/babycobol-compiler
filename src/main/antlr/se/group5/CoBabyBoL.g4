@@ -1,7 +1,8 @@
 parser grammar CoBabyBoL;
 
-options { tokenVocab=CoBabyBoLLexer; }
-
+options {
+    tokenVocab=CoBabyBoLLexer;
+}
 
 program: identification_division data_division? procedure_division? function* EOF;
 function: IDENTIFIER EOL sentence*;

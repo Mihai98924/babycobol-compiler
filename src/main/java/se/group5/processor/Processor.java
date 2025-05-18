@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import se.group5.gen.CoBabyBoLLexer;
-import se.group5.gen.CoBabyBoLParser;
+import se.group5.gen.CoBabyBoL;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,12 +48,12 @@ public class Processor {
     /**
      * Build & configure a parser but *do not* invoke the start rule yet.
      */
-    public CoBabyBoLParser buildParser() throws IOException {
+    public CoBabyBoL buildParser() throws IOException {
         CharStream chars = loadCharStream();
 
         CoBabyBoLLexer lexer = new CoBabyBoLLexer(chars);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        CoBabyBoLParser parser = new CoBabyBoLParser(tokens);
+        CoBabyBoL parser = new CoBabyBoL(tokens);
 
         parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
@@ -77,7 +77,7 @@ public class Processor {
      * 4. returns the produced parse tree.
      */
     public ParseTree parse() throws IOException {
-        CoBabyBoLParser parser = buildParser();
+        CoBabyBoL parser = buildParser();
         ParseTree tree = parser.program();
         Assert.assertEquals("Parser reported syntax errors",
                 0, parser.getNumberOfSyntaxErrors());
