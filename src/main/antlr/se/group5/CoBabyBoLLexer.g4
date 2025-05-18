@@ -127,13 +127,10 @@ fragment Y:[Y]; fragment Z:[Z];
 
 mode PIC_REP;
 
-REPRESENTATION: PR_SIGN? CHUNK ( PR_DECSEP CHUNK )? PRECISION? -> popMode;
+REPRESENTATION: PR_SIGN? WS* CHUNK WS* ( PR_DECSEP CHUNK )? WS* PRECISION? -> popMode;
 CHUNK: ( '9' | 'A' | 'X' | 'Z' )+;
 
-
-LPAREN: '(';
-RPAREN: ')';
-PRECISION           : LPAREN [0-9]+ RPAREN;
+PRECISION           : '(' [0-9]+ ')';
 
 PR_WS               : [ \t\r\n]+ -> skip ;
 PR_SIGN             : 'S';   // operational sign
