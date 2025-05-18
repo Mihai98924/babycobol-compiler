@@ -9,7 +9,7 @@ function: IDENTIFIER EOL sentence*;
 
 // Identification division
 identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
-identification_clause: clause_name EOL clause_value EOL;
+identification_clause: WS* clause_name EOL clause_value EOL;
 clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
 clause_value: atomic;
 
