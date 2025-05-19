@@ -64,7 +64,6 @@
                 <configuration>
                     <visitor>true</visitor>
                     <listener>true</listener>
-                    <packageName>se.group5.parser</packageName>
                 </configuration>
 
                 <executions>
