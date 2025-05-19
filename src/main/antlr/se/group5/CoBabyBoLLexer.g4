@@ -46,7 +46,7 @@ SECURITY       : S WS* E WS* C WS* U WS* R WS* I WS* T WS* Y ;
 FROM: F WS* R WS* O WS* M;
 HIGH_VALUES: H WS* I WS* G WS* H WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;
 LOW_VALUES: L WS* O WS* W WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;
-REMAINDER: R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
+REMAINDER: R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R -> pushMode(REM_REP);
 INTO: I WS* N WS* T WS* O;
 USING: U WS* S WS* I WS* N WS* G;
 BY_REFERENCE: B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
@@ -69,6 +69,7 @@ OTHER: O WS* T WS* H WS* E WS* R;
 STOP: S WS* T WS* O WS* P;
 PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 ZERO: Z WS* E WS* R WS* O;
+XOR: X WS* O WS* R;
 
 // === LOGICAL OPERATORS ===============================================================
 AND: A WS* N WS* D;
@@ -93,6 +94,10 @@ LEQ: '<=';
 GEQ: '>=';
 GT: '>';
 LT: '<';
+
+// === PUNCTUATION ===============================================================
+LPAR: '(';
+RPAR: ')';
 
 // === LITERALS ===============================================================
 STRINGLITERAL: '"' (WS* ~["\n\r] | '""' | '\'')* '"'
@@ -135,3 +140,8 @@ PRECISION           : '(' [0-9]+ ')';
 PR_WS               : [ \t\r\n]+ -> skip ;
 PR_SIGN             : 'S';   // operational sign
 PR_DECSEP           : 'V';   // decimal separator
+
+mode REM_REP;
+
+REM_REPRESENTATION: WS* IDENTIFIER WS* PRECISION? -> popMode;
+REM_PRECISION       : '(' [0-9]+ ')';
