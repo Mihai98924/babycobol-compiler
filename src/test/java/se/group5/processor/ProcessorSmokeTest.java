@@ -1,11 +1,11 @@
 package se.group5.processor;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import se.group5.ast.Program;
 import se.group5.build.AstSmokeTest;
 
 import java.io.IOException;
@@ -63,15 +63,15 @@ public class ProcessorSmokeTest {
         if (underscore >= 0 && dot > underscore) {
             try {
                 return Integer.parseInt(name.substring(underscore + 1, dot));
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         return Integer.MAX_VALUE;
     }
 
     @Test
     public void parsesWithoutErrors() throws Exception {
-        ParseResult result = processor.parseFile(resourcePath);
-        Assert.assertNotNull(result.rootNode());
-
+        Program program = processor.parseFile(resourcePath);
+        Assert.assertNotNull(program);
     }
 }

@@ -18,11 +18,15 @@ public final class SymbolTable implements Node {
      */
     public void register(List<Identifier> qualification, DataDefinition def) {
         String fq = qualification.stream().map(Identifier::value).reduce("", (a, b) -> a + "." + b);
-        table.put(def.name().value(), def);     // short
-        table.put(fq.substring(1), def);        // fully qualified (skip leading dot)
+        table.put(def.name().value(), def);                   // short
+        table.put(fq.substring(1), def);            // fully qualified (skip leading dot)
     }
 
     public Optional<DataDefinition> resolve(String name) {
         return Optional.ofNullable(table.get(name));
+    }
+
+    public boolean isEmpty() {
+        return table.isEmpty();
     }
 }
