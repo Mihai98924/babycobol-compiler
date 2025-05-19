@@ -26,6 +26,11 @@ public final class SymbolTable implements Node {
         return Optional.ofNullable(table.get(name));
     }
 
+    public Optional<Identifier> resolveIdentifier(String name) {
+        Optional<DataDefinition> def = resolve(name);
+        return def.map(DataDefinition::name);
+    }
+
     public boolean isEmpty() {
         return table.isEmpty();
     }
