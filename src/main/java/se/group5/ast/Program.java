@@ -11,4 +11,12 @@ public class Program implements Node {
         this.identityTable = identityTable;
         this.symbolTable = symbolTable;
     }
+
+    @Override
+    public String toString() {
+        return "Program {\n" +
+                "  IdentityTable: " + identityTable.toString() + "\n" +
+                "  SymbolTable:   " + symbolTable.toString() + "\n" +
+                "}";
+    }
 }
