@@ -130,11 +130,10 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
         if (ctx.identifier() != null) {
             String name = ctx.identifier().getText();
-            Optional<Identifier> optId = symbolTable.resolveIdentifier(name);
-            if (optId.isEmpty())
-                throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not an element or not declared");
-            Identifier id = optId.get();
-            return new Atomic(id);
+            Optional<DataDefinition> def = symbolTable.resolve(name);
+            if (def.isEmpty() || !(def.get() instanceof DataElement))
+                throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not a data definition or not declared");
+            return new Atomic((DataElement) def.get());
         }
 
         Literal literal = (Literal) visit(ctx.literal());
