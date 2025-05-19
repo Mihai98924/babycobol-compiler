@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import se.group5.processor.ParseResult;
+import se.group5.ast.Program;
 import se.group5.processor.Processor;
 
 import java.io.IOException;
@@ -71,9 +71,8 @@ public class AstSmokeTest {
 
     @Test
     public void parsesAndBuildsAst() throws Exception {
-        ParseResult result = processor.parseFile(resourcePath);
-
-        Assert.assertNotNull("Root node should not be null", result.rootNode());
-        Assert.assertNotNull("Symbol table should not be null", result.symbolTable());
+        Program program = processor.parseFile(resourcePath);
+        Assert.assertNotNull("Symbol table should not be null", program.getSymbolTable());
+        Assert.assertTrue("Symbol table should be empty", program.getSymbolTable().isEmpty());
     }
 }
