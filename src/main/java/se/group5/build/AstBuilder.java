@@ -4,20 +4,19 @@ import lombok.Getter;
 import se.group5.ast.Identifier;
 import se.group5.ast.Node;
 import se.group5.ast.SymbolTable;
-import se.group5.ast.data_division.DataDefinition;
-import se.group5.ast.data_division.DataElement;
-import se.group5.ast.data_division.DataGroup;
-import se.group5.ast.data_division.Representation;
+import se.group5.ast.data.DataDefinition;
+import se.group5.ast.data.DataElement;
+import se.group5.ast.data.DataGroup;
+import se.group5.ast.data.Representation;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.statement.Accept;
-import se.group5.gen.CoBabyBoL;
-import se.group5.gen.CoBabyBoLBaseVisitor;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import se.group5.parser.*;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model

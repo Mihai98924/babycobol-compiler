@@ -1,4 +1,4 @@
-package se.group5.ast.data_division;
+package se.group5.ast.data;
 
 public enum PictureSymbol {
     /**
