@@ -5,74 +5,150 @@ import se.group5.ast.Atomic;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.procedure.Procedure;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.UnaryOperator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+/**
+ * AST node representing the COBOL <code>DISPLAY</code> statement.
+ * <p>
+ * - Each argument (an {@link Atomic}) is paired with exactly one delimiter, captured
+ * by {@link Argument}.
+ * - For <code>DELIMITED BY SPACE</code> and <code>DELIMITED BY SIZE</code> the delimiter
+ * does not carry a literal value.
+ * - For <code>DELIMITED BY "literal"</code> the literal value is retained so it can be
+ * emitted later by {@link #toString()} or serialisation.
+ */
 @Getter
 public class Display implements Procedure {
-    private final Boolean noAdvancing;
-    private final HashMap<Atomic, UnaryOperator<String>> atomics;
 
+    /**
+     * Supported COBOL delimiter variants.
+     */
+    public enum DelimiterType {
+        SPACE,
+        SIZE,
+        LITERAL
+    }
 
-    public Display(Boolean noAdvancing, HashMap<Atomic, UnaryOperator<String>> atomics) {
+    /**
+     * Value object that captures the delimiter information.
+     * <p>
+     * For {@code SPACE} and {@code SIZE} the {@code literal} is {@code null}.
+     * For {@code LITERAL} the {@code literal} is required.
+     */
+    public static final class Delimiter {
+        private final DelimiterType type;
+        private final Literal literal; // nullable except when type == LITERAL
+
+        private Delimiter(DelimiterType type, Literal literal) {
+            this.type = type;
+            this.literal = literal;
+        }
+
+        /**
+         * Creates a delimiter of type {@code SPACE} or {@code SIZE}.
+         */
+        public static Delimiter of(DelimiterType type) {
+            if (type == DelimiterType.LITERAL) {
+                throw new IllegalArgumentException("Use Delimiter.of(Literal) for LITERAL delimiters");
+            }
+            return new Delimiter(type, null);
+        }
+
+        /**
+         * Creates a delimiter of type {@code LITERAL}.
+         */
+        public static Delimiter of(Literal literal) {
+            Objects.requireNonNull(literal, "literal");
+            return new Delimiter(DelimiterType.LITERAL, literal);
+        }
+
+        public DelimiterType type() {
+            return type;
+        }
+
+        public Literal literal() {
+            return literal;
+        }
+
+        @Override
+        public String toString() {
+            return switch (type) {
+                case SPACE -> "SPACE";
+                case SIZE -> "SIZE";
+                case LITERAL -> literal.toString();
+            };
+        }
+    }
+
+    /**
+     * A single argument supplied to the DISPLAY statement together with the
+     * way it is delimited.
+     */
+    public static final class Argument {
+        private final Atomic atomic;
+        private final Delimiter delimiter;
+
+        public Argument(Atomic atomic, Delimiter delimiter) {
+            this.atomic = Objects.requireNonNull(atomic, "atomic");
+            this.delimiter = delimiter;
+        }
+
+        public Argument(Atomic atomic) {
+            this(atomic, null);
+        }
+
+        public Atomic atomic() {
+            return atomic;
+        }
+
+        public Delimiter delimiter() {
+            return delimiter;
+        }
+
+        @Override
+        public String toString() {
+            if (delimiter != null) {
+                return atomic + " DELIMITED BY " + delimiter;
+            }
+            return atomic.toString();
+        }
+    }
+
+    private final boolean noAdvancing;
+    private final List<Argument> arguments = new ArrayList<>();
+
+    public Display(boolean noAdvancing) {
         this.noAdvancing = noAdvancing;
-        this.atomics = atomics;
     }
 
     /**
-     * trim both sides
+     * Adds an argument with a non-literal delimiter (SPACE or SIZE).
      */
-    public static UnaryOperator<String> delimitedBySpace() {
-        return s -> s == null ? "" : s.trim();
+    public void addAtomic(Atomic atomic, DelimiterType type) {
+        arguments.add(new Argument(atomic, Delimiter.of(type)));
     }
 
     /**
-     * fixed‐width, padding or truncating to atomic.length()
+     * Adds an argument with a literal delimiter (DELIMITED BY "literal").
      */
-    public static UnaryOperator<String> delimitedBySize(Atomic atomic) {
-        return s -> {
-            if (s == null) {
-                return " ".repeat(atomic.length());
-            }
-            String t = s.trim();
-            if (t.length() > atomic.length()) {
-                return t.substring(0, atomic.length());
-            } else {
-                // left‐justify, pad with spaces
-                return String.format("%-" + atomic.length() + "s", t);
-            }
-        };
+    public void addAtomic(Atomic atomic, Literal literal) {
+        arguments.add(new Argument(atomic, Delimiter.of(literal)));
     }
 
-    /**
-     * cut off at first occurrence of literal.raw()
-     */
-    public static UnaryOperator<String> delimitedByLiteral(Literal literal) {
-        return s -> {
-            if (s == null) return "";
-            int idx = s.indexOf(literal.raw());
-            return idx >= 0 ? s.substring(0, idx) : s;
-        };
+    public void addAtomic(Atomic atomic) {
+        arguments.add(new Argument(atomic));
     }
 
-    /**
-     * Apply *all* delimiters in insertion order, then
-     * append a newline unless NO ADVANCING was specified.
-     *
-     * @param values a map from each Atomic to its raw string
-     */
-    public String format(Map<Atomic, String> values) {
-        StringBuilder sb = new StringBuilder();
-        for (var entry : atomics.entrySet()) {
-            Atomic atomic = entry.getKey();
-            UnaryOperator<String> fn = entry.getValue();
-            String raw = values.get(atomic);
-            sb.append(fn.apply(raw));
-        }
-        if (Boolean.FALSE.equals(noAdvancing)) {
-            sb.append(System.lineSeparator());
-        }
-        return sb.toString();
+    public List<Argument> getArguments() {
+        return List.copyOf(arguments);
+    }
+
+    @Override
+    public String toString() {
+        String prefix = noAdvancing ? "NO ADVANCING, " : "";
+        String body = String.join(", ", arguments.stream().map(Object::toString).toList());
+        return "DISPLAY(" + prefix + body + ")";
     }
 }
