@@ -43,8 +43,7 @@ call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VA
 move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+ (OF IDENTIFIER+)*;
 
 // Maths
-add: ADD atomic+ to_atomic giving_identifier*;
-to_atomic: TO atomic;
+add: ADD ADD_REPRESENTATION atomic giving_identifier*;
 
 divide: DIVIDE atomic into_atomic (giving_identifier+ remainder?)?;
 into_atomic: INTO atomic+;
@@ -88,7 +87,7 @@ boolean_expression: SOL?
 
 boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
-atomic: identifier | literal;
+atomic: identifier (OF IDENTIFIER)* | literal;
 identifier: IDENTIFIER;
 
 file_name: alphanumeric_literal;
