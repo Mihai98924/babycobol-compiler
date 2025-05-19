@@ -12,7 +12,7 @@ import se.group5.processor.Processor;
  * Smoke-tests that the parser creates an {@link Arithmetic} node
  * for each COBOL arithmetic statement (ADD, SUBTRACT, MULTIPLY, DIVIDE).
  */
-public class AstOperationsTest {
+public class AstArithmeticTest {
 
     private static Processor processor;
 
@@ -93,6 +93,22 @@ public class AstOperationsTest {
         assertSingleArithmetic(source);
     }
 
+    @Test
+    public void DivideOperationWithOf() throws Exception {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. DIVIDETEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                       01 GROUP.
+                          03 A PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                     DIVIDE 02 INTO A OF GROUP.
+            """;
+        assertSingleArithmetic(source);
+    }
+
     /* ------------------------------------------------------------- *
      *  Shared assertion helper
      * ------------------------------------------------------------- */
@@ -101,6 +117,7 @@ public class AstOperationsTest {
         Assert.assertNotNull("Program should not be null", program);
 
         ProcedureList procedures = program.procedures();
+        System.out.println(procedures);
         Assert.assertNotNull("Procedure list should not be null", procedures);
         Assert.assertEquals("Procedure list should contain exactly 1 procedure",
                 1, procedures.size());
