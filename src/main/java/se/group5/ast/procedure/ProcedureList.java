@@ -32,6 +32,10 @@ public class ProcedureList implements Node {
         return procedures.isEmpty();
     }
 
+    public int size() {
+        return procedures.size();
+    }
+
     @Override
     public String toString() {
         return procedures.toString();
