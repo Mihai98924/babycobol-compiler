@@ -21,7 +21,6 @@ public class AstBuilderTest {
         processor.parse("PROCEDURE DIVISION. DISPLAY 'Hello'.");
     }
 
-
     @Test
     public void allowsMinimalProgramWithIdentificationDivision() throws Exception {
         String validInput = ""
@@ -33,6 +32,6 @@ public class AstBuilderTest {
         Assert.assertNotNull("Symbol table should not be null", result.symbolTable());
         Assert.assertTrue("Symbol table should be empty", result.symbolTable().table.isEmpty());
     }
+
+
 }
-
-
