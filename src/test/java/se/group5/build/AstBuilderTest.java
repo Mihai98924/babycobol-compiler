@@ -36,4 +36,6 @@ public class AstBuilderTest {
         System.out.println("Identification division: " + program.getIdentityTable().table);
         Assert.assertFalse("Identification division should not be empty", program.getIdentityTable().isEmpty());
     }
+
+
 }

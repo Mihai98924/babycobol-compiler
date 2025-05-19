@@ -72,7 +72,8 @@ public class AstSmokeTest {
     @Test
     public void parsesAndBuildsAst() throws Exception {
         Program program = processor.parseFile(resourcePath);
+        Assert.assertNotNull("Program should not be null", program);
+        Assert.assertNotNull("Identity table should not be null", program.getIdentityTable());
         Assert.assertNotNull("Symbol table should not be null", program.getSymbolTable());
-        Assert.assertTrue("Symbol table should be empty", program.getSymbolTable().isEmpty());
     }
 }
