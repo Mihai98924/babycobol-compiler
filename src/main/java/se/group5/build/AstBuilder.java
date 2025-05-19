@@ -1,34 +1,60 @@
 package se.group5.build;
 
-import lombok.Getter;
-import se.group5.ast.Identifier;
-import se.group5.ast.Node;
-import se.group5.ast.SymbolTable;
+import se.group5.ast.*;
 import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
 import se.group5.ast.data.DataGroup;
 import se.group5.ast.data.Representation;
+import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.NumericLiteral;
+import se.group5.ast.procedure.Procedure;
+import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
+import se.group5.parser.CoBabyBoL;
+import se.group5.parser.CoBabyBoLBaseVisitor;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import se.group5.parser.*;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
  */
 public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
-    @Getter
-    private final SymbolTable symbols = new SymbolTable();
+    private final IdentityTable identityTable = new IdentityTable();
+    private final SymbolTable symbolTable = new SymbolTable();
+    private final ProcedureList procedures = new ProcedureList();
     private final Deque<DataGroup> groupStack = new ArrayDeque<>();
 
     @Override
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
-        return visitChildren(ctx);
+        if (ctx.data_division() != null) visit(ctx.data_division());
+        if (ctx.identification_division() != null) visit(ctx.identification_division());
+        if (ctx.procedure_division() != null) visit(ctx.procedure_division());
+
+        return new Program(
+                identityTable,
+                symbolTable,
+                procedures
+        );
+    }
+
+    @Override
+    public Node visitIdentification_division(CoBabyBoL.Identification_divisionContext ctx) {
+        for (var idClause : ctx.identification_clause()) {
+            identityTable.register(idClause.clause_name().getText(), idClause.clause_value().getText());
+        }
+        return identityTable;
+    }
+
+    @Override
+    public Node visitData_division(CoBabyBoL.Data_divisionContext ctx) {
+        for (var itemCtx : ctx.data_item()) {
+            visit(itemCtx);
+        }
+        return symbolTable;
     }
 
     // === DATA DIVISION =======================================================
@@ -47,7 +73,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         } else if (ctx.like_clause(0) != null) {
             Identifier ref = new Identifier(ctx.like_clause(0).IDENTIFIER().getText());
 
-            pic = symbols.resolve(ref.value())
+            pic = symbolTable.resolve(ref.value())
                     .filter(DataElement.class::isInstance)
                     .map(DataElement.class::cast).map(DataElement::picture)
                     .orElseThrow(() -> new IllegalStateException("LIKE reference '" + ref + "' is not an element or not declared"));
@@ -67,17 +93,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             groupStack.pop();
         }
         if (!groupStack.isEmpty()) {
-            groupStack.peek().addChild(def);
-        }
-        if (def instanceof DataGroup g) {
-            groupStack.push(g);
+            groupStack.peek().register(id.toString(), def);
         }
 
-        // Register fully-qualified name in the symbol table
         List<Identifier> qualification = new ArrayList<>();
         groupStack.descendingIterator().forEachRemaining(g -> qualification.add(g.name()));
         qualification.add(id);
-        symbols.register(qualification, def);
+        symbolTable.register(qualification, def);
+
+        if (def instanceof DataGroup g) {
+            groupStack.push(g);
+        }
 
         return def;
     }
@@ -106,9 +132,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitAccept(CoBabyBoL.AcceptContext ctx) {
         List<Identifier> targets = ctx.IDENTIFIER()
                 .stream()
-                .map(t -> new Identifier(t.getText()))
+                .map(t -> {
+                    var name = t.getText();
+                    if (symbolTable.resolve(name).isEmpty()) {
+                        throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
+                    }
+                    return symbolTable.resolve(name).get().name();
+                })
                 .toList();
-        return new Accept(targets);
+        Accept accept = new Accept(targets);
+        procedures.add(accept);
+        return accept;
     }
 
     @Override

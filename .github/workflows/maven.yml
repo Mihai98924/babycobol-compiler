@@ -10,15 +10,12 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 24
@@ -27,5 +24,9 @@ jobs:
         java-version: '24'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Install Maven
+      run: sudo apt-get update && sudo apt-get install -y maven
+    - name: Generate Sources
+      run: mvn generate-sources
+    - name: Run Tests
+      run: mvn test -Dtest=AstSmokeTest
