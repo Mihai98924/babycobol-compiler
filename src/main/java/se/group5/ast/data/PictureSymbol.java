@@ -2,28 +2,29 @@ package se.group5.ast.data;
 
 public enum PictureSymbol {
     /**
-     * numeric 0‑9
+     * any numerical digit
      */
     DIGIT('9'),
     /**
-     * alphabetic A‑Z
+     * any alphabetic character or whitespace
      */
     ALPHA('A'),
     /**
-     * alphanumeric
+     * any single character
      */
     ALPHANUM('X'),
     /**
-     * editing sign (S/CR/DB)
+     * a leading digit, disappearing into space if zero
+     */
+    LEADING_DIGIT('Z'),
+    /**
+     * a sign, positive or negative, space is treated as a plus
      */
     SIGN('S'),
     /**
-     * assumed decimal V
+     * a decimal separator (usually '.' or ',')
      */
     DECIMAL('V');
-    /**
-     *
-     */
 
     public final char glyph;
 
