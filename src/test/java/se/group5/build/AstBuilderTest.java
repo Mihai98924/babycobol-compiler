@@ -13,9 +13,9 @@ import se.group5.ast.data.DataGroup;
 import se.group5.ast.procedure.Procedure;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
+import se.group5.ast.statement.Display;
 import se.group5.processor.Processor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +75,6 @@ public class AstBuilderTest {
                 """;
 
         Program program = processor.parse(validInput);
-        System.out.println(program);
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Symbol table should not be null", program.symbolTable());
 
@@ -103,6 +102,8 @@ public class AstBuilderTest {
         List<Identifier> targets = accept.targets();
         Assert.assertEquals("Accept correctly targets VAR1", "VAR1", targets.get(0).toString());
         Assert.assertEquals("Accept correctly targets VAR1", "VAR3", targets.get(1).toString());
+
+
     }
 
     private void assertDataDefinition(
@@ -118,5 +119,51 @@ public class AstBuilderTest {
         Assert.assertEquals("Name mismatch for " + expectedName, expectedName, element.name().toString());
         Assert.assertEquals("Picture mismatch for " + expectedName, expectedPicture, element.picture().toString());
         Assert.assertEquals("Occurs mismatch for " + expectedName, expectedOccurs, element.occurs());
+    }
+
+    @Test
+    public void parsesDisplayStatementWithDelimiters() throws Exception {
+        String cobol = """
+                       IDENTIFICATION DIVISION.
+                       DATA DIVISION.
+                         01 VAR1 PICTURE IS 9 (04).
+                         01 VAR3 PICTURE IS 9 (04).
+                       PROCEDURE DIVISION.
+                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
+                """;
+
+        Program program = processor.parse(cobol);
+        ProcedureList procedures = program.procedures();
+
+        Assert.assertEquals("Exactly two procedures should be parsed (DISPLAY)", 1, procedures.size());
+
+        Optional<Procedure> displayOpt = procedures.get(0);
+        Assert.assertTrue("Second procedure should be present", displayOpt.isPresent());
+        Assert.assertTrue("Second procedure should be an instance of Display", displayOpt.get() instanceof Display);
+
+        Display display = (Display) displayOpt.get();
+        Assert.assertFalse("DISPLAY must not use NO ADVANCING in the test source", display.isNoAdvancing());
+
+        // ─── Argument list ──────────────────────────────────────────────────────
+        Assert.assertEquals("DISPLAY must contain three arguments", 3, display.getArguments().size());
+
+        Display.Argument arg1 = display.getArguments().get(0);
+        Assert.assertEquals("First atomic should be VAR1", "ATOMIC(ELEM(1, VAR1, 9999))", arg1.atomic().toString());
+        Assert.assertNull("First argument has no delimiter", arg1.delimiter());
+
+        Display.Argument arg2 = display.getArguments().get(1);
+        Assert.assertEquals("Second atomic should be VAR3", "ATOMIC(ELEM(1, VAR3, 9999))", arg2.atomic().toString());
+        Assert.assertNotNull("Second argument must have a delimiter", arg2.delimiter());
+        Assert.assertEquals("Delimiter type must be SPACE", Display.DelimiterType.SPACE, arg2.delimiter().type());
+
+        Display.Argument arg3 = display.getArguments().get(2);
+        Assert.assertEquals("Third atomic should be \"HENK\"", "ATOMIC(AlphanumericLiteral[value=\"HENK\"])", arg3.atomic().toString());
+        Assert.assertNotNull("Third argument must have a delimiter", arg3.delimiter());
+        Assert.assertEquals("Delimiter type must be LITERAL", Display.DelimiterType.LITERAL, arg3.delimiter().type());
+        Assert.assertEquals("Delimiter literal must be \"E\"", "AlphanumericLiteral[value=\"E\"]", arg3.delimiter().literal().toString());
+
+        // ─── toString() – round‑trip serialisation check ───────────────────────
+        String expected = "DISPLAY(ATOMIC(ELEM(1, VAR1, 9999)), ATOMIC(ELEM(1, VAR3, 9999)) DELIMITED BY SPACE, ATOMIC(AlphanumericLiteral[value=\"HENK\"]) DELIMITED BY AlphanumericLiteral[value=\"E\"])";
+        Assert.assertEquals("DISPLAY.toString() must match exactly", expected, display.toString());
     }
 }
