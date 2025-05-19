@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.procedure.ProcedureList;
+import se.group5.ast.statement.Add;
 import se.group5.processor.Processor;
 
 public class AstOperationsTest {
@@ -32,6 +33,8 @@ public class AstOperationsTest {
         Assert.assertNotNull("Program should not be null", program);
         ProcedureList procedureList = program.procedures();
         Assert.assertNotNull("Procedure list should not be null", procedureList);
-        System.out.println(program);
+        Assert.assertEquals("Procedure list should contain 1 procedure", 1, procedureList.size());
+        var procedure = procedureList.get(0).get();
+        Assert.assertTrue("Procedure should be an Add operation", procedure instanceof Add);
     }
 }
