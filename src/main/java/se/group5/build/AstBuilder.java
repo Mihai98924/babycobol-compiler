@@ -11,7 +11,6 @@ import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
-import se.group5.ast.statement.Add;
 import se.group5.ast.statement.Arithmetic;
 import se.group5.ast.statement.Display;
 import se.group5.parser.CoBabyBoL;
@@ -142,7 +141,6 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
 
-        System.out.println(display.getArguments());
         procedures.add(display);
         return display;
     }
@@ -195,6 +193,82 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         procedures.add(add);
         return add;
     }
+
+    @Override
+    public Arithmetic visitDivide(CoBabyBoL.DivideContext ctx) {
+        Atomic divisor = (Atomic) visitAtomic(ctx.atomic());
+
+        List<Atomic> dividends = ctx.into_atomic().atomic()
+                .stream()
+                .map(a -> (Atomic) visitAtomic(a))
+                .toList();
+
+        List<DataElement> giving = ctx.giving_identifier() == null
+                ? List.of()
+                : ctx.giving_identifier()
+                .stream()
+                .map(g -> (DataElement) symbolTable
+                        .resolve(g.IDENTIFIER().getText())
+                        .get())
+                .toList();
+
+        DataElement remainder = null;
+        if (ctx.remainder() != null) {
+            String remName = ctx.remainder().REM_REPRESENTATION().getText();
+            remainder = (DataElement) symbolTable.resolve(remName).get();
+        }
+
+        Arithmetic divide = Arithmetic.divide(divisor, dividends, giving, remainder);
+        procedures.add(divide);
+        return divide;
+    }
+
+    @Override
+    public Arithmetic visitMultiply(CoBabyBoL.MultiplyContext ctx) {
+        Atomic multiplier = (Atomic) visitAtomic(ctx.atomic());
+
+        List<Atomic> multiplicands = ctx.by_atomic().atomic()
+                .stream()
+                .map(a -> (Atomic) visitAtomic(a))
+                .toList();
+
+        DataElement giving = null;
+        if (ctx.giving_identifier() != null) {
+            String id = ctx.giving_identifier().IDENTIFIER().getText();
+            giving = (DataElement) symbolTable.resolve(id).get();
+        }
+
+        Arithmetic multiply = Arithmetic.multiply(multiplier, multiplicands, giving);
+        procedures.add(multiply);
+        return multiply;
+    }
+
+    @Override
+    public Arithmetic visitSubtract(CoBabyBoL.SubtractContext ctx) {
+        List<Atomic> subtrahends = ctx.atomic()
+                .stream()
+                .map(a -> (Atomic) visitAtomic(a))
+                .toList();
+
+        List<Atomic> minuends = ctx.from_atomic().atomic()
+                .stream()
+                .map(a -> (Atomic) visitAtomic(a))
+                .toList();
+
+        List<DataElement> giving = ctx.giving_identifier() == null
+                ? List.of()
+                : ctx.giving_identifier()
+                .stream()
+                .map(i -> (DataElement) symbolTable
+                        .resolve(i.IDENTIFIER().getText())
+                        .get())
+                .toList();
+
+        Arithmetic subtract = Arithmetic.subtract(subtrahends, minuends, giving);
+        procedures.add(subtract);
+        return subtract;
+    }
+
 
     @Override
     protected Node defaultResult() {

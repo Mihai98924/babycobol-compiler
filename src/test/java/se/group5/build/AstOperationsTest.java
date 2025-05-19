@@ -5,9 +5,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.procedure.ProcedureList;
-import se.group5.ast.statement.Add;
+import se.group5.ast.statement.Arithmetic;
 import se.group5.processor.Processor;
 
+/**
+ * Smoke-tests that the parser creates an {@link Arithmetic} node
+ * for each COBOL arithmetic statement (ADD, SUBTRACT, MULTIPLY, DIVIDE).
+ */
 public class AstOperationsTest {
 
     private static Processor processor;
@@ -17,24 +21,91 @@ public class AstOperationsTest {
         processor = new Processor();
     }
 
+    /* ------------------------------------------------------------- *
+     *  ADD
+     * ------------------------------------------------------------- */
     @Test
     public void AddOperation() throws Exception {
-        String validInput = """
-                       IDENTIFICATION DIVISION.
-                           PROGRAM-ID. MULTIPLICATIONTEST.
-                           AUTHOR. SUSPICIOUSLAWNMOWERS.
-                           DATE-WRITTEN. 2022-04-22.
-                       DATA DIVISION.
-                            01 A PICTURE IS 99.
-                       PROCEDURE DIVISION.
-                          ADD 06 70 TO A.
-                """;
-        Program program = processor.parse(validInput);
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                       01 A PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                     ADD 06 70 TO A.
+            """;
+        assertSingleArithmetic(source);
+    }
+
+    /* ------------------------------------------------------------- *
+     *  SUBTRACT
+     * ------------------------------------------------------------- */
+    @Test
+    public void SubtractOperation() throws Exception {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. SUBTRACTTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                       01 A PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                     SUBTRACT 05 20 FROM A.
+            """;
+        assertSingleArithmetic(source);
+    }
+
+    /* ------------------------------------------------------------- *
+     *  MULTIPLY
+     * ------------------------------------------------------------- */
+    @Test
+    public void MultiplyOperation() throws Exception {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. MULTIPLYTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                       01 A PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                     MULTIPLY 02 BY A.
+            """;
+        assertSingleArithmetic(source);
+    }
+
+    /* ------------------------------------------------------------- *
+     *  DIVIDE
+     * ------------------------------------------------------------- */
+    @Test
+    public void DivideOperation() throws Exception {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. DIVIDETEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                       01 A PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                     DIVIDE 02 INTO A.
+            """;
+        assertSingleArithmetic(source);
+    }
+
+    /* ------------------------------------------------------------- *
+     *  Shared assertion helper
+     * ------------------------------------------------------------- */
+    private static void assertSingleArithmetic(String cobolSource) throws Exception {
+        Program program = processor.parse(cobolSource);
         Assert.assertNotNull("Program should not be null", program);
-        ProcedureList procedureList = program.procedures();
-        Assert.assertNotNull("Procedure list should not be null", procedureList);
-        Assert.assertEquals("Procedure list should contain 1 procedure", 1, procedureList.size());
-        var procedure = procedureList.get(0).get();
-        Assert.assertTrue("Procedure should be an Add operation", procedure instanceof Add);
+
+        ProcedureList procedures = program.procedures();
+        Assert.assertNotNull("Procedure list should not be null", procedures);
+        Assert.assertEquals("Procedure list should contain exactly 1 procedure",
+                1, procedures.size());
+
+        Assert.assertTrue("Procedure should be an Arithmetic operation",
+                procedures.get(0).get() instanceof Arithmetic);
     }
 }

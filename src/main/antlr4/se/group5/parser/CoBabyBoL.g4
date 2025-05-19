@@ -46,7 +46,8 @@ move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+ (OF IDENT
 add: ADD atomic+ to_atomic giving_identifier*;
 to_atomic: TO atomic;
 
-divide: DIVIDE atomic INTO atomic+ (giving_identifier+ remainder?)?;
+divide: DIVIDE atomic into_atomic (giving_identifier+ remainder?)?;
+into_atomic: INTO atomic+;
 remainder: REMAINDER REM_REPRESENTATION;
 
 multiply: MULTIPLY atomic by_atomic giving_identifier?;
