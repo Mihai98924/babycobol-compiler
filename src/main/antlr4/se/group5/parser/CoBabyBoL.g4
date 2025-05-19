@@ -43,18 +43,14 @@ call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VA
 move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO identifier+;
 
 // Maths
-add: ADD atomic+ to_atomic giving_identifier*;
-to_atomic: TO atomic;
+add: ADD ADD_REPRESENTATION atomic+ giving_identifier*;
 
-divide: DIVIDE atomic into_atomic (giving_identifier+ remainder?)?;
-into_atomic: INTO atomic+;
+divide: DIVIDE DIV_REPRESENTATION atomic+ (giving_identifier+ remainder?)?;
 remainder: REMAINDER REM_REPRESENTATION;
 
-multiply: MULTIPLY atomic by_atomic giving_identifier?;
-by_atomic: BY atomic+;
+multiply: MULTIPLY MUL_REPRESENTATION atomic+ giving_identifier?;
 
-subtract: SUBTRACT atomic+ from_atomic giving_identifier*;
-from_atomic: FROM atomic+;
+subtract: SUBTRACT SUB_REPRESENTATION atomic+ giving_identifier*;
 
 giving_identifier: GIVING IDENTIFIER;
 
