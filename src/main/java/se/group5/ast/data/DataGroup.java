@@ -2,9 +2,7 @@ package se.group5.ast.data;
 
 import se.group5.ast.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 01 – 49 group entries that contain children but no direct representation.
@@ -12,19 +10,24 @@ import java.util.List;
 public final class DataGroup implements DataDefinition {
     private final int level;
     private final Identifier name;
-    private final List<DataDefinition> children = new ArrayList<>();
+    public final Map<String, DataDefinition> children = new HashMap<>();
+
 
     public DataGroup(int level, Identifier name) {
         this.level = level;
         this.name = name;
     }
 
-    public void addChild(DataDefinition d) {
-        children.add(d);
+    public void register(String name, DataDefinition d) {
+        children.put(name, d);
+    }
+
+    public Optional<DataDefinition> resolve(String name) {
+        return Optional.ofNullable(children.get(name));
     }
 
     public List<DataDefinition> children() {
-        return Collections.unmodifiableList(children);
+        return new ArrayList<>(children.values());
     }
 
     @Override

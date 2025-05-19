@@ -1,4 +1,6 @@
-package se.group5.ast;
+package se.group5.ast.identity;
+
+import se.group5.ast.Node;
 
 import java.util.HashMap;
 import java.util.Map;
