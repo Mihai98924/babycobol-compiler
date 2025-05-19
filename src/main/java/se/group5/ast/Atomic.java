@@ -3,9 +3,6 @@ package se.group5.ast;
 import se.group5.ast.data.DataElement;
 import se.group5.ast.literal.Literal;
 
-import javax.swing.text.Element;
-import javax.xml.crypto.Data;
-
 public class Atomic implements Node {
     Literal literal;
     DataElement element;
@@ -16,5 +13,12 @@ public class Atomic implements Node {
 
     public Atomic(DataElement element) {
         this.element = element;
+    }
+
+    public int length() {
+        if (literal != null) {
+            return literal.length();
+        }
+        return element.picture().length();
     }
 }
