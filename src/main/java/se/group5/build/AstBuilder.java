@@ -182,36 +182,38 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitAdd(CoBabyBoL.AddContext ctx) {
-        List<Atomic> targets = ctx.atomic()
+        List<Atomic> atomics = ctx.atomic()
                 .stream()
                 .map(t -> {
                     var value = t.getText();
-                    if(value == null) {
+                    if (value == null) {
                         throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
                     }
                     return (Atomic) this.visitAtomic(t);
                 })
                 .toList();
-        Atomic last = targets.get(targets.size() - 1);
-        Representation repr = last.getElement().picture();
-        for (Atomic atomic : targets) {
-            if (atomic != last) {
+
+        Atomic target = atomics.get(atomics.size() - 1);
+        Representation targetRep = target.getElement().picture();
+        ArrayList<Atomic> sources = new ArrayList<>();
+        for (Atomic atomic : atomics) {
+            if (atomic != target) {
                 if (atomic.getElement() == null) {
-                    if (!repr.matches(atomic.getLiteral().raw())) {
+                    if (!targetRep.matches(atomic.getLiteral().raw())) {
                         throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
                     }
                 } else {
-                    if (atomic.getElement().picture().toString() != repr.toString()) {
+                    if (atomic.getElement().picture().toString() != targetRep.toString()) {
                         throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
                     }
                 }
+                sources.add(atomic);
             }
         }
-        Add add = new Add(targets);
+        Add add = new Add(sources, target);
         procedures.add(add);
         return add;
     }
-
 
     @Override
     protected Node defaultResult() {
