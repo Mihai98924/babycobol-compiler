@@ -230,5 +230,4 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
         return visit(ctx.alphanumeric_literal());
     }
-
 }
