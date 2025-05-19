@@ -2,6 +2,7 @@ package se.group5.ast;
 
 import lombok.Getter;
 import se.group5.ast.data.DataElement;
+import se.group5.ast.data.DataGroup;
 import se.group5.ast.literal.Literal;
 
 @Getter
@@ -30,5 +31,13 @@ public class Atomic implements Node {
             return "ATOMIC(" + literal + ")";
         }
         return "ATOMIC(" + element + ")";
+    }
+
+    public boolean isLiteral() {
+        return literal != null;
+    }
+
+    public boolean isComposite() {
+        return element != null && element.picture() == null;
     }
 }

@@ -37,29 +37,44 @@ copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
 // Display
 display: DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?;
 display_atomic_clause: atomic (DELIMITED_BY (SIZE | SPACE | literal))?;
+
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
 move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+ (OF IDENTIFIER+)*;
 
 // Maths
-add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
-divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER REM_REPRESENTATION)?)?;
-multiply: MULTIPLY atomic BY atomic+ (GIVING IDENTIFIER)?;
-subtract: SUBTRACT atomic+ FROM atomic+ (GIVING IDENTIFIER)*;
+add: ADD atomic+ to_atomic giving_identifier*;
+to_atomic: TO atomic;
+
+divide: DIVIDE atomic INTO atomic+ (giving_identifier+ remainder?)?;
+remainder: REMAINDER REM_REPRESENTATION;
+
+multiply: MULTIPLY atomic by_atomic giving_identifier?;
+by_atomic: BY atomic+;
+
+subtract: SUBTRACT atomic+ from_atomic giving_identifier*;
+from_atomic: FROM atomic+;
+
+giving_identifier: GIVING IDENTIFIER;
 
 // Evaluations
 loop: LOOP (SOL? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
+
+
 evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause SOL? statement+)+ SOL? END;
+any_expression: boolean_expression | math_expr | string_expr;
+when_clause: WHEN ((atomic_through | ( OTHER)));
+
+
+// Parts
+
 next_sentence: NEXT_SENTENCE;
 stop: STOP;
 
 
-// Parts
 atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
-when_clause: WHEN ((atomic_through | ( OTHER)));
 
 argument_literal: ARG_LIT literal ARG_LIT;
-any_expression: boolean_expression | math_expr | string_expr;
 math_expr: (LPAR math_expr RPAR | numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 string_expr: (literal | IDENTIFIER) (MATH_OP string_expr)?;
 
@@ -69,6 +84,7 @@ boolean_expression: SOL?
   atomic (EQ_OP atomic)? boolean_eq_expression? |
   LPAR boolean_expression RPAR boolean_eq_expression?
 );
+
 boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
 atomic: identifier | literal;
