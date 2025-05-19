@@ -1,4 +1,4 @@
-package se.group5.ast.data_division;
+package se.group5.ast.data;
 
 import se.group5.ast.Identifier;
 import se.group5.ast.Node;

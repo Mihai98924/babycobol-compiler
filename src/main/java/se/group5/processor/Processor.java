@@ -1,11 +1,10 @@
-/*  src/main/java/se/group5/processor/Processor.java  */
 package se.group5.processor;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
-import se.group5.gen.CoBabyBoLLexer;
-import se.group5.gen.CoBabyBoL;
+import se.group5.parser.CoBabyBoL;
+import se.group5.parser.CoBabyBoLLexer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
