@@ -1,10 +1,11 @@
-package se.group5;
+package se.group5.build;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import se.group5.processor.ParseResult;
 import se.group5.processor.Processor;
 
 import java.io.IOException;
@@ -16,29 +17,21 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-/**
- * Simple parser smoke-test:
- * – parameterised: one test invocation per .baby file
- * – fails on the first syntax error
- * <p>
- * Generated classes used here:
- * CoBabyBoLLexer   – from CoBabyBoLLexer.g4
- * CoBabyBoLParser  – from CoBabyBoLParser.g4
- * <p>
- * Adjust the start rule name (`program` below) if your grammar’s
- * top-level rule is called differently.
- */
-/*  src/test/java/se/group5/ParserSmokeTest.java  */
 @RunWith(Parameterized.class)
-public class ParserSmokeTest {
+public class AstSmokeTest {
+
     private static final int MAX_TESTS = 100;
+    private static Processor processor;
 
     @Parameterized.Parameter(0)
     public String resourcePath;
+
+    @BeforeClass
+    public static void setup() {
+        processor = new Processor();
+    }
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> parameters() throws IOException {
@@ -48,8 +41,8 @@ public class ParserSmokeTest {
         )) {
             List<Object[]> tests = paths
                     .filter(p -> p.toString().endsWith(".baby"))
-                    .sorted(Comparator.comparingInt(ParserSmokeTest::extractIndex))
-                    .limit(MAX_TESTS)                                 // ← cap at MAX_TESTS
+                    .sorted(Comparator.comparingInt(AstSmokeTest::extractIndex))
+                    .limit(MAX_TESTS)
                     .map(p -> new Object[]{"/programs/" + p.getFileName()})
                     .toList();
 
@@ -64,22 +57,23 @@ public class ParserSmokeTest {
     }
 
     private static int extractIndex(Path p) {
-        String name = p.getFileName().toString();   // e.g. “test_17.baby”
+        String name = p.getFileName().toString();
         int underscore = name.indexOf('_');
         int dot = name.lastIndexOf('.');
         if (underscore >= 0 && dot > underscore) {
             try {
                 return Integer.parseInt(name.substring(underscore + 1, dot));
-            } catch (NumberFormatException ignored) { /* fall through */ }
+            } catch (NumberFormatException ignored) {
+            }
         }
         return Integer.MAX_VALUE;
     }
 
-
     @Test
-    public void parsesWithoutErrors() throws Exception {
-        Processor processor = new Processor(resourcePath);
-        ParseTree tree = processor.parse();
-        Assert.assertNotNull(tree);
+    public void parsesAndBuildsAst() throws Exception {
+        ParseResult result = processor.parseFile(resourcePath);
+
+        Assert.assertNotNull("Root node should not be null", result.rootNode());
+        Assert.assertNotNull("Symbol table should not be null", result.symbolTable());
     }
 }
