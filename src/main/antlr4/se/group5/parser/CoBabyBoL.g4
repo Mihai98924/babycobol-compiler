@@ -56,7 +56,13 @@ any_expression: boolean_expression | math_expr | string_expr;
 math_expr: (LPAR math_expr RPAR | numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 string_expr: (literal | IDENTIFIER) (MATH_OP string_expr)?;
 
-boolean_expression: SOL? (INTEGERLITERAL | NOT boolean_expression | ((atomic | LPAR boolean_expression RPAR ) (EQ_OP| AND | OR | XOR) (atomic | LPAR boolean_expression RPAR) ((OR | AND | XOR) boolean_expression)*));
+boolean_expression: SOL?
+(NOT boolean_expression |
+ LPAR boolean_expression RPAR |
+  atomic (EQ_OP atomic)? boolean_eq_expression? |
+  LPAR boolean_expression RPAR boolean_eq_expression?
+);
+boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
 atomic: identifier (OF IDENTIFIER)* | literal;
 identifier: IDENTIFIER;
