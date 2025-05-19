@@ -16,7 +16,6 @@ import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
 
 import java.util.*;
-import java.util.function.UnaryOperator;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
@@ -124,23 +123,25 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitDisplay(CoBabyBoL.DisplayContext ctx) {
+        System.out.println("VISIT DISPLAY");
         boolean noAdvancing = ctx.WITH_NO_ADVANCING() != null;
-
-        LinkedHashMap<Atomic, UnaryOperator<String>> atomics = new LinkedHashMap<>();
+        Display display = new Display(noAdvancing);
         for (var atomicClause : ctx.display_atomic_clause()) {
             Atomic atomic = (Atomic) visit(atomicClause);
 
             if (atomicClause.SPACE() != null) {
-                atomics.put(atomic, Display.delimitedBySpace());
+                display.addAtomic(atomic, Display.DelimiterType.SPACE);
             } else if (atomicClause.SIZE() != null) {
-                atomics.put(atomic, Display.delimitedBySize(atomic));
+                display.addAtomic(atomic, Display.DelimiterType.SIZE);
             } else if (atomicClause.literal() != null) {
                 Literal literal = (Literal) visit(atomicClause.literal());
-                atomics.put(atomic, Display.delimitedByLiteral(literal));
+                display.addAtomic(atomic, literal);
+            } else {
+                display.addAtomic(atomic);
             }
         }
 
-        Display display = new Display(noAdvancing, atomics);
+        System.out.println(display.getArguments());
         procedures.add(display);
         return display;
     }
