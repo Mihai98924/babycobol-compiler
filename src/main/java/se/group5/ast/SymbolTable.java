@@ -1,6 +1,6 @@
 package se.group5.ast;
 
-import se.group5.ast.data_division.DataDefinition;
+import se.group5.ast.data.DataDefinition;
 
 import java.util.HashMap;
 import java.util.List;
