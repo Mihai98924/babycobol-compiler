@@ -64,7 +64,7 @@ boolean_expression: SOL?
 );
 boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
-atomic: identifier (OF IDENTIFIER)* | literal;
+atomic: identifier | literal;
 identifier: IDENTIFIER;
 
 file_name: alphanumeric_literal;

@@ -9,6 +9,10 @@
     <artifactId>babycobol-compiler</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
     <!-- ─────────────── dependencies (unchanged) ─────────────── -->
     <dependencies>
         <dependency>

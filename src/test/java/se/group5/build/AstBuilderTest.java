@@ -71,6 +71,7 @@ public class AstBuilderTest {
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
                          ACCEPT VAR1 VAR3.
+                         DISPLAY VAR1 VAR3 ≡≡≡"HENK"≡≡≡.
                 """;
 
         Program program = processor.parse(validInput);
@@ -84,20 +85,27 @@ public class AstBuilderTest {
         assertDataDefinition(symbolTable.resolve("VAR2"), 1, "VAR2", "ZZZ9", 0);
         assertDataDefinition(symbolTable.resolve("VAR3"), 1, "VAR3", "9999", 0);
         assertDataDefinition(symbolTable.resolve("VAR4"), 1, "VAR4", "ZZZ9", 9);
+
         Assert.assertTrue("SOME-GROUP is present", symbolTable.resolve("SOME-GROUP").isPresent());
         DataGroup group = (DataGroup) symbolTable.resolve("SOME-GROUP").get();
         Assert.assertEquals("Name mismatch for group", "SOME-GROUP", group.name().toString());
         assertDataDefinition(group.resolve("VAR5"), 3, "VAR5", "9999", 0);
+
         ProcedureList procedures = program.procedures();
         Assert.assertNotNull("Procedures aren't present", procedures);
         Assert.assertFalse("Procedures aren't present", procedures.isEmpty());
-        Optional<Procedure> procedure = procedures.get(0);
-        Assert.assertTrue("Procedure should be present", procedure.isPresent());
-        Assert.assertTrue("Procedure is not an instance of accept", procedure.get() instanceof Accept);
-        Accept accept = (Accept) procedure.get();
+
+        Optional<Procedure> acceptProcedure = procedures.get(0);
+        Assert.assertTrue("Procedure should be present", acceptProcedure.isPresent());
+        Assert.assertTrue("Procedure is not an instance of accept", acceptProcedure.get() instanceof Accept);
+
+        Accept accept = (Accept) acceptProcedure.get();
         List<Identifier> targets = accept.targets();
         Assert.assertEquals("Accept correctly targets VAR1", "VAR1", targets.get(0).toString());
         Assert.assertEquals("Accept correctly targets VAR1", "VAR3", targets.get(1).toString());
+
+
+
     }
 
     private void assertDataDefinition(
@@ -114,5 +122,7 @@ public class AstBuilderTest {
         Assert.assertEquals("Picture mismatch for " + expectedName, expectedPicture, element.picture().toString());
         Assert.assertEquals("Occurs mismatch for " + expectedName, expectedOccurs, element.occurs());
     }
+
+
 
 }
