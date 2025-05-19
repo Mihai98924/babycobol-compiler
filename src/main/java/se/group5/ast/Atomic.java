@@ -1,8 +1,10 @@
 package se.group5.ast;
 
+import lombok.Getter;
 import se.group5.ast.data.DataElement;
 import se.group5.ast.literal.Literal;
 
+@Getter
 public class Atomic implements Node {
     Literal literal;
     DataElement element;
