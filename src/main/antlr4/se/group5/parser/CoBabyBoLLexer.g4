@@ -2,7 +2,7 @@ lexer grammar CoBabyBoLLexer;
 
 // === KEYWORDS ===============================================================
 ACCEPT: A WS* C WS* C WS* E WS* P WS* T;
-ADD: A WS* D WS* D;
+ADD: A WS* D WS* D -> pushMode(ADD_REP);
 ALTER: A WS* L WS* T WS* E WS* R;
 BY: B WS* Y;
 CALL: C WS* A WS* L WS* L;
@@ -145,3 +145,8 @@ mode REM_REP;
 
 REM_REPRESENTATION: WS* IDENTIFIER WS* PRECISION? -> popMode;
 REM_PRECISION       : '(' [0-9]+ ')';
+
+mode ADD_REP;
+
+ATOMIC: IDENTIFIER | NUMERICLITERAL | ZERO | INTEGERLITERAL | STRINGLITERAL;
+ADD_REPRESENTATION: WS* (ATOMIC WS*)+ TO -> popMode;
