@@ -6,22 +6,21 @@ import se.group5.ast.data.DataElement;
 import se.group5.ast.procedure.Procedure;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * DIVIDE atomic INTO atomic+ [GIVING identifier+ [REMAINDER identifier]]
+import java.util.stream.Collectors; /**
+ * SUBTRACT atomic+ FROM atomic+ [GIVING identifier*]
  */
-public record Divide(Atomic dividend,
-                     List<Atomic> into,
-                     List<DataElement> giving,
-                     DataElement remainder) implements Procedure {
+public record Subtract(List<Atomic> sources,
+                       List<Atomic> from,
+                       List<DataElement> giving) implements Procedure {
 
     @Override
     @NonNull
     public String toString() {
-        return "DIVIDE(" +
-                "DIVIDEND(" + dividend + ")" +
-                ", INTO(" + into.stream()
+        return "SUBTRACT(" +
+                "SOURCES(" + sources.stream()
+                .map(Atomic::toString)
+                .collect(Collectors.joining(", ")) + ")" +
+                ", FROM(" + from.stream()
                 .map(Atomic::toString)
                 .collect(Collectors.joining(", ")) + ")" +
                 (giving != null && !giving.isEmpty()
@@ -29,7 +28,6 @@ public record Divide(Atomic dividend,
                         .map(DataElement::toString)
                         .collect(Collectors.joining(", ")) + ")"
                         : "") +
-                (remainder != null ? ", REMAINDER(" + remainder + ")" : "") +
                 ")";
     }
 }

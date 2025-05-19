@@ -8,17 +8,22 @@ import se.group5.ast.procedure.Procedure;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record Add(List<Atomic> sources, Atomic target, List<DataElement> giving) implements Procedure {
+/**
+ * MULTIPLY atomic BY atomic+ [GIVING identifier]
+ */
+public record Multiply(Atomic source,
+                       List<Atomic> by,
+                       DataElement giving) implements Procedure {
 
     @Override
     @NonNull
     public String toString() {
-        return "ADD(" +
-                "SOURCES(" + sources.stream()
+        return "MULTIPLY(" +
+                "SOURCE(" + source + ")" +
+                ", BY(" + by.stream()
                 .map(Atomic::toString)
                 .collect(Collectors.joining(", ")) + ")" +
-                ", TARGET(" + target.toString() + ")" +
-                ", GIVING(" + giving.stream().map(DataElement::toString).collect(Collectors.joining(", ")) + ")" +
+                (giving != null ? ", GIVING(" + giving + ")" : "") +
                 ")";
     }
 }

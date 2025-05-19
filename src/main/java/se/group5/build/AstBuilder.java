@@ -12,6 +12,7 @@ import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
 import se.group5.ast.statement.Add;
+import se.group5.ast.statement.Arithmetic;
 import se.group5.ast.statement.Display;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
@@ -181,36 +182,16 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
 
     @Override
-    public Node visitAdd(CoBabyBoL.AddContext ctx) {
-        List<Atomic> atomics = ctx.atomic()
-                .stream()
-                .map(t -> {
-                    var value = t.getText();
-                    if (value == null) {
-                        throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
-                    }
-                    return (Atomic) this.visitAtomic(t);
-                })
-                .toList();
+    public Arithmetic visitAdd(CoBabyBoL.AddContext ctx) {
+        List<Atomic> addends = ctx.atomic()
+                .stream().map(a -> (Atomic) visitAtomic(a)).toList();
+        Atomic target = (Atomic) visitAtomic(ctx.to_atomic().atomic());
 
-        Atomic target = atomics.get(atomics.size() - 1);
-        Representation targetRep = target.getElement().picture();
-        ArrayList<Atomic> sources = new ArrayList<>();
-        for (Atomic atomic : atomics) {
-            if (atomic != target) {
-                if (atomic.getElement() == null) {
-                    if (!targetRep.matches(atomic.getLiteral().raw())) {
-                        throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
-                    }
-                } else {
-                    if (atomic.getElement().picture().toString() != targetRep.toString()) {
-                        throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
-                    }
-                }
-                sources.add(atomic);
-            }
-        }
-        Add add = new Add(sources, target);
+        List<DataElement> giving = ctx.giving_identifier() == null
+                ? List.of()
+                : ctx.giving_identifier()
+                .stream().map(i -> (DataElement) symbolTable.resolve(i.IDENTIFIER().getText()).get()).toList();
+        Arithmetic add = Arithmetic.add(addends, target, giving);
         procedures.add(add);
         return add;
     }
@@ -233,3 +214,4 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return visit(ctx.alphanumeric_literal());
     }
 }
+
