@@ -35,13 +35,13 @@ signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
 display: DISPLAY ((atomic)+ (DELIMITED_BY (SIZE | SPACE | literal))?)+ WITH_NO_ADVANCING?;
 add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
-call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)*
+call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
 divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER IDENTIFIER)?)?;
-move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+;
+move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+ (OF IDENTIFIER+)*;
 multiply: MULTIPLY atomic BY atomic+ (GIVING IDENTIFIER)?;
 subtract: SUBTRACT atomic+ FROM atomic+ (GIVING IDENTIFIER)*;
-loop: LOOP ((WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
+loop: LOOP (SOL? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
 evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause SOL? statement+)+ SOL? END;
 next_sentence: NEXT_SENTENCE;
 stop: STOP;
@@ -55,9 +55,9 @@ argument_literal: ARG_LIT literal ARG_LIT;
 any_expression: boolean_expression | math_expr;
 math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 
-boolean_expression: NOT boolean_expression | (atomic (EQ_OP| AND | OR) atomic ((OR | AND) boolean_expression)*);
+boolean_expression: INTEGERLITERAL | NOT boolean_expression | (atomic (EQ_OP| AND | OR) atomic ((OR | AND) boolean_expression)*);
 
-atomic: identifier | literal;
+atomic: identifier (OF IDENTIFIER)* | literal;
 identifier: IDENTIFIER;
 
 file_name: alphanumeric_literal;
