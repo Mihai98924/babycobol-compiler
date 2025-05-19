@@ -50,7 +50,7 @@ REMAINDER: R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
 INTO: I WS* N WS* T WS* O;
 USING: U WS* S WS* I WS* N WS* G;
 BY_REFERENCE: B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
-BY_CONTENT: B WS* Y WS+ C WS* O WS* N WS* T WS* E WS* N WS* T;
+BY_CONTENT: B SOL* Y SOL+ C SOL* O SOL* N SOL* T SOL* E SOL* N SOL* T;
 BY_VALUE: B WS* Y WS+ V WS* A WS* L WS* U WS* E;
 THROUGH: T WS* H WS* R WS* O WS* U WS* G WS* H;
 TIMES: T WS* I WS* M WS* E WS* S;
@@ -95,7 +95,7 @@ GT: '>';
 LT: '<';
 
 // === LITERALS ===============================================================
-STRINGLITERAL: '"' (~["\n\r] | '""' | '\'')* '"'
+STRINGLITERAL: '"' (WS* ~["\n\r] | '""' | '\'')* '"'
                       | '\'' (~['\n\r] | '\'\'' | '"')* '\'';
 INTEGERLITERAL: (SIGN)? [0-9]+;
 NUMERICLITERAL
