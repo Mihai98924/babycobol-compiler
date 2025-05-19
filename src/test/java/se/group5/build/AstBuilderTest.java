@@ -71,7 +71,7 @@ public class AstBuilderTest {
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
                          ACCEPT VAR1 VAR3.
-                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY SIZE 1234 DELIMITED BY 1.
+                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
                 """;
 
         Program program = processor.parse(validInput);
