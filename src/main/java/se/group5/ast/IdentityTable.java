@@ -21,4 +21,8 @@ public class IdentityTable implements Node {
     public boolean isEmpty() {
         return table.isEmpty();
     }
+
+    public String toString() {
+        return table.toString();
+    }
 }
