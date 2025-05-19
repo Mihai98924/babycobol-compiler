@@ -1,22 +1,18 @@
 package se.group5.ast;
+import lombok.NonNull;
+import se.group5.ast.identity.IdentityTable;
+import se.group5.ast.procedure.ProcedureList;
 
-import lombok.Getter;
-
-@Getter
-public class Program implements Node {
-    private final IdentityTable identityTable;
-    private final SymbolTable symbolTable;
-
-    public Program(IdentityTable identityTable, SymbolTable symbolTable) {
-        this.identityTable = identityTable;
-        this.symbolTable = symbolTable;
-    }
+public record Program(IdentityTable identityTable, SymbolTable symbolTable,
+                      ProcedureList procedures) implements Node {
 
     @Override
+    @NonNull
     public String toString() {
         return "Program {\n" +
                 "  IdentityTable: " + identityTable.toString() + "\n" +
                 "  SymbolTable:   " + symbolTable.toString() + "\n" +
+                "  Procedures:   " + procedures.toString() + "\n" +
                 "}";
     }
 }
