@@ -7,17 +7,14 @@ import se.group5.ast.data.DataGroup;
 import se.group5.ast.data.Representation;
 import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.literal.AlphanumericLiteral;
+import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
-import se.group5.ast.procedure.Procedure;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
@@ -124,8 +121,24 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
+    public Node visitDisplay(CoBabyBoL.DisplayContext ctx) {
         return visitChildren(ctx);
+    }
+
+
+    @Override
+    public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
+        if (ctx.identifier() != null) {
+            String name = ctx.identifier().getText();
+            Optional<Identifier> optId = symbolTable.resolveIdentifier(name);
+            if (optId.isEmpty())
+                throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not an element or not declared");
+            Identifier id = optId.get();
+            return new Atomic(id);
+        }
+
+        Literal literal = (Literal) visit(ctx.literal());
+        return new Atomic(literal);
     }
 
     @Override
@@ -134,10 +147,11 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .stream()
                 .map(t -> {
                     var name = t.getText();
-                    if (symbolTable.resolve(name).isEmpty()) {
+                    var identifier = symbolTable.resolveIdentifier(name);
+                    if (identifier.isEmpty()) {
                         throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
                     }
-                    return symbolTable.resolve(name).get().name();
+                    return identifier.get();
                 })
                 .toList();
         Accept accept = new Accept(targets);
