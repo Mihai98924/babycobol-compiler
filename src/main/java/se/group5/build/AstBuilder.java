@@ -11,6 +11,7 @@ import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
+import se.group5.ast.statement.Add;
 import se.group5.ast.statement.Display;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
@@ -177,6 +178,40 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         procedures.add(accept);
         return accept;
     }
+
+
+    @Override
+    public Node visitAdd(CoBabyBoL.AddContext ctx) {
+        List<Atomic> targets = ctx.atomic()
+                .stream()
+                .map(t -> {
+                    var value = t.getText();
+                    if(value == null) {
+                        throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
+                    }
+                    return (Atomic) this.visitAtomic(t);
+                })
+                .toList();
+        Atomic last = targets.get(targets.size() - 1);
+        Representation repr = last.getElement().picture();
+        for (Atomic atomic : targets) {
+            if (atomic != last) {
+                if (atomic.getElement() == null) {
+                    if (!repr.matches(atomic.getLiteral().raw())) {
+                        throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
+                    }
+                } else {
+                    if (atomic.getElement().picture().toString() != repr.toString()) {
+                        throw new IllegalStateException("Type mismatch between atomics and/or the identifier");
+                    }
+                }
+            }
+        }
+        Add add = new Add(targets);
+        procedures.add(add);
+        return add;
+    }
+
 
     @Override
     protected Node defaultResult() {
