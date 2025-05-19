@@ -19,7 +19,7 @@ import se.group5.processor.Processor;
 import java.util.List;
 import java.util.Optional;
 
-public class AstBuilderTest {
+public class AstDataTest {
 
     private static Processor processor;
 
