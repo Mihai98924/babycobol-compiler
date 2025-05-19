@@ -123,18 +123,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitDisplay(CoBabyBoL.DisplayContext ctx) {
-        System.out.println("VISIT DISPLAY");
         boolean noAdvancing = ctx.WITH_NO_ADVANCING() != null;
         Display display = new Display(noAdvancing);
-        for (var atomicClause : ctx.display_atomic_clause()) {
-            Atomic atomic = (Atomic) visit(atomicClause);
+        for (var displayAtomicClause : ctx.display_atomic_clause()) {
+            Atomic atomic = (Atomic) visit(displayAtomicClause.atomic());
 
-            if (atomicClause.SPACE() != null) {
+            if (displayAtomicClause.SPACE() != null) {
                 display.addAtomic(atomic, Display.DelimiterType.SPACE);
-            } else if (atomicClause.SIZE() != null) {
+            } else if (displayAtomicClause.SIZE() != null) {
                 display.addAtomic(atomic, Display.DelimiterType.SIZE);
-            } else if (atomicClause.literal() != null) {
-                Literal literal = (Literal) visit(atomicClause.literal());
+            } else if (displayAtomicClause.literal() != null) {
+                Literal literal = (Literal) visit(displayAtomicClause.literal());
                 display.addAtomic(atomic, literal);
             } else {
                 display.addAtomic(atomic);
