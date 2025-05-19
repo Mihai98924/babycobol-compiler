@@ -66,11 +66,11 @@ public final class Arithmetic implements Procedure {
 
     public static Arithmetic divide(
             @NonNull Atomic divisor,
-            @NonNull Atomic dividend,
+            List<@NonNull Atomic> dividend,
             List<DataElement> giving,
             DataElement remainder) {
         return new Arithmetic(
-                Verb.DIVIDE, List.of(divisor), List.of(dividend),
+                Verb.DIVIDE, List.of(divisor), dividend,
                 giving, remainder
         );
     }
