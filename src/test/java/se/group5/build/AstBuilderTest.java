@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import se.group5.ast.Program;
 import se.group5.processor.ParseResult;
 import se.group5.processor.Processor;
 
@@ -27,11 +28,12 @@ public class AstBuilderTest {
                 + "       IDENTIFICATION DIVISION.\n"
                 + "           PROGRAM-ID. MULTIPLICATIONTEST.";
 
-        ParseResult result = processor.parse(validInput);
-
-        Assert.assertNotNull("Symbol table should not be null", result.symbolTable());
-        Assert.assertTrue("Symbol table should be empty", result.symbolTable().table.isEmpty());
+        Program program = processor.parse(validInput);
+        Assert.assertNotNull("Program should not be null", program);
+        Assert.assertNotNull("Symbol table should not be null", program.getSymbolTable());
+        Assert.assertTrue("Symbol table should be empty", program.getSymbolTable().isEmpty());
+        Assert.assertNotNull("Identification division should not be null", program.getIdentityTable());
+        System.out.println("Identification division: " + program.getIdentityTable().table);
+        Assert.assertFalse("Identification division should not be empty", program.getIdentityTable().isEmpty());
     }
-
-
 }

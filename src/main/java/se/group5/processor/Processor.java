@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import se.group5.ast.Node;
+import se.group5.ast.Program;
 import se.group5.ast.SymbolTable;
 import se.group5.build.AstBuilder;
 import se.group5.parser.CoBabyBoL;
@@ -17,7 +18,7 @@ public class Processor {
     /**
      * Parse COBOL from a raw string and build the AST + symbol table in one go.
      */
-    public ParseResult parse(String source) throws IOException {
+    public Program parse(String source) throws IOException {
         String cleaned = stripCobolComments(source);
         return buildResult(parseFromCharStream(CharStreams.fromString(cleaned, "string-input")));
     }
@@ -25,7 +26,7 @@ public class Processor {
     /**
      * Parse COBOL from a class-path resource and build the AST + symbol table in one go.
      */
-    public ParseResult parseFile(String resourcePath) throws IOException {
+    public Program parseFile(String resourcePath) throws IOException {
         InputStream in = getClass().getResourceAsStream(resourcePath);
         if (in == null) throw new IOException("Resource not found on class-path: " + resourcePath);
 
@@ -36,11 +37,9 @@ public class Processor {
     /**
      * Convert the ANTLR parse tree into a {@link ParseResult}.
      */
-    private ParseResult buildResult(ParseTree tree) {
+    private Program buildResult(ParseTree tree) {
         AstBuilder builder = new AstBuilder();
-        Node rootNode = builder.visit(tree);
-        SymbolTable symbols = builder.getSymbols();
-        return new ParseResult(tree, rootNode, symbols);
+        return (Program) builder.visit(tree);
     }
 
     /**
