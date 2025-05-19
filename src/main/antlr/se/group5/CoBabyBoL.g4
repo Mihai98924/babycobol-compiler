@@ -37,7 +37,7 @@ display: DISPLAY ((atomic)+ (DELIMITED_BY (SIZE | SPACE | literal))?)+ WITH_NO_A
 add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
-divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER IDENTIFIER)?)?;
+divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER REM_REPRESENTATION)?)?;
 move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO IDENTIFIER+ (OF IDENTIFIER+)*;
 multiply: MULTIPLY atomic BY atomic+ (GIVING IDENTIFIER)?;
 subtract: SUBTRACT atomic+ FROM atomic+ (GIVING IDENTIFIER)*;
@@ -52,10 +52,11 @@ atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
 when_clause: WHEN ((atomic_through | ( OTHER)));
 
 argument_literal: ARG_LIT literal ARG_LIT;
-any_expression: boolean_expression | math_expr;
-math_expr: (numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
+any_expression: boolean_expression | math_expr | string_expr;
+math_expr: (LPAR math_expr RPAR | numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
+string_expr: (literal | IDENTIFIER) (MATH_OP string_expr)?;
 
-boolean_expression: INTEGERLITERAL | NOT boolean_expression | (atomic (EQ_OP| AND | OR) atomic ((OR | AND) boolean_expression)*);
+boolean_expression: SOL? (INTEGERLITERAL | NOT boolean_expression | ((atomic | LPAR boolean_expression RPAR ) (EQ_OP| AND | OR | XOR) (atomic | LPAR boolean_expression RPAR) ((OR | AND | XOR) boolean_expression)*));
 
 atomic: identifier (OF IDENTIFIER)* | literal;
 identifier: IDENTIFIER;
