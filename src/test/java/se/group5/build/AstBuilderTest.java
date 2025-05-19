@@ -71,7 +71,7 @@ public class AstBuilderTest {
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
                          ACCEPT VAR1 VAR3.
-                         DISPLAY VAR1 VAR3 ≡≡≡"HENK"≡≡≡.
+                         DISPLAY VAR1 VAR3 "HENK".
                 """;
 
         Program program = processor.parse(validInput);
