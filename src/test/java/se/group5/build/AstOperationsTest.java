@@ -7,8 +7,6 @@ import se.group5.ast.Program;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.processor.Processor;
 
-import java.io.IOException;
-
 public class AstOperationsTest {
 
     private static Processor processor;

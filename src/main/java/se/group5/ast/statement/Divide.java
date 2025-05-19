@@ -7,16 +7,16 @@ import se.group5.ast.procedure.Procedure;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record Add(List<Atomic> sources, Atomic target) implements Procedure {
+public record Divide(Atomic source, List<Atomic> targets) implements Procedure {
 
     @Override
     @NonNull
     public String toString() {
-        return "ADD(" +
-                "SOURCES(" + sources.stream()
+        return "DIVIDE(" +
+                "SOURCE(" + source.toString() + ")" +
+                ", TARGETS(" + targets.stream()
                 .map(Atomic::toString)
                 .collect(Collectors.joining(", ")) + ")" +
-                ", TARGET(" + target.toString() + ")" +
                 ")";
     }
 }
