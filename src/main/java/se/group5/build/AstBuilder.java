@@ -149,7 +149,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     @Override
     public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
         if (ctx.identifier() != null) {
-            String name = ctx.identifier().getText();
+            Identifier identifier = (Identifier) visit(ctx.identifier());
+            String name = identifier.toString();
             Optional<DataDefinition> def = symbolTable.resolve(name);
             if (def.isEmpty() || !(def.get() instanceof DataElement))
                 throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not a data definition or not declared");
@@ -159,6 +160,19 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         Literal literal = (Literal) visit(ctx.literal());
         return new Atomic(literal);
     }
+
+    @Override
+    public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
+        if (ctx.identifier() != null) {
+            Identifier identifier = (Identifier) visit(ctx.identifier());
+            Identifier complete = new Identifier(
+                identifier.value() + "." + ctx.IDENTIFIER().getText()
+            );
+            return complete;
+        }
+        return new Identifier(ctx.IDENTIFIER().getText());
+    }
+
 
     @Override
     public Node visitAccept(CoBabyBoL.AcceptContext ctx) {
