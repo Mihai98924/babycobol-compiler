@@ -33,8 +33,12 @@ if: IF boolean_expression SOL? THEN SOL? statement+ (SOL? ELSE statement+)? SOL?
 perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
 signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
-display: DISPLAY ((atomic)+ (DELIMITED_BY (SIZE | SPACE | literal))?)+ WITH_NO_ADVANCING?;
-add: ADD ADD_REPRESENTATION atomic (GIVING IDENTIFIER)*;
+
+// Display
+display: DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?;
+display_atomic_clause: atomic (DELIMITED_BY (SIZE | SPACE | literal))?;
+
+add: ADD atomic+ TO atomic (GIVING IDENTIFIER)*;
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
 divide: DIVIDE atomic INTO atomic+ (GIVING IDENTIFIER+ (REMAINDER REM_REPRESENTATION)?)?;

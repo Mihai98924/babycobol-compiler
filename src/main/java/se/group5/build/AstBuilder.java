@@ -11,10 +11,12 @@ import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
+import se.group5.ast.statement.Display;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
@@ -122,7 +124,25 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitDisplay(CoBabyBoL.DisplayContext ctx) {
-        return visitChildren(ctx);
+        boolean noAdvancing = ctx.WITH_NO_ADVANCING() != null;
+
+        LinkedHashMap<Atomic, UnaryOperator<String>> atomics = new LinkedHashMap<>();
+        for (var atomicClause : ctx.display_atomic_clause()) {
+            Atomic atomic = (Atomic) visit(atomicClause);
+
+            if (atomicClause.SPACE() != null) {
+                atomics.put(atomic, Display.delimitedBySpace());
+            } else if (atomicClause.SIZE() != null) {
+                atomics.put(atomic, Display.delimitedBySize(atomic));
+            } else if (atomicClause.literal() != null) {
+                Literal literal = (Literal) visit(atomicClause.literal());
+                atomics.put(atomic, Display.delimitedByLiteral(literal));
+            }
+        }
+
+        Display display = new Display(noAdvancing, atomics);
+        procedures.add(display);
+        return display;
     }
 
 
@@ -167,4 +187,13 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     protected Node aggregateResult(Node aggregate, Node next) {
         return next != null ? next : aggregate;
     }
+
+    @Override
+    public Node visitLiteral(CoBabyBoL.LiteralContext ctx) {
+        if (ctx.numeric_literal() != null) {
+            return visit(ctx.numeric_literal());
+        }
+        return visit(ctx.alphanumeric_literal());
+    }
+
 }
