@@ -21,4 +21,12 @@ public class Atomic implements Node {
         }
         return element.picture().length();
     }
+
+    @Override
+    public String toString() {
+        if (literal != null) {
+            return "ATOMIC(" + literal + ")";
+        }
+        return "ATOMIC(" + element + ")";
+    }
 }

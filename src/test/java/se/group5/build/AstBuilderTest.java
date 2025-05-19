@@ -71,7 +71,7 @@ public class AstBuilderTest {
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
                          ACCEPT VAR1 VAR3.
-                         DISPLAY VAR1 VAR3 "HENK".
+                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY SIZE 1234 DELIMITED BY 1.
                 """;
 
         Program program = processor.parse(validInput);
@@ -103,9 +103,6 @@ public class AstBuilderTest {
         List<Identifier> targets = accept.targets();
         Assert.assertEquals("Accept correctly targets VAR1", "VAR1", targets.get(0).toString());
         Assert.assertEquals("Accept correctly targets VAR1", "VAR3", targets.get(1).toString());
-
-
-
     }
 
     private void assertDataDefinition(
@@ -122,7 +119,4 @@ public class AstBuilderTest {
         Assert.assertEquals("Picture mismatch for " + expectedName, expectedPicture, element.picture().toString());
         Assert.assertEquals("Occurs mismatch for " + expectedName, expectedOccurs, element.occurs());
     }
-
-
-
 }
