@@ -43,20 +43,18 @@ SOL :
 
 // MATCH start of a code line
 // If a code line is found, go back to regular parsing.
-CODE_LINE : SOL [ ] -> pushMode(CODE);
+CODE_LINE : SOL [ ];
 
 // Match COBOL comment line: newline + 6 chars + '*' in column 7, skip entire line
 // Remain in start of line mode
 COMMENT: STAR ANY* LINE_BREAK;
-
-mode CODE;
 
 // Match whitespace or continuation, skip it
 WS : ([ ] | CONTINUE_LINE) -> skip;
 CONTINUE_LINE : LINE_BREAK SOL '-' -> skip;
 
 // === DEFAULT MODE =================================================
-EOL : DOT LINE_BREAK -> pushMode(DEFAULT_MODE);
+EOL : DOT LINE_BREAK;
 
 // === IDENTIFICATION DIVISION ======================================
 IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N -> pushMode(ID);
@@ -89,7 +87,7 @@ LIKE: L WS* I WS* K WS* E -> pushMode(ID_REP);
 OCCURS: O WS* C WS* C WS* U WS* R WS* S;
 TIMES: T WS* I WS* M WS* E WS* S;
 DD_CODE_LINE: CODE_LINE -> type(CODE_LINE);
-DD_START_PD: PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(PD);
+DD_START_PD: PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(DEFAULT_MODE);
 
 mode DD_LVL;
 DD_REP_WS: WS -> type(WS);
@@ -107,11 +105,8 @@ PR_WS               : [ \t\r\n]+ -> skip ;
 PR_SIGN             : 'S';   // operational sign
 PR_DECSEP           : 'V';   // decimal separator
 
-mode PD;
+mode DEFAULT_MODE;
 
-PD_EOL: EOL -> type(EOL);
-PD_WS: WS -> type(WS);
-PD_LINE: CODE_LINE [ ] [ ] [ ] [ ];
 DISPLAY: D WS* I WS* S WS* P WS* L WS* A WS* Y;
 
 
@@ -184,9 +179,6 @@ STOP: S WS* T WS* O WS* P;
 PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 ZERO: Z WS* E WS* R WS* O;
 XOR: X WS* O WS* R;
-
-mode DEFAULT_MODE;
-
 
 LEVEL : [0-9] [0-9];
 

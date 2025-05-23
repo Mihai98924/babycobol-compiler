@@ -25,7 +25,7 @@ occurs_clause: OCCURS INTEGERLITERAL TIMES;
 
 // Procedure division
 sentence: statement* EOL;
-statement: PD_LINE WS* (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
+statement: CODE_LINE WS* (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
 // Statements
 accept: ACCEPT IDENTIFIER+;
