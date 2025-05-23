@@ -13,7 +13,6 @@
         <java.version>17</java.version>
     </properties>
 
-    <!-- ─────────────── dependencies (unchanged) ─────────────── -->
     <dependencies>
         <dependency>
             <groupId>org.antlr</groupId>
@@ -58,48 +57,71 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- antlr code generation -->
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.13.2</version>
-                <configuration>
-                    <visitor>true</visitor>
-                    <listener>true</listener>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <!-- ───────── plugin management: centralise plugin versions ───────── -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-maven-plugin</artifactId>
+                    <version>4.13.2</version>
+                    <configuration>
+                        <visitor>true</visitor>
+                        <listener>true</listener>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>generate-antlr-sources</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>antlr4</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>${project.build.directory}/generated-sources/antlr4</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
-            <!-- adds generated antlr4 code to the source set -->
+        <plugins>
+
             <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.5.0</version>
                 <executions>
                     <execution>
-                        <id>add-antlr-source-root</id>
+                        <id>fix-parser-generation</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>add-source</goal>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/antlr4</source>
-                            </sources>
+                            <executable>touch</executable>
+                            <arguments>
+                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoL.g4</argument>
+                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoLLexer.g4</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-
             <!-- Java compiler (with Lombok) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -115,6 +137,26 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+
+            <!-- ANTLR4 source generation -->
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>add-antlr-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Tests -->

@@ -3,15 +3,12 @@ package se.group5.processor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
-import se.group5.ast.Node;
 import se.group5.ast.Program;
-import se.group5.ast.SymbolTable;
 import se.group5.build.AstBuilder;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLLexer;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 public class Processor {
 
@@ -19,8 +16,7 @@ public class Processor {
      * Parse COBOL from a raw string and build the AST + symbol table in one go.
      */
     public Program parse(String source) throws IOException {
-        String cleaned = stripCobolComments(source);
-        return buildResult(parseFromCharStream(CharStreams.fromString(cleaned, "string-input")));
+        return buildResult(parseFromCharStream(CharStreams.fromString(source, "string-input")));
     }
 
     /**
@@ -30,8 +26,8 @@ public class Processor {
         InputStream in = getClass().getResourceAsStream(resourcePath);
         if (in == null) throw new IOException("Resource not found on class-path: " + resourcePath);
 
-        String cleaned = stripCobolComments(in);
-        return buildResult(parseFromCharStream(CharStreams.fromString(cleaned, resourcePath)));
+        CharStream charStream = CharStreams.fromStream(in);
+        return buildResult(parseFromCharStream(charStream));
     }
 
     /**
@@ -70,36 +66,6 @@ public class Processor {
                     "Parser reported " + parser.getNumberOfSyntaxErrors() + " syntax error(s)");
         }
         return tree;
-    }
-
-    /**
-     * Strip COBOL-style comments from a raw string.
-     */
-    public static String stripCobolComments(String input) throws IOException {
-        return stripCobolComments(new BufferedReader(new StringReader(input)));
-    }
-
-    /**
-     * Strip COBOL-style comments from an input stream.
-     */
-    public static String stripCobolComments(InputStream in) throws IOException {
-        return stripCobolComments(new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)));
-    }
-
-    /**
-     * Shared internal logic for COBOL comment stripping.
-     */
-    private static String stripCobolComments(BufferedReader reader) throws IOException {
-        StringBuilder sb = new StringBuilder(4096);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (line.length() > 6 &&
-                    (line.replace(" ", "").startsWith("*") || line.length() > 80)) {
-                continue;
-            }
-            sb.append(line).append('\n');
-        }
-        return sb.toString();
     }
 }
 

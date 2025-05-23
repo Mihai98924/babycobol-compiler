@@ -64,6 +64,7 @@ ID_EOL        : EOL       -> type(EOL);
 ID_CODE_LINE  : DEFAULT_LINE -> type(DEFAULT_LINE);
 ID_LINE       : DEFAULT_LINE [ ] [ ] [ ] [ ]           -> pushMode(ID_NAME);
 ID_START_DD   : DATA_DIVISION                       -> type(DATA_DIVISION), pushMode(DD);
+ID_START_PD   : DEFAULT_LINE PROCEDURE_DIVISION                  -> type(PROCEDURE_DIVISION), pushMode(CODE);
 
 mode ID_NAME;
 ID_NAME_VAL       : ~[.\r\n]+ ;
@@ -85,18 +86,22 @@ DATA_DIVISION
 mode DD;
 DD_EOL        : EOL        -> type(EOL);
 DD_WS         : WS         -> type(WS);
-DD_LINE       : DEFAULT_LINE [ ] [ ] WS*                  -> pushMode(DD_LVL);
 PICTURE_IS    : P WS* I WS* C WS* T WS* U WS* R WS* E WS* I WS* S
                 -> pushMode(PIC_REP);
-LIKE          : L WS* I WS* K WS* E                    -> pushMode(ID_REP);
-OCCURS        : O WS* C WS* C WS* U WS* R WS* S;
+LIKE          : L WS* I WS* K WS* E                         -> pushMode(ID_REP);
+OCCURS        : O WS* C WS* C WS* U WS* R WS* S             -> pushMode(DD_INT);
 TIMES         : T WS* I WS* M WS* E WS* S;
-DD_CODE_LINE  : DEFAULT_LINE        -> type(DEFAULT_LINE);
-DD_START_PD   : PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
+DD_LINE       : DEFAULT_LINE [ ] [ ] WS*                    -> pushMode(DD_LVL);
+DD_START_PD   : DEFAULT_LINE PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
 
 mode DD_LVL;
 DD_REP_WS : WS    -> type(WS);
 DD_LEVEL  : LEVEL -> type(LEVEL), pushMode(ID_REP);
+LEVEL : [0-9] [0-9];
+
+mode DD_INT;
+DD_INT_WS : WS -> skip;
+DD_INT : INTEGERLITERAL -> type(INTEGERLITERAL), popMode;
 
 mode ID_REP;
 ID_REP_WS : WS         -> type(WS);
@@ -116,6 +121,7 @@ PR_DECSEP    : 'V' ;               // decimal separator
 // === BACK TO DEFAULT MODE =====================================
 mode CODE;
 
+CODE_WS : WS -> skip;
 CODE_EOL : EOL -> type(EOL);
 CODE_LINE : DEFAULT_LINE [ ] [ ] [ ] [ ];
 DISPLAY : D WS* I WS* S WS* P WS* L WS* A WS* Y ;
@@ -133,7 +139,7 @@ DELIMITED_BY        : D WS* E WS* L WS* I WS* M WS* I WS* T WS* E WS* D WS+ B WS
 ADD                 : A WS* D WS* D      -> pushMode(UNTIL_TO);
 SUBTRACT            : S WS* U WS* B WS* T WS* R WS* A WS* C WS* T -> pushMode(UNTIL_FROM);
 MULTIPLY            : M WS* U WS* L WS* T WS* I WS* P WS* L WS* Y -> pushMode(UNTIL_BY);
-DIVIDE              : D WS* I WS* V WS* I WS* D WS* E            -> pushMode(UNTIL_INTO);
+DIVIDE              : D WS* I WS* V WS* I WS* D WS* E             -> pushMode(UNTIL_INTO);
 
 REMAINDER           : R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
 
@@ -184,8 +190,6 @@ PROCEDURE_DIVISION  : P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS
 ZERO                : Z WS* E WS* R WS* O;
 XOR                 : X WS* O WS* R;
 
-LEVEL : [0-9] [0-9];
-
 // === OPERATORS & PUNCTUATION ================================
 AND : A WS* N WS* D;
 OR  : O WS* R;
@@ -234,8 +238,8 @@ UT_NUMERIC  : NUMERICLITERAL   -> type(NUMERICLITERAL);
 UT_INTEGER  : INTEGERLITERAL   -> type(INTEGERLITERAL);
 UT_ZERO     : ZERO             -> type(ZERO);
 UT_STRING   : STRINGLITERAL    -> type(STRINGLITERAL);
-UT_ID       : ({ noMatchInLine(CoBabyBoLLexer.TO) }? IDENTIFIER) -> type(IDENTIFIER);
-UT_TO       : TO  -> type(TO), popMode;
+UT_TO       : { noMatchInLine(CoBabyBoLLexer.TO) }? TO  -> type(TO), popMode;
+UT_ID       : IDENTIFIER -> type(IDENTIFIER);
 
 mode UNTIL_FROM;
 UF_WS       : WS  -> channel(HIDDEN);
@@ -244,8 +248,8 @@ UF_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UF_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UF_ZERO     : ZERO              -> type(ZERO);
 UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UF_ID       : ({ noMatchInLine(CoBabyBoLLexer.FROM) }? IDENTIFIER) -> type(IDENTIFIER);
-UF_FROM     : FROM -> type(FROM), popMode;
+UF_FROM     : { noMatchInLine(CoBabyBoLLexer.FROM) }? FROM -> type(FROM), popMode;
+UF_ID       : IDENTIFIER -> type(IDENTIFIER);
 
 mode UNTIL_BY;
 UB_WS       : WS  -> channel(HIDDEN);
@@ -254,8 +258,8 @@ UB_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UB_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UB_ZERO     : ZERO              -> type(ZERO);
 UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UB_ID       : ({ noMatchInLine(CoBabyBoLLexer.BY) }? IDENTIFIER) -> type(IDENTIFIER);
-UB_BY       : BY  -> type(BY), popMode;
+UB_BY       : { noMatchInLine(CoBabyBoLLexer.BY) }? BY -> type(BY), popMode;
+UB_ID       : IDENTIFIER  -> type(IDENTIFIER);
 
 mode UNTIL_INTO;
 UI_WS       : WS  -> channel(HIDDEN);

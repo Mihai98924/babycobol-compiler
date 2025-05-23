@@ -23,7 +23,7 @@ data_division
     ;
 
 procedure_division
-    : DEFAULT_LINE PROCEDURE_DIVISION EOL sentence*
+    : PROCEDURE_DIVISION EOL sentence*
     ;
 
 // ── TOP-LEVEL FUNCTION ────────────────────────────────────────
@@ -48,8 +48,8 @@ data_item
     ;
 
 picture_clause : PICTURE_IS REPRESENTATION ;
-like_clause    : LIKE IDENTIFIER ;
-occurs_clause  : OCCURS INTEGERLITERAL TIMES ;
+like_clause    : LIKE WS* IDENTIFIER ;
+occurs_clause  : OCCURS WS* INTEGERLITERAL WS* TIMES ;
 
 // === PROCEDURE DIVISION =======================================
 sentence
@@ -145,7 +145,7 @@ add
     ;
 
 add_atomic  : ADD atomic+ ;
-to_atomic   : TO  atomic   ;
+to_atomic   : TO  atomic  ;
 
 divide
     : DIVIDE atomic into_atomic (giving_identifier_list remainder?)?
