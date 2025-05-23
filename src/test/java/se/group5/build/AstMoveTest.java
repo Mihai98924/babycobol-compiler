@@ -1,8 +1,11 @@
 package se.group5.build;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
+import se.group5.ast.procedure.ProcedureList;
+import se.group5.ast.statement.Move;
 import se.group5.processor.Processor;
 
 public class AstMoveTest {
@@ -26,9 +29,23 @@ public class AstMoveTest {
                        01 C PICTURE IS 99.
                   PROCEDURE DIVISION.
                      MOVE C TO B.
-                     MOVE 09 TO A.
+                     MOVE 08 TO C.
+                     MOVE SPACES TO A.
             """;
         Program program = processor.parse(source);
         System.out.println(program);
+
+        Assert.assertNotNull("Program should not be null", program);
+
+        ProcedureList procedures = program.procedures();
+        System.out.println(procedures);
+        Assert.assertNotNull("Procedure list should not be null", procedures);
+        Assert.assertEquals("Procedure list should contain exactly 3 procedures",
+                3, procedures.size());
+        for(int i = 0; i < procedures.size(); i++) {
+            Assert.assertTrue("Procedure should be a MOVE operation",
+                    procedures.get(i).get() instanceof Move);
+        }
+
     }
 }
