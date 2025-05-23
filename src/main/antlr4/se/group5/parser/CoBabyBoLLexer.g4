@@ -37,7 +37,7 @@ fragment Y:[yY]; fragment Z:[zZ];
 // Match start-of-line: 6 characters, representing columns 1–6
 // Optionally a comment can be put here and ignored, and then a new start of line will ocur
 SOL :
-    ( ANY ANY ANY ANY ANY ANY STAR ~[\r\n]* LINE_BREAK SOL
+    ( ANY ANY ANY ANY ANY ANY STAR ANY* LINE_BREAK SOL
     | ANY ANY ANY ANY ANY ANY
     ) -> skip;
 
@@ -63,38 +63,57 @@ IDENTIFICATION_DIVISION: I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A
 
 mode ID;
 ID_EOL: EOL -> type(EOL);
-ID_LINE: SOL [ ] [ ] [ ] [ ] [ ] -> pushMode(ID_NAME);
-
-
-
+ID_CODE_LINE: CODE_LINE -> type(CODE_LINE);
+ID_LINE: CODE_LINE [ ] [ ] [ ] [ ] -> pushMode(ID_NAME);
+ID_START_DD: DATA_DIVISION -> type(DATA_DIVISION), pushMode(DD);
 
 mode ID_NAME;
 ID_NAME_VAL: ~[.\r\n]+;
-ID_NAME_VAL_END: DOT -> pushMode(ID_VALUE);
+ID_NAME_VAL_END: DOT WS* -> pushMode(ID_VALUE);
 
 mode ID_VALUE;
 ID_VALUE_VAL: ~[.\r\n]+;
-ID_VALUE_VAL_END: DOT LINE_BREAK -> pushMode(ID);
+ID_VALUE_VAL_END: EOL -> pushMode(ID);
 
 mode CODE;
 
-// === DATA DIVISION ================================================
 DATA_DIVISION: D WS* A WS* T WS* A WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N -> pushMode(DD);
 
+// === DATA DIVISION ======================================
 mode DD;
-
-DD_WS: WS -> type(WS);
 DD_EOL: EOL -> type(EOL);
-DD_CODE_LINE: SOL [ ] [ ] [ ] -> type(CODE_LINE);
-DD_LEVEL: INTEGERLITERAL -> type(INTEGERLITERAL), pushMode(ID_REP);
+DD_WS: WS -> type(WS);
+DD_LINE: CODE_LINE [ ] [ ] WS* -> pushMode(DD_LVL);
 PICTURE_IS: P WS* I WS* C WS* T WS* U WS* R WS* E WS* I WS* S -> pushMode(PIC_REP);
 LIKE: L WS* I WS* K WS* E -> pushMode(ID_REP);
+OCCURS: O WS* C WS* C WS* U WS* R WS* S;
+TIMES: T WS* I WS* M WS* E WS* S;
+DD_CODE_LINE: CODE_LINE -> type(CODE_LINE);
+DD_START_PD: PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(PD);
+
+mode DD_LVL;
+DD_REP_WS: WS -> type(WS);
+DD_LEVEL: LEVEL -> type(LEVEL), pushMode(ID_REP);
 
 mode ID_REP;
+ID_REP_WS: WS -> type(WS);
+IR_ID: IDENTIFIER -> type(IDENTIFIER), pushMode(DD);
 
-IR_ID: IDENTIFIER -> type(IDENTIFIER), popMode;
+mode PIC_REP;
+REPRESENTATION: PR_SIGN? WS* CHUNK WS* ( PR_DECSEP CHUNK )? WS* PRECISION? -> popMode;
+CHUNK: ( '9' | 'A' | 'X' | 'Z' )+;
+PRECISION           : '(' [0-9]+ ')';
+PR_WS               : [ \t\r\n]+ -> skip ;
+PR_SIGN             : 'S';   // operational sign
+PR_DECSEP           : 'V';   // decimal separator
 
-mode DEFAULT_MODE;
+mode PD;
+
+PD_EOL: EOL -> type(EOL);
+PD_WS: WS -> type(WS);
+PD_LINE: CODE_LINE [ ] [ ] [ ] [ ];
+DISPLAY: D WS* I WS* S WS* P WS* L WS* A WS* Y;
+
 
 // === KEYWORDS ===============================================================
 ACCEPT: A WS* C WS* C WS* E WS* P WS* T;
@@ -104,7 +123,6 @@ CALL: C WS* A WS* L WS* L;
 COPY: C WS* O WS* P WS* Y;
 
 DELIMITED_BY: D WS* E WS* L WS* I WS* M WS* I WS* T WS* E WS* D WS+ B WS* Y;
-DISPLAY: D WS* I WS* S WS* P WS* L WS* A WS* Y;
 
 // Picture representation
 
@@ -114,7 +132,6 @@ SUBTRACT: S WS* U WS* B WS* T WS* R WS* A WS* C WS* T -> pushMode(UNTIL_FROM);
 MULTIPLY: M WS* U WS* L WS* T WS* I WS* P WS* L WS* Y -> pushMode(UNTIL_BY);
 DIVIDE: D WS* I WS* V WS* I WS* D WS* E -> pushMode(UNTIL_INTO);
 REMAINDER: R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
-
 
 ELSE: E WS* L WS* S WS* E;
 END: E WS* N WS* D;
@@ -154,11 +171,9 @@ BY_REFERENCE: B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
 BY_CONTENT: B SOL* Y SOL+ C SOL* O SOL* N SOL* T SOL* E SOL* N SOL* T;
 BY_VALUE: B WS* Y WS+ V WS* A WS* L WS* U WS* E;
 THROUGH: T WS* H WS* R WS* O WS* U WS* G WS* H;
-TIMES: T WS* I WS* M WS* E WS* S;
 RETURNING: R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
 AS_PRIMITIVE: A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
 AS_STRUCT: A WS* S WS+ S WS* T WS* R WS* U WS* C WS* T;
-OCCURS: O WS* C WS* C WS* U WS* R WS* S;
 ALSO: A WS* L WS* S WS* O;
 VARYING: V WS* A WS* R WS* Y WS* I WS* N WS* G;
 WHILE: W WS* H WS* I WS* L WS* E;
@@ -169,6 +184,11 @@ STOP: S WS* T WS* O WS* P;
 PROCEDURE_DIVISION: P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
 ZERO: Z WS* E WS* R WS* O;
 XOR: X WS* O WS* R;
+
+mode DEFAULT_MODE;
+
+
+LEVEL : [0-9] [0-9];
 
 // === LOGICAL OPERATORS ===============================================================
 AND: A WS* N WS* D;
@@ -210,18 +230,6 @@ ARG_LIT : '≡≡≡';
 // === MISCELLANEOUS ===============================================================
 COMMA: ',';
 SIGN : '+' | '-';
-
-mode PIC_REP;
-
-REPRESENTATION: PR_SIGN? WS* CHUNK WS* ( PR_DECSEP CHUNK )? WS* PRECISION? -> popMode;
-CHUNK: ( '9' | 'A' | 'X' | 'Z' )+;
-
-PRECISION           : '(' [0-9]+ ')';
-
-PR_WS               : [ \t\r\n]+ -> skip ;
-PR_SIGN             : 'S';   // operational sign
-PR_DECSEP           : 'V';   // decimal separator
-
 
 mode UNTIL_TO;
 
