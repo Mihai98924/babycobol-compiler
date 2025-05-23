@@ -27,6 +27,6 @@ jobs:
     - name: Install Maven
       run: sudo apt-get update && sudo apt-get install -y maven
     - name: Generate Sources
-      run: mvn -f pom.xml && mvn clean compile
+      run: mvn -f pom.xml antlr4:antlr4
     - name: Run Tests
-      run: mvn test -Dtest=AstSmokeTest
+      run: mvn test
