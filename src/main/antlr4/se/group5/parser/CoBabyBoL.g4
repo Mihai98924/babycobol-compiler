@@ -4,6 +4,20 @@ options {
     tokenVocab=CoBabyBoLLexer;
 }
 
+@members {
+    private boolean noMatchInLine(int want) {
+        int k = 1;
+        for (;;) {
+            int ttype = _input.LA(k);
+            if (ttype == EOL || ttype == Token.EOF)
+                return true;
+            if (ttype == want)
+                return false;
+            k++;
+        }
+    }
+}
+
 program: identification_division data_division? procedure_division? function* EOF;
 function: IDENTIFIER EOL sentence*;
 
@@ -44,20 +58,24 @@ move: MOVE move_arg TO identifier+;
 move_arg: atomic | HIGH_VALUES | LOW_VALUES | SPACES;
 
 // Maths
-add: ADD atomic+ to_atomic giving_identifier*;
+add: add_atomic+ to_atomic giving_identifier_list?;
+add_atomic: ADD atomic+;
 to_atomic: TO atomic;
 
-divide: DIVIDE atomic into_atomic (giving_identifier+ remainder?)?;
+divide: DIVIDE atomic into_atomic (giving_identifier remainder?)?;
+
 into_atomic: INTO atomic+;
-remainder: REMAINDER REM_REPRESENTATION;
+remainder: REMAINDER IDENTIFIER;
 
 multiply: MULTIPLY atomic by_atomic giving_identifier?;
 by_atomic: BY atomic+;
 
-subtract: SUBTRACT atomic+ from_atomic giving_identifier*;
+subtract: sub_atomic from_atomic giving_identifier_list?;
+sub_atomic: SUBTRACT atomic+;
 from_atomic: FROM atomic+;
 
-giving_identifier: GIVING IDENTIFIER;
+giving_identifier: GIVING IDENTIFIER+;
+giving_identifier_list: GIVING IDENTIFIER*;
 
 // Evaluations
 loop: LOOP (SOL? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
@@ -90,14 +108,15 @@ boolean_expression: SOL?
 boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
 atomic: identifier | literal;
+
 identifier: IDENTIFIER (OF identifier)?;
+
+literal: numeric_literal | alphanumeric_literal;
+numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
+alphanumeric_literal: STRINGLITERAL;
 
 file_name: alphanumeric_literal;
 procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
 level: INTEGERLITERAL;
-
-literal: numeric_literal | alphanumeric_literal;
-numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
-alphanumeric_literal: STRINGLITERAL;
