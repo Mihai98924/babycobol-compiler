@@ -13,6 +13,7 @@ import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.Accept;
 import se.group5.ast.statement.Arithmetic;
 import se.group5.ast.statement.Display;
+import se.group5.ast.statement.Move;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
 
@@ -281,6 +282,38 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         Arithmetic subtract = Arithmetic.subtract(subtrahends, minuends, giving);
         procedures.add(subtract);
         return subtract;
+    }
+
+    public Node visitMove(CoBabyBoL.MoveContext ctx) {
+        Object moveType;
+        if(ctx.move_arg().HIGH_VALUES() != null){
+            moveType = Move.MoveType.HIGH_VALUES;
+        } else if (ctx.move_arg().LOW_VALUES() != null){
+            moveType = Move.MoveType.LOW_VALUES;
+        } else if (ctx.move_arg().SPACES() != null){
+            moveType = Move.MoveType.SPACES;
+        } else {
+            moveType = (Atomic) visitAtomic(ctx.move_arg().atomic());
+        }
+
+        List<Identifier> targets = ctx.identifier().stream().map(
+                t -> {
+                    var name = t.getText();
+                    var identifier = symbolTable.resolveIdentifier(name);
+                    Representation repr = ((DataElement) symbolTable.resolve(name).get()).picture();
+                    if (moveType instanceof Atomic){
+                        if(((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
+                            throw new IllegalStateException("Move with literal '" + ((Atomic) moveType).getLiteral().raw() + "' does not match target '" + repr + "'");
+                        } else if (((Atomic) moveType).getElement() != null && !repr.matches(((Atomic) moveType).getElement().picture().toString())) {
+                            throw new IllegalStateException("Move with identifier '" + ((Atomic) moveType).getElement().name() + "' does not match target '" + identifier.get() + "'");
+                        }
+                    }
+                    return identifier.get();
+                }
+        ).toList();
+        Move move = new Move(moveType, targets);
+        procedures.add(move);
+        return move;
     }
 
 
