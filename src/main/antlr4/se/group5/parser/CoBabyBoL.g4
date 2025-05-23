@@ -15,15 +15,15 @@ program
 
 // ── DIVISIONS ─────────────────────────────────────────────────
 identification_division
-    : CODE_LINE IDENTIFICATION_DIVISION EOL identification_clause*
+    : DEFAULT_LINE IDENTIFICATION_DIVISION EOL identification_clause*
     ;
 
 data_division
-    : CODE_LINE DATA_DIVISION EOL data_item*
+    : DEFAULT_LINE DATA_DIVISION EOL data_item*
     ;
 
 procedure_division
-    : CODE_LINE PROCEDURE_DIVISION EOL sentence*
+    : DEFAULT_LINE PROCEDURE_DIVISION EOL sentence*
     ;
 
 // ── TOP-LEVEL FUNCTION ────────────────────────────────────────
@@ -86,9 +86,9 @@ goto        : GOTO procedure_name ;
 
 if
     : IF boolean_expression
-      CODE_LINE? THEN CODE_LINE? statement+
-      (CODE_LINE? ELSE statement+)?
-      CODE_LINE? END?
+      DEFAULT_LINE? THEN DEFAULT_LINE? statement+
+      (DEFAULT_LINE? ELSE statement+)?
+      DEFAULT_LINE? END?
     ;
 
 perform
@@ -148,7 +148,7 @@ add_atomic  : ADD atomic+ ;
 to_atomic   : TO  atomic   ;
 
 divide
-    : DIVIDE atomic into_atomic (giving_identifier remainder?)?
+    : DIVIDE atomic into_atomic (giving_identifier_list remainder?)?
     ;
 
 into_atomic : INTO atomic+ ;
@@ -167,13 +167,13 @@ subtract
 sub_atomic  : SUBTRACT atomic+ ;
 from_atomic : FROM     atomic+ ;
 
-giving_identifier      : GIVING IDENTIFIER+ ;
+giving_identifier      : GIVING IDENTIFIER ;
 giving_identifier_list : GIVING IDENTIFIER* ;
 
 // ── LOOP / EVALUATE ───────────────────────────────────────────
 loop
     : LOOP (
-          CODE_LINE? (
+          DEFAULT_LINE? (
               WHILE   boolean_expression
             | UNTIL   boolean_expression
             | statement
@@ -182,14 +182,14 @@ loop
                 (TO   atomic)?
                 (BY   atomic)?
           )
-      )+ CODE_LINE? END
+      )+ DEFAULT_LINE? END
     ;
 
 evaluate
     : EVALUATE any_expression
-      (CODE_LINE? ALSO any_expression)*
-      (CODE_LINE? when_clause CODE_LINE? statement+)+
-      CODE_LINE? END
+      (DEFAULT_LINE? ALSO any_expression)*
+      (DEFAULT_LINE? when_clause DEFAULT_LINE? statement+)+
+      DEFAULT_LINE? END
     ;
 
 any_expression
@@ -224,7 +224,7 @@ string_expr
     ;
 
 boolean_expression
-    : CODE_LINE? (
+    : DEFAULT_LINE? (
           NOT boolean_expression
         | LPAR boolean_expression RPAR
         | atomic (EQ_OP atomic)? boolean_eq_expression?
@@ -233,7 +233,7 @@ boolean_expression
     ;
 
 boolean_eq_expression
-    : CODE_LINE? (OR | AND | XOR) CODE_LINE?
+    : DEFAULT_LINE? (OR | AND | XOR) DEFAULT_LINE?
       ( IDENTIFIER (EQ_OP atomic)?
       | EQ_OP? atomic
       | LPAR boolean_expression RPAR

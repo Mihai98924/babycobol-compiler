@@ -61,7 +61,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     @Override
     public Node visitData_item(CoBabyBoL.Data_itemContext ctx) {
         // level number & identifier
-        int level = Integer.parseInt(ctx.level().INTEGERLITERAL().getText());
+        int level = Integer.parseInt(ctx.level().LEVEL().getText());
         Identifier id = new Identifier(ctx.IDENTIFIER().getText());
 
         // Determine the picture (may come from LIKE, or explicit PIC, or none)
@@ -166,10 +166,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
         if (ctx.identifier() != null) {
             Identifier identifier = (Identifier) visit(ctx.identifier());
-            Identifier complete = new Identifier(
-                identifier.value() + "." + ctx.IDENTIFIER().getText()
+            return new Identifier(
+                    identifier.value() + "." + ctx.IDENTIFIER().getText()
             );
-            return complete;
         }
         return new Identifier(ctx.IDENTIFIER().getText());
     }
@@ -196,18 +195,20 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Arithmetic visitAdd(CoBabyBoL.AddContext ctx) {
-        List<Atomic> addends = ctx.atomic()
-                .stream().map(a -> (Atomic) visitAtomic(a)).toList();
+        List<Atomic> addends = ctx.add_atomic().stream()
+                .flatMap(aa -> aa.atomic().stream())
+                .map(a -> (Atomic) visitAtomic(a)).toList();
         Atomic target = (Atomic) visitAtomic(ctx.to_atomic().atomic());
 
-        List<DataElement> giving = ctx.giving_identifier() == null
+        List<DataElement> giving = ctx.giving_identifier_list() == null
                 ? List.of()
-                : ctx.giving_identifier()
-                .stream().map(i -> (DataElement) symbolTable.resolve(i.IDENTIFIER().getText()).get()).toList();
+                : ctx.giving_identifier_list().IDENTIFIER()
+                .stream().map(i -> (DataElement) symbolTable.resolve(i.getText()).get()).toList();
         Arithmetic add = Arithmetic.add(addends, target, giving);
         procedures.add(add);
         return add;
     }
+
 
     @Override
     public Arithmetic visitDivide(CoBabyBoL.DivideContext ctx) {
@@ -218,18 +219,18 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();
 
-        List<DataElement> giving = ctx.giving_identifier() == null
+        List<DataElement> giving = ctx.giving_identifier_list() == null
                 ? List.of()
-                : ctx.giving_identifier()
+                : ctx.giving_identifier_list().IDENTIFIER()
                 .stream()
                 .map(g -> (DataElement) symbolTable
-                        .resolve(g.IDENTIFIER().getText())
+                        .resolve(g.getText())
                         .get())
                 .toList();
 
         DataElement remainder = null;
         if (ctx.remainder() != null) {
-            String remName = ctx.remainder().REM_REPRESENTATION().getText();
+            String remName = ctx.remainder().REMAINDER().getText();
             remainder = (DataElement) symbolTable.resolve(remName).get();
         }
 
@@ -260,7 +261,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Arithmetic visitSubtract(CoBabyBoL.SubtractContext ctx) {
-        List<Atomic> subtrahends = ctx.atomic()
+        List<Atomic> subtrahends = ctx.from_atomic().atomic()
                 .stream()
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();
@@ -270,12 +271,12 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();
 
-        List<DataElement> giving = ctx.giving_identifier() == null
+        List<DataElement> giving = ctx.giving_identifier_list() == null
                 ? List.of()
-                : ctx.giving_identifier()
+                : ctx.giving_identifier_list().IDENTIFIER()
                 .stream()
                 .map(i -> (DataElement) symbolTable
-                        .resolve(i.IDENTIFIER().getText())
+                        .resolve(i.getText())
                         .get())
                 .toList();
 

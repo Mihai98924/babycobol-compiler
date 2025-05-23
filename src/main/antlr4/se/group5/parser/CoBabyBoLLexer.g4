@@ -33,17 +33,18 @@ fragment Y : [yY]; fragment Z : [zZ];
 // === DEFAULT MODE (start-of-line handling) ====================
 // Match start-of-line (columns 1-6); handle comments or advance.
 SOL
-    : ( ANY ANY ANY ANY ANY ANY STAR ANY* LINE_BREAK SOL
+    : ( ANY ANY ANY ANY ANY ANY COMMENT
       | ANY ANY ANY ANY ANY ANY
       ) -> skip
     ;
 
 // Code line begins at column 7
-CODE_LINE : SOL [ ] ;
+DEFAULT_LINE : SOL [ ] -> pushMode(CODE);
 
 // Entire COBOL comment line (column-7 '*')
-COMMENT : STAR ANY* LINE_BREAK ;
+COMMENT : STAR ANY* LINE_BREAK SOL;
 
+mode CODE;
 // Whitespace (incl. continuation) – skipped
 WS : ([ ] | CONTINUE_LINE) -> skip ;
 CONTINUE_LINE : LINE_BREAK SOL '-' -> skip ;
@@ -60,8 +61,8 @@ IDENTIFICATION_DIVISION
 
 mode ID;
 ID_EOL        : EOL       -> type(EOL);
-ID_CODE_LINE  : CODE_LINE -> type(CODE_LINE);
-ID_LINE       : CODE_LINE [ ] [ ] [ ] [ ]           -> pushMode(ID_NAME);
+ID_CODE_LINE  : DEFAULT_LINE -> type(DEFAULT_LINE);
+ID_LINE       : DEFAULT_LINE [ ] [ ] [ ] [ ]           -> pushMode(ID_NAME);
 ID_START_DD   : DATA_DIVISION                       -> type(DATA_DIVISION), pushMode(DD);
 
 mode ID_NAME;
@@ -84,14 +85,14 @@ DATA_DIVISION
 mode DD;
 DD_EOL        : EOL        -> type(EOL);
 DD_WS         : WS         -> type(WS);
-DD_LINE       : CODE_LINE [ ] [ ] WS*                  -> pushMode(DD_LVL);
+DD_LINE       : DEFAULT_LINE [ ] [ ] WS*                  -> pushMode(DD_LVL);
 PICTURE_IS    : P WS* I WS* C WS* T WS* U WS* R WS* E WS* I WS* S
                 -> pushMode(PIC_REP);
 LIKE          : L WS* I WS* K WS* E                    -> pushMode(ID_REP);
 OCCURS        : O WS* C WS* C WS* U WS* R WS* S;
 TIMES         : T WS* I WS* M WS* E WS* S;
-DD_CODE_LINE  : CODE_LINE        -> type(CODE_LINE);
-DD_START_PD   : PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(DEFAULT_MODE);
+DD_CODE_LINE  : DEFAULT_LINE        -> type(DEFAULT_LINE);
+DD_START_PD   : PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
 
 mode DD_LVL;
 DD_REP_WS : WS    -> type(WS);
@@ -113,7 +114,10 @@ PR_SIGN      : 'S' ;               // operational sign
 PR_DECSEP    : 'V' ;               // decimal separator
 
 // === BACK TO DEFAULT MODE =====================================
-mode DEFAULT_MODE;
+mode CODE;
+
+CODE_EOL : EOL -> type(EOL);
+CODE_LINE : DEFAULT_LINE [ ] [ ] [ ] [ ];
 DISPLAY : D WS* I WS* S WS* P WS* L WS* A WS* Y ;
 
 // === KEYWORDS & RESERVED WORDS ================================
@@ -156,13 +160,6 @@ WITH_NO_ADVANCING   : W WS* I WS* T WS* H WS+ N WS* O WS+ A WS* D WS* V WS* A WS
 SIZE                : S WS* I WS* Z WS* E;
 SPACE               : S WS* P WS* A WS* C WS* E;
 SPACES              : S WS* P WS* A WS* C WS* E WS* S;
-
-PROGRAM_ID          : P WS* R WS* O WS* G WS* R WS* A WS* M WS* '-' WS* I WS* D;
-AUTHOR              : A WS* U WS* T WS* H WS* O WS* R;
-INSTALLATION        : I WS* N WS* S WS* T WS* A WS* L WS* L WS* A WS* T WS* I WS* O WS* N;
-DATE_WRITTEN        : D WS* A WS* T WS* E WS* '-' WS* W WS* R WS* I WS* T WS* T WS* E WS* N;
-DATE_COMPILED       : D WS* A WS* T WS* E WS* '-' WS* C WS* O WS* M WS* P WS* I WS* L WS* E WS* D;
-SECURITY            : S WS* E WS* C WS* U WS* R WS* I WS* T WS* Y;
 
 FROM                : F WS* R WS* O WS* M;
 HIGH_VALUES         : H WS* I WS* G WS* H WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;

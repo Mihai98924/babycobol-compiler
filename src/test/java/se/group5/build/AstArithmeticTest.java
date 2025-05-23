@@ -27,14 +27,14 @@ public class AstArithmeticTest {
     @Test
     public void AddOperation() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. ADDTEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 A PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     ADD 06 70 TO A.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. ADDTEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 A PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       ADD 06 70 TO A.
             """;
         assertSingleArithmetic(source);
     }
@@ -45,14 +45,14 @@ public class AstArithmeticTest {
     @Test
     public void SubtractOperation() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. SUBTRACTTEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 A PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     SUBTRACT 05 20 FROM A.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. SUBTRACTTEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 A PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       SUBTRACT 05 20 FROM A.
             """;
         assertSingleArithmetic(source);
     }
@@ -63,14 +63,14 @@ public class AstArithmeticTest {
     @Test
     public void MultiplyOperation() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. MULTIPLYTEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 A PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     MULTIPLY 02 BY A.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. MULTIPLYTEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 A PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       MULTIPLY 02 BY A.
             """;
         assertSingleArithmetic(source);
     }
@@ -81,14 +81,14 @@ public class AstArithmeticTest {
     @Test
     public void DivideOperation() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. DIVIDETEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 A PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     DIVIDE 02 INTO A.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. DIVIDETEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 A PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       DIVIDE 02 INTO A.
             """;
         assertSingleArithmetic(source);
     }
@@ -96,15 +96,15 @@ public class AstArithmeticTest {
     @Test
     public void DivideOperationWithOf() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. DIVIDETEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 GROUP.
-                          03 A PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     DIVIDE 02 INTO A OF GROUP.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. DIVIDETEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 GROUP.
+                       03 A PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       DIVIDE 02 INTO A OF GROUP.
             """;
         assertSingleArithmetic(source);
     }
