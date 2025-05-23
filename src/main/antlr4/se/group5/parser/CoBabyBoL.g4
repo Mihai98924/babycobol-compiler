@@ -28,21 +28,21 @@ procedure_division
 
 // ── TOP-LEVEL FUNCTION ────────────────────────────────────────
 function
-    : IDENTIFIER EOL sentence*
+    : DEFAULT_LINE IDENTIFIER EOL sentence*
     ;
 
 // === IDENTIFICATION DIVISION ==================================
 identification_clause
-    : ID_LINE clause_name ID_NAME_VAL_END clause_value ID_VALUE_VAL_END
+    : DEFAULT_LINE clause_name ID_END clause_value EOL
     ;
 
-clause_name   : ID_NAME_VAL ;
-clause_value  : ID_VALUE_VAL ;
+clause_name   : ID_NAME ;
+clause_value  : ID_VALUE ;
 
 // === DATA DIVISION ============================================
 data_item
-    : DD_LINE level WS* IDENTIFIER WS*
-      (picture_clause | like_clause)* WS*
+    : DEFAULT_LINE level IDENTIFIER
+      (picture_clause | like_clause)*
       occurs_clause*
       EOL
     ;
@@ -57,7 +57,7 @@ sentence
     ;
 
 statement
-    : CODE_LINE WS* (
+    : DEFAULT_LINE (
           accept
         | alter
         | goto
@@ -106,13 +106,12 @@ copy
 
 // ── DISPLAY ───────────────────────────────────────────────────
 display
-    : DISPLAY WS* display_atomic_clause+ WITH_NO_ADVANCING?
+    : DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?
     ;
 
 display_atomic_clause
-    : atomic WS*
+    : atomic
       (DELIMITED_BY (SIZE | SPACE | literal))?
-      WS*
     ;
 
 // ── CALL & MOVE ───────────────────────────────────────────────
@@ -167,10 +166,9 @@ move_arg
     : atomic | HIGH_VALUES | LOW_VALUES | SPACES
     ;
 
-
 // ── ARITHMETIC ────────────────────────────────────────────────
 add
-    : add_atomic to_atomic giving_identifier_list?
+    : add_atomic to_atomic giving_identifier_list? add?
     ;
 
 add_atomic  : ADD atomic+ ;
