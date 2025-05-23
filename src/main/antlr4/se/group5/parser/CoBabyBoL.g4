@@ -40,7 +40,8 @@ display_atomic_clause: atomic (DELIMITED_BY (SIZE | SPACE | literal))?;
 
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
-move: MOVE (atomic | HIGH_VALUES | LOW_VALUES | SPACES) TO identifier+;
+move: MOVE move_arg TO identifier+;
+move_arg: atomic | HIGH_VALUES | LOW_VALUES | SPACES;
 
 // Maths
 add: ADD atomic+ to_atomic giving_identifier*;
