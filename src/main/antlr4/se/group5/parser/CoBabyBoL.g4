@@ -1,103 +1,259 @@
 parser grammar CoBabyBoL;
 
 options {
-    tokenVocab=CoBabyBoLLexer;
+    tokenVocab = CoBabyBoLLexer;
 }
 
-program: identification_division data_division? procedure_division? function* EOF;
-function: IDENTIFIER EOL sentence*;
+// ── PROGRAM STRUCTURE ─────────────────────────────────────────
+program
+    : identification_division
+      data_division?
+      procedure_division?
+      function*
+      EOF
+    ;
 
-// Identification division
-identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
-identification_clause: WS* clause_name EOL clause_value EOL;
-clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
-clause_value: atomic;
+// ── DIVISIONS ─────────────────────────────────────────────────
+identification_division
+    : DEFAULT_LINE IDENTIFICATION_DIVISION EOL identification_clause*
+    ;
 
-// Procedure division
-procedure_division: PROCEDURE_DIVISION EOL sentence*;
-sentence: statement* EOL;
-statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
+data_division
+    : DEFAULT_LINE DATA_DIVISION EOL data_item*
+    ;
 
-// Data division
-data_division: DATA_DIVISION EOL data_item*;
-data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
-picture_clause: PICTURE_IS REPRESENTATION;
-like_clause: LIKE IDENTIFIER;
-occurs_clause: OCCURS INTEGERLITERAL TIMES;
+procedure_division
+    : DEFAULT_LINE PROCEDURE_DIVISION EOL sentence*
+    ;
 
-// Statements
-accept: ACCEPT IDENTIFIER+;
-alter: ALTER procedure_name TO PROCEED TO procedure_name;
-goto: GOTO procedure_name;
-if: IF boolean_expression SOL? THEN SOL? statement+ (SOL? ELSE statement+)? SOL? END?;
-perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
-signal: SIGNAL (procedure_name | OFF) ON_ERROR;
-copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
+// ── TOP-LEVEL FUNCTION ────────────────────────────────────────
+function
+    : IDENTIFIER EOL sentence*
+    ;
 
-// Display
-display: DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?;
-display_atomic_clause: atomic (DELIMITED_BY (SIZE | SPACE | literal))?;
+// === IDENTIFICATION DIVISION ==================================
+identification_clause
+    : ID_LINE clause_name ID_NAME_VAL_END clause_value ID_VALUE_VAL_END
+    ;
 
-call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
-      CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
-move: MOVE move_arg TO identifier+;
-move_arg: atomic | HIGH_VALUES | LOW_VALUES | SPACES;
+clause_name   : ID_NAME_VAL ;
+clause_value  : ID_VALUE_VAL ;
 
-// Maths
-add: ADD atomic+ to_atomic giving_identifier*;
-to_atomic: TO atomic;
+// === DATA DIVISION ============================================
+data_item
+    : DD_LINE level WS* IDENTIFIER WS*
+      (picture_clause | like_clause)* WS*
+      occurs_clause*
+      EOL
+    ;
 
-divide: DIVIDE atomic into_atomic (giving_identifier+ remainder?)?;
-into_atomic: INTO atomic+;
-remainder: REMAINDER REM_REPRESENTATION;
+picture_clause : PICTURE_IS REPRESENTATION ;
+like_clause    : LIKE IDENTIFIER ;
+occurs_clause  : OCCURS INTEGERLITERAL TIMES ;
 
-multiply: MULTIPLY atomic by_atomic giving_identifier?;
-by_atomic: BY atomic+;
+// === PROCEDURE DIVISION =======================================
+sentence
+    : statement* EOL
+    ;
 
-subtract: SUBTRACT atomic+ from_atomic giving_identifier*;
-from_atomic: FROM atomic+;
+statement
+    : CODE_LINE WS* (
+          accept
+        | alter
+        | goto
+        | if
+        | perform
+        | signal
+        | copy
+        | display
+        | call
+        | add
+        | divide
+        | move
+        | multiply
+        | subtract
+        | loop
+        | evaluate
+        | next_sentence
+        | stop
+      )
+    ;
 
-giving_identifier: GIVING IDENTIFIER;
+// ── STATEMENTS ────────────────────────────────────────────────
+accept      : ACCEPT IDENTIFIER+ ;
+alter       : ALTER procedure_name TO PROCEED TO procedure_name ;
+goto        : GOTO procedure_name ;
 
-// Evaluations
-loop: LOOP (SOL? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
+if
+    : IF boolean_expression
+      DEFAULT_LINE? THEN DEFAULT_LINE? statement+
+      (DEFAULT_LINE? ELSE statement+)?
+      DEFAULT_LINE? END?
+    ;
+
+perform
+    : PERFORM procedure_name
+      (THROUGH procedure_name)?
+      (atomic TIMES)?
+    ;
+
+signal      : SIGNAL (procedure_name | OFF) ON_ERROR ;
+
+copy
+    : COPY file_name
+      (REPLACING (argument_literal BY argument_literal)+)?
+    ;
+
+// ── DISPLAY ───────────────────────────────────────────────────
+display
+    : DISPLAY WS* display_atomic_clause+ WITH_NO_ADVANCING?
+    ;
+
+display_atomic_clause
+    : atomic WS*
+      (DELIMITED_BY (SIZE | SPACE | literal))?
+      WS*
+    ;
+
+// ── CALL & MOVE ───────────────────────────────────────────────
+call
+    : CALL file_name
+      (USING (BY_REFERENCE IDENTIFIER
+            | BY_CONTENT   atomic
+            | BY_VALUE     atomic
+            )+)*
+
+    | CALL (function_name OF)* program_name
+      ( USING    ((BY_REFERENCE | BY_CONTENT | BY_VALUE)
+                  atomic (AS_PRIMITIVE | AS_STRUCT))+ )*
+      ( RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE)
+                  atomic (AS_PRIMITIVE | AS_STRUCT))+ )*
+    ;
+
+move
+    : MOVE move_arg TO identifier+
+    ;
+
+move_arg
+    : atomic | HIGH_VALUES | LOW_VALUES | SPACES
+    ;
 
 
-evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause SOL? statement+)+ SOL? END;
-any_expression: boolean_expression | math_expr | string_expr;
-when_clause: WHEN ((atomic_through | ( OTHER)));
+// ── ARITHMETIC ────────────────────────────────────────────────
+add
+    : add_atomic+ to_atomic giving_identifier_list?
+    ;
 
+add_atomic  : ADD atomic+ ;
+to_atomic   : TO  atomic   ;
 
-// Parts
+divide
+    : DIVIDE atomic into_atomic (giving_identifier_list remainder?)?
+    ;
 
-next_sentence: NEXT_SENTENCE;
-stop: STOP;
+into_atomic : INTO atomic+ ;
+remainder   : REMAINDER IDENTIFIER ;
 
+multiply
+    : MULTIPLY atomic by_atomic giving_identifier?
+    ;
 
-atomic_through: atomic (THROUGH  atomic)? (ALSO atomic_through)?;
+by_atomic   : BY   atomic+ ;
 
-argument_literal: ARG_LIT literal ARG_LIT;
-math_expr: (LPAR math_expr RPAR | numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
-string_expr: (literal | IDENTIFIER) (MATH_OP string_expr)?;
+subtract
+    : sub_atomic from_atomic giving_identifier_list?
+    ;
 
-boolean_expression: SOL?
-(NOT boolean_expression |
- LPAR boolean_expression RPAR |
-  atomic (EQ_OP atomic)? boolean_eq_expression? |
-  LPAR boolean_expression RPAR boolean_eq_expression?
-);
+sub_atomic  : SUBTRACT atomic+ ;
+from_atomic : FROM     atomic+ ;
 
-boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
+giving_identifier      : GIVING IDENTIFIER ;
+giving_identifier_list : GIVING IDENTIFIER* ;
 
-atomic: identifier | literal;
-identifier: IDENTIFIER (OF identifier)?;
+// ── LOOP / EVALUATE ───────────────────────────────────────────
+loop
+    : LOOP (
+          DEFAULT_LINE? (
+              WHILE   boolean_expression
+            | UNTIL   boolean_expression
+            | statement
+            | VARYING IDENTIFIER?
+                (FROM atomic)?
+                (TO   atomic)?
+                (BY   atomic)?
+          )
+      )+ DEFAULT_LINE? END
+    ;
 
-file_name: alphanumeric_literal;
-procedure_name: IDENTIFIER;
-function_name: IDENTIFIER;
-program_name: IDENTIFIER;
-level: INTEGERLITERAL;
+evaluate
+    : EVALUATE any_expression
+      (DEFAULT_LINE? ALSO any_expression)*
+      (DEFAULT_LINE? when_clause DEFAULT_LINE? statement+)+
+      DEFAULT_LINE? END
+    ;
 
-literal: numeric_literal | alphanumeric_literal;
-numeric_literal: NUMERICLITERAL | ZERO | INTEGERLITERAL;
-alphanumeric_literal: STRINGLITERAL;
+any_expression
+    : boolean_expression
+    | math_expr
+    | string_expr
+    ;
+
+when_clause
+    : WHEN (atomic_through | OTHER)
+    ;
+
+// ── PARTS & TERMINATORS ───────────────────────────────────────
+next_sentence : NEXT_SENTENCE ;
+stop          : STOP ;
+
+// ── EXPRESSIONS & ATOMS ───────────────────────────────────────
+atomic_through
+    : atomic (THROUGH atomic)? (ALSO atomic_through)?
+    ;
+
+argument_literal : ARG_LIT literal ARG_LIT ;
+
+math_expr
+    : (LPAR math_expr RPAR | numeric_literal | IDENTIFIER)
+      (MATH_OP math_expr)?
+    ;
+
+string_expr
+    : (literal | IDENTIFIER)
+      (MATH_OP string_expr)?
+    ;
+
+boolean_expression
+    : DEFAULT_LINE? (
+          NOT boolean_expression
+        | LPAR boolean_expression RPAR
+        | atomic (EQ_OP atomic)? boolean_eq_expression?
+        | LPAR boolean_expression RPAR boolean_eq_expression?
+      )
+    ;
+
+boolean_eq_expression
+    : DEFAULT_LINE? (OR | AND | XOR) DEFAULT_LINE?
+      ( IDENTIFIER (EQ_OP atomic)?
+      | EQ_OP? atomic
+      | LPAR boolean_expression RPAR
+      )
+      boolean_eq_expression?
+    ;
+
+atomic     : identifier | literal ;
+identifier : IDENTIFIER (OF identifier)? ;
+
+literal
+    : numeric_literal
+    | alphanumeric_literal
+    ;
+
+numeric_literal        : NUMERICLITERAL | ZERO | INTEGERLITERAL ;
+alphanumeric_literal   : STRINGLITERAL ;
+
+file_name      : alphanumeric_literal ;
+procedure_name : IDENTIFIER ;
+function_name  : IDENTIFIER ;
+program_name   : IDENTIFIER ;
+level          : LEVEL ;
