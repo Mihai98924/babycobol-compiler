@@ -4,46 +4,32 @@ options {
     tokenVocab=CoBabyBoLLexer;
 }
 
-@members {
-    private boolean noMatchInLine(int want) {
-        int k = 1;
-        for (;;) {
-            int ttype = _input.LA(k);
-            if (ttype == EOL || ttype == Token.EOF)
-                return true;
-            if (ttype == want)
-                return false;
-            k++;
-        }
-    }
-}
-
 program: identification_division data_division? procedure_division? function* EOF;
 function: IDENTIFIER EOL sentence*;
 
-// Identification division
-identification_division: SOL IDENTIFICATION_DIVISION EOL identification_clause*;
-identification_clause: WS* clause_name EOL clause_value EOL;
-clause_name: PROGRAM_ID | AUTHOR | INSTALLATION | DATE_WRITTEN | DATE_COMPILED | SECURITY | IDENTIFIER;
-clause_value: atomic;
+// === IDENTIFICATION DIVISION ======================================
+identification_division: CODE_LINE IDENTIFICATION_DIVISION EOL identification_clause*;
+identification_clause: ID_LINE clause_name ID_NAME_VAL_END clause_value ID_VALUE_VAL_END;
+clause_name: ID_NAME_VAL;
+clause_value: ID_VALUE_VAL;
+
+// === DATA DIVISION ======================================
+data_division: CODE_LINE DATA_DIVISION EOL data_item*;
+data_item: CODE_LINE level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
+picture_clause: PICTURE_IS REPRESENTATION;
+like_clause: LIKE IDENTIFIER;
+occurs_clause: OCCURS INTEGERLITERAL TIMES;
 
 // Procedure division
 procedure_division: PROCEDURE_DIVISION EOL sentence*;
 sentence: statement* EOL;
-statement: SOL? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
-
-// Data division
-data_division: DATA_DIVISION EOL data_item*;
-data_item: level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
-picture_clause: PICTURE_IS REPRESENTATION;
-like_clause: LIKE IDENTIFIER;
-occurs_clause: OCCURS INTEGERLITERAL TIMES;
+statement: CODE_LINE? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
 // Statements
 accept: ACCEPT IDENTIFIER+;
 alter: ALTER procedure_name TO PROCEED TO procedure_name;
 goto: GOTO procedure_name;
-if: IF boolean_expression SOL? THEN SOL? statement+ (SOL? ELSE statement+)? SOL? END?;
+if: IF boolean_expression CODE_LINE? THEN CODE_LINE? statement+ (CODE_LINE? ELSE statement+)? CODE_LINE? END?;
 perform: PERFORM procedure_name (THROUGH procedure_name)? (atomic TIMES)?;
 signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
@@ -78,10 +64,10 @@ giving_identifier: GIVING IDENTIFIER+;
 giving_identifier_list: GIVING IDENTIFIER*;
 
 // Evaluations
-loop: LOOP (SOL? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ SOL? END;
+loop: LOOP (CODE_LINE? ( WHILE  boolean_expression | UNTIL  boolean_expression | statement | (VARYING IDENTIFIER? (FROM atomic)? (TO atomic)? (BY atomic)?)))+ CODE_LINE? END;
 
 
-evaluate: EVALUATE any_expression (SOL? ALSO any_expression)* (SOL? when_clause SOL? statement+)+ SOL? END;
+evaluate: EVALUATE any_expression (CODE_LINE? ALSO any_expression)* (CODE_LINE? when_clause CODE_LINE? statement+)+ CODE_LINE? END;
 any_expression: boolean_expression | math_expr | string_expr;
 when_clause: WHEN ((atomic_through | ( OTHER)));
 
@@ -98,14 +84,14 @@ argument_literal: ARG_LIT literal ARG_LIT;
 math_expr: (LPAR math_expr RPAR | numeric_literal | IDENTIFIER) (MATH_OP math_expr)?;
 string_expr: (literal | IDENTIFIER) (MATH_OP string_expr)?;
 
-boolean_expression: SOL?
+boolean_expression: CODE_LINE?
 (NOT boolean_expression |
  LPAR boolean_expression RPAR |
   atomic (EQ_OP atomic)? boolean_eq_expression? |
   LPAR boolean_expression RPAR boolean_eq_expression?
 );
 
-boolean_eq_expression: SOL? (OR | AND | XOR) SOL? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
+boolean_eq_expression: CODE_LINE? (OR | AND | XOR) CODE_LINE? (IDENTIFIER (EQ_OP atomic)? | EQ_OP? atomic | LPAR boolean_expression RPAR) boolean_eq_expression?;
 
 atomic: identifier | literal;
 
