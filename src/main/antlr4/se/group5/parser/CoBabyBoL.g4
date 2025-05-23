@@ -5,25 +5,27 @@ options {
 }
 
 program: identification_division data_division? procedure_division? function* EOF;
+
+identification_division: CODE_LINE IDENTIFICATION_DIVISION EOL identification_clause*;
+data_division: CODE_LINE DATA_DIVISION EOL data_item*;
+procedure_division: CODE_LINE PROCEDURE_DIVISION EOL sentence*;
+
 function: IDENTIFIER EOL sentence*;
 
 // === IDENTIFICATION DIVISION ======================================
-identification_division: CODE_LINE IDENTIFICATION_DIVISION EOL identification_clause*;
 identification_clause: ID_LINE clause_name ID_NAME_VAL_END clause_value ID_VALUE_VAL_END;
 clause_name: ID_NAME_VAL;
 clause_value: ID_VALUE_VAL;
 
 // === DATA DIVISION ======================================
-data_division: CODE_LINE DATA_DIVISION EOL data_item*;
-data_item: CODE_LINE level IDENTIFIER (picture_clause | like_clause)* (occurs_clause)* EOL;
+data_item: DD_LINE level WS* IDENTIFIER WS* (picture_clause | like_clause)* WS* (occurs_clause)* EOL;
 picture_clause: PICTURE_IS REPRESENTATION;
 like_clause: LIKE IDENTIFIER;
 occurs_clause: OCCURS INTEGERLITERAL TIMES;
 
 // Procedure division
-procedure_division: PROCEDURE_DIVISION EOL sentence*;
 sentence: statement* EOL;
-statement: CODE_LINE? (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
+statement: PD_LINE WS* (accept | alter | goto | if | perform | signal | copy | display | call | add | divide | move | multiply | subtract | loop | evaluate | next_sentence | stop);
 
 // Statements
 accept: ACCEPT IDENTIFIER+;
@@ -35,8 +37,8 @@ signal: SIGNAL (procedure_name | OFF) ON_ERROR;
 copy: COPY file_name (REPLACING (argument_literal BY argument_literal)+)?;
 
 // Display
-display: DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?;
-display_atomic_clause: atomic (DELIMITED_BY (SIZE | SPACE | literal))?;
+display: DISPLAY WS* display_atomic_clause+ WITH_NO_ADVANCING?;
+display_atomic_clause: atomic WS* (DELIMITED_BY (SIZE | SPACE | literal))? WS*;
 
 call: CALL file_name (USING (BY_REFERENCE IDENTIFIER | BY_CONTENT atomic | BY_VALUE atomic)+)* |
       CALL (function_name OF)* program_name ( USING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT))+)* (RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE) atomic (AS_PRIMITIVE | AS_STRUCT)))*;
@@ -105,4 +107,4 @@ file_name: alphanumeric_literal;
 procedure_name: IDENTIFIER;
 function_name: IDENTIFIER;
 program_name: IDENTIFIER;
-level: INTEGERLITERAL;
+level: LEVEL;
