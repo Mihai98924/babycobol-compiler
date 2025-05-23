@@ -12,4 +12,9 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
         LOW_VALUES,
         SPACES;
     }
+
+    @Override
+    public String toString() {
+        return "MOVE(" + type + targets + ")";
+    }
 }
