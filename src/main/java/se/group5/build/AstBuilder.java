@@ -10,13 +10,13 @@ import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
-import se.group5.ast.statement.Accept;
-import se.group5.ast.statement.Arithmetic;
-import se.group5.ast.statement.Display;
-import se.group5.ast.statement.Move;
+import se.group5.ast.statement.*;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
+import se.group5.processor.Processor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -315,6 +315,67 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         Move move = new Move(moveType, targets);
         procedures.add(move);
         return move;
+    }
+
+    public Node visitCall(CoBabyBoL.CallContext ctx) {
+        AlphanumericLiteral filename = null;
+        List<Object> args = new ArrayList<>();
+        if(ctx.call_option_1() != null){
+            filename = new AlphanumericLiteral(ctx.call_option_1().file_name().getText());
+            File file = new File(filename.raw()+ ".baby");
+            if(!file.exists()){
+                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
+            }
+            if(ctx.call_option_1().USING() != null){
+                var options = ctx.call_option_1().by_clause();
+                for (var option : options) {
+                    if (option.by_reference() != null) {
+                        if(option.by_reference().IDENTIFIER() == null || option.by_reference().atomic() != null) {
+                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+                        }
+                        var identifier = symbolTable.resolveIdentifier(option.by_reference().IDENTIFIER().getText());
+                        if(identifier.isEmpty()) {
+                            throw new IllegalStateException("Identifier '" + option.by_reference().IDENTIFIER().getText() + "' is not an element or not declared");
+                        }
+                        args.add(identifier.get());
+                    } else if (option.by_content() != null) {
+                        if(option.by_content().atomic() != null) {
+                            var atomic = (Atomic) visit(option.by_content().atomic());
+                            if(atomic.getElement() != null) {
+                                args.add(atomic.getElement());
+                            } else if(atomic.getLiteral() != null) {
+                                args.add(atomic.getLiteral());
+                            }
+                        }
+                    } else if(option.by_value() != null) {
+                        if(option.by_value().atomic() != null) {
+                            var atomic = (Atomic) visit(option.by_value().atomic());
+                            if(atomic.getElement() != null) {
+                                args.add(atomic.getElement());
+                            } else if(atomic.getLiteral() != null) {
+                                args.add(atomic.getLiteral());
+                            }
+                        }
+                    }
+                }
+            }
+
+        } else if(ctx.call_option_2() != null){
+            filename = new AlphanumericLiteral(ctx.call_option_2().file_name().getText());
+            File file = new File(filename.raw()+ ".baby");
+            if(!file.exists()){
+                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
+            }
+            Processor processor = new Processor();
+            try {
+                Program program = processor.parse(String.valueOf(file));
+            } catch (IOException e) {
+                throw new IllegalStateException("Error parsing file '" + filename.raw() + ".baby': " + e.getMessage(), e);
+            }
+        }
+        Call call = new Call(filename, args);
+        procedures.add(call);
+        return call;
     }
 
 

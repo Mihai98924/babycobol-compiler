@@ -116,19 +116,20 @@ display_atomic_clause
     ;
 
 // ── CALL & MOVE ───────────────────────────────────────────────
-call
-    : CALL file_name
-      (USING (BY_REFERENCE IDENTIFIER
-            | BY_CONTENT   atomic
-            | BY_VALUE     atomic
-            )+)*
+call: CALL (call_function)* file_name (USING (by_clause as_clause)+)* (RETURNING (returning_by_clause as_clause))*;
+call_function: function_name OF;
 
-    | CALL (function_name OF)* program_name
-      ( USING    ((BY_REFERENCE | BY_CONTENT | BY_VALUE)
-                  atomic (AS_PRIMITIVE | AS_STRUCT))+ )*
-      ( RETURNING ((BY_REFERENCE | BY_CONTENT | BY_VALUE)
-                  atomic (AS_PRIMITIVE | AS_STRUCT))+ )*
-    ;
+by_reference: BY_REFERENCE atomic;
+by_content: BY_CONTENT atomic;
+by_value: BY_VALUE atomic;
+by_clause: (by_reference | by_content | by_value);
+
+returning_by_reference: BY_REFERENCE IDENTIFIER;
+returning_by_value: BY_VALUE IDENTIFIER;
+returning_by_content: BY_CONTENT IDENTIFIER;
+returning_by_clause: (returning_by_reference | returning_by_value | returning_by_content);
+
+as_clause: AS_PRIMITIVE | AS_STRUCT;
 
 move
     : MOVE move_arg TO identifier+
@@ -252,8 +253,8 @@ literal
 numeric_literal        : NUMERICLITERAL | ZERO | INTEGERLITERAL ;
 alphanumeric_literal   : STRINGLITERAL ;
 
-file_name      : alphanumeric_literal ;
+file_name      : atomic ;
 procedure_name : IDENTIFIER ;
-function_name  : IDENTIFIER ;
+function_name  : alphanumeric_literal ;
 program_name   : IDENTIFIER ;
 level          : LEVEL ;
