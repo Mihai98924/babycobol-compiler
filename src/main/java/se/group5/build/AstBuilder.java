@@ -320,59 +320,60 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitCall(CoBabyBoL.CallContext ctx) {
         AlphanumericLiteral filename = null;
         List<Object> args = new ArrayList<>();
-        if(ctx.call_option_1() != null){
-            filename = new AlphanumericLiteral(ctx.call_option_1().file_name().getText());
+        if(ctx.call_function() == null){
+            filename = new AlphanumericLiteral(ctx.file_name().getText());
             File file = new File(filename.raw()+ ".baby");
             if(!file.exists()){
                 throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
             }
-            if(ctx.call_option_1().USING() != null){
-                var options = ctx.call_option_1().by_clause();
+            if(ctx.using_clause() != null){
+                var options = ctx.using_clause();
                 for (var option : options) {
-                    if (option.by_reference() != null) {
-                        if(option.by_reference().IDENTIFIER() == null || option.by_reference().atomic() != null) {
-                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
-                        }
-                        var identifier = symbolTable.resolveIdentifier(option.by_reference().IDENTIFIER().getText());
-                        if(identifier.isEmpty()) {
-                            throw new IllegalStateException("Identifier '" + option.by_reference().IDENTIFIER().getText() + "' is not an element or not declared");
-                        }
-                        args.add(identifier.get());
-                    } else if (option.by_content() != null) {
-                        if(option.by_content().atomic() != null) {
-                            var atomic = (Atomic) visit(option.by_content().atomic());
-                            if(atomic.getElement() != null) {
-                                args.add(atomic.getElement());
-                            } else if(atomic.getLiteral() != null) {
-                                args.add(atomic.getLiteral());
-                            }
-                        }
-                    } else if(option.by_value() != null) {
-                        if(option.by_value().atomic() != null) {
-                            var atomic = (Atomic) visit(option.by_value().atomic());
-                            if(atomic.getElement() != null) {
-                                args.add(atomic.getElement());
-                            } else if(atomic.getLiteral() != null) {
-                                args.add(atomic.getLiteral());
-                            }
-                        }
-                    }
+//                    if (option.by_reference() != null) {
+//                        if(option.by_reference().IDENTIFIER() == null || option.by_reference().atomic() != null) {
+//                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+//                        }
+//                        var identifier = symbolTable.resolveIdentifier(option.by_reference().IDENTIFIER().getText());
+//                        if(identifier.isEmpty()) {
+//                            throw new IllegalStateException("Identifier '" + option.by_reference().IDENTIFIER().getText() + "' is not an element or not declared");
+//                        }
+//                        args.add(identifier.get());
+//                    } else if (option.by_content() != null) {
+//                        if(option.by_content().atomic() != null) {
+//                            var atomic = (Atomic) visit(option.by_content().atomic());
+//                            if(atomic.getElement() != null) {
+//                                args.add(atomic.getElement());
+//                            } else if(atomic.getLiteral() != null) {
+//                                args.add(atomic.getLiteral());
+//                            }
+//                        }
+//                    } else if(option.by_value() != null) {
+//                        if(option.by_value().atomic() != null) {
+//                            var atomic = (Atomic) visit(option.by_value().atomic());
+//                            if(atomic.getElement() != null) {
+//                                args.add(atomic.getElement());
+//                            } else if(atomic.getLiteral() != null) {
+//                                args.add(atomic.getLiteral());
+//                            }
+//                        }
+//                    }
                 }
             }
 
-        } else if(ctx.call_option_2() != null){
-            filename = new AlphanumericLiteral(ctx.call_option_2().file_name().getText());
-            File file = new File(filename.raw()+ ".baby");
-            if(!file.exists()){
-                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
-            }
-            Processor processor = new Processor();
-            try {
-                Program program = processor.parse(String.valueOf(file));
-            } catch (IOException e) {
-                throw new IllegalStateException("Error parsing file '" + filename.raw() + ".baby': " + e.getMessage(), e);
-            }
         }
+//        else if(ctx.call_option_2() != null){
+//            filename = new AlphanumericLiteral(ctx.call_option_2().file_name().getText());
+//            File file = new File(filename.raw()+ ".baby");
+//            if(!file.exists()){
+//                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
+//            }
+//            Processor processor = new Processor();
+//            try {
+//                Program program = processor.parse(String.valueOf(file));
+//            } catch (IOException e) {
+//                throw new IllegalStateException("Error parsing file '" + filename.raw() + ".baby': " + e.getMessage(), e);
+//            }
+//        }
         Call call = new Call(filename, args);
         procedures.add(call);
         return call;

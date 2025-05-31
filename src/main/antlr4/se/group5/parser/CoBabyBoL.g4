@@ -116,20 +116,31 @@ display_atomic_clause
     ;
 
 // ── CALL & MOVE ───────────────────────────────────────────────
-call: CALL (call_function)* file_name (USING (by_clause as_clause)+)* (RETURNING (returning_by_clause as_clause))*;
-call_function: function_name OF;
+call
+    : CALL (call_function)* file_name (using_clause)* (returning_clause)*
+    ;
+
+call_function
+    : function_name OF
+    ;
 
 by_reference: BY_REFERENCE atomic;
 by_content: BY_CONTENT atomic;
 by_value: BY_VALUE atomic;
 by_clause: (by_reference | by_content | by_value);
 
-returning_by_reference: BY_REFERENCE IDENTIFIER;
-returning_by_value: BY_VALUE IDENTIFIER;
-returning_by_content: BY_CONTENT IDENTIFIER;
-returning_by_clause: (returning_by_reference | returning_by_value | returning_by_content);
+using_clause
+    : USING (by_clause as_clause*)+
+    ;
 
-as_clause: AS_PRIMITIVE | AS_STRUCT;
+returning_clause
+    : RETURNING (by_clause as_clause)+
+    ;
+
+as_clause
+    : AS_PRIMITIVE
+    | AS_STRUCT
+    ;
 
 move
     : MOVE move_arg TO identifier+
