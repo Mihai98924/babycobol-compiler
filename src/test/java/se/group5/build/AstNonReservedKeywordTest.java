@@ -37,7 +37,7 @@ public class AstNonReservedKeywordTest {
             """;
 
         Program program = processor.parse(cobol);
-        ProcedureList procedures = program.procedures();
+        ProcedureList procedures = program.procedures;
 
         Assert.assertEquals("[ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999)), ATOMIC(ELEM(1, to, 999999999)), ATOMIC(ELEM(1, B, 999999999)), ATOMIC(ELEM(1, C, 999999999))), TO(ATOMIC(ELEM(1, D, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999)), ATOMIC(ELEM(1, to, 999999999)), ATOMIC(ELEM(1, B, 999999999)), ATOMIC(ELEM(1, C, 999999999))), TO(ATOMIC(ELEM(1, D, 999999999))))]", procedures.toString());
     }

@@ -1,5 +1,6 @@
 package se.group5.ast.statement;
 
+import se.group5.ast.Program;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.procedure.Procedure;
 
@@ -18,5 +19,10 @@ public record Call(AlphanumericLiteral fileName, List<Object> callArgs) implemen
     @Override
     public String toString() {
         return "CALL(" + fileName + (callArgs != null ? ", " + callArgs : "") + ")";
+    }
+
+    @Override
+    public void execute(Program state) {
+        
     }
 }

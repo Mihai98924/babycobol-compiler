@@ -303,7 +303,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Arithmetic visitSubtract(CoBabyBoL.SubtractContext ctx) {
-        List<Atomic> subtrahends = ctx.from_atomic().atomic()
+        List<Atomic> subtrahends = ctx.sub_atomic().atomic()
                 .stream()
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();

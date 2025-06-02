@@ -41,6 +41,16 @@ public final class DataGroup implements DataDefinition {
     }
 
     @Override
+    public Object getValue() {
+        return null;
+    }
+
+    @Override
+    public void setValue(Object value) {
+
+    }
+
+    @Override
     public String toString() {
         return "GROUP(" + level + " " + name + ")";
     }

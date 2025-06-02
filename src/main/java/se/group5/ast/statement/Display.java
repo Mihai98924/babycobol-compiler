@@ -2,6 +2,7 @@ package se.group5.ast.statement;
 
 import lombok.Getter;
 import se.group5.ast.Atomic;
+import se.group5.ast.Program;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.procedure.Procedure;
 
@@ -21,6 +22,11 @@ import java.util.Objects;
  */
 @Getter
 public class Display implements Procedure {
+
+    @Override
+    public void execute(Program state) {
+
+    }
 
     /**
      * Supported COBOL delimiter variants.
