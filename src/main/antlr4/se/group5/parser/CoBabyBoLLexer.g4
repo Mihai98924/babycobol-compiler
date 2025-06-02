@@ -116,33 +116,26 @@ IV_END  : EOL -> type(EOL), popMode, pushMode(DEFAULT_MODE);
 
 // === DATA DIVISION TOKENS =====================================
 mode DD;
-DD_EOL        : EOL        -> type(EOL), pushMode(DEFAULT_MODE);
-DD_WS         : WS         -> channel(HIDDEN);
-DD_LINE       : DEFAULT_LINE [ ] [ ]                  -> pushMode(DD_LVL);
-PICTURE_IS    : P I C T U R E WS+ I S
-                -> pushMode(PIC_REP);
-LIKE          : L I K E                    -> pushMode(ID_REP);
-OCCURS        : O C C U R S;
-TIMES         : T I M E S;
-DD_CODE_LINE  : DEFAULT_LINE        -> type(DEFAULT_LINE);
-DD_START_PD   : PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
-
-mode DD_LVL;
-DD_REP_WS : WS    -> skip;
-DD_LEVEL  : LEVEL -> type(LEVEL), pushMode(ID_REP);
+DD_EOL          : EOL                           -> type(EOL), pushMode(DEFAULT_MODE);
+DD_WS           : WS                            -> channel(HIDDEN);
+DD_LEVEL        : LEVEL                         -> type(LEVEL), pushMode(ID_REP);
+PICTURE_IS      : P I C T U R E WS+ I S         -> pushMode(PIC_REP);
+LIKE            : L I K E                       -> pushMode(ID_REP);
+OCCURS          : O C C U R S;
+TIMES           : T I M E S;
 
 mode ID_REP;
-ID_REP_WS : WS         -> skip;
-IR_ID     : IDENTIFIER -> type(IDENTIFIER), pushMode(DD);
+ID_REP_WS : WS                                  -> skip;
+IR_ID     : IDENTIFIER                          -> type(IDENTIFIER), popMode;
 
 // === PICTURE REPRESENTATION ===================================
 mode PIC_REP;
+PR_WS        : WS                               -> channel(HIDDEN) ;
 REPRESENTATION
-    : PR_SIGN? CHUNK (PR_DECSEP CHUNK)? PRECISION? -> popMode
+    : PR_SIGN? CHUNK (PR_DECSEP CHUNK)? WS+ PRECISION? -> popMode
     ;
 CHUNK        : ('9' | 'A' | 'X' | 'Z')+ ;
 PRECISION    : '(' [0-9]+ ')' ;
-PR_WS        : [ \t\r\n]+ -> skip ;
 PR_SIGN      : 'S' ;               // operational sign
 PR_DECSEP    : 'V' ;               // decimal separator
 

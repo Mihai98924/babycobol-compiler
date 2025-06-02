@@ -41,8 +41,8 @@ clause_value  : ID_VALUE ;
 
 // === DATA DIVISION ============================================
 data_item
-    : DD_LINE level WS* IDENTIFIER WS*
-      (picture_clause | like_clause)* WS*
+    : DEFAULT_LINE level IDENTIFIER
+      (picture_clause | like_clause)*
       occurs_clause*
       EOL
     ;
