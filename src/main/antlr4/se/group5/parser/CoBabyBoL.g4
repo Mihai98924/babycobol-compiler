@@ -141,7 +141,7 @@ move_arg
 
 // ── ARITHMETIC ────────────────────────────────────────────────
 add
-    : add_atomic+ to_atomic giving_identifier_list?
+    : add_atomic to_atomic giving_identifier_list?
     ;
 
 add_atomic  : ADD atomic+ ;
