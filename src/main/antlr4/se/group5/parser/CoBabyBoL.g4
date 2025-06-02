@@ -281,7 +281,7 @@ literal
 numeric_literal        : NUMERICLITERAL | ZERO | INTEGERLITERAL ;
 alphanumeric_literal   : STRINGLITERAL ;
 
-file_name      : atomic ;
+file_name      : alphanumeric_literal ;
 procedure_name : IDENTIFIER ;
 function_name  : alphanumeric_literal ;
 program_name   : IDENTIFIER ;

@@ -22,6 +22,9 @@ import se.group5.parser.CoBabyBoLLexer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -37,8 +40,19 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
+        if (ctx.function() != null) {
+            var paragraphs = ctx.function().stream().map(
+                    t-> t.IDENTIFIER().getText()
+            ).toList();
+            for (String name : paragraphs) {
+                if (symbolTable.resolve(name).isPresent()) {
+                    throw new IllegalStateException("Function with name '" + name + "' already exists as an identifier.");
+                }
+                symbolTable.registerParagraph(name);
+            }
+            ctx.function().forEach(this::visit);
+        }
         if (ctx.procedure_division() != null) visit(ctx.procedure_division());
-        if (ctx.function() != null) ctx.function().forEach(this::visit);
 
         return new Program(
                 identityTable,
@@ -394,6 +408,20 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 //        procedures.add(call);
 //        return call;
         return null;
+    }
+
+    @Override
+    public Node visitGoto(CoBabyBoL.GotoContext ctx) {
+        var label = ctx.procedure_name().IDENTIFIER().getText();
+        try {
+            String paragraph = symbolTable.resolveParagraph(label).get();
+            GoTo goTo = new GoTo(paragraph);
+            procedures.add(goTo, ctx);
+            return goTo;
+        }
+        catch (NoSuchElementException e) {
+            throw new IllegalStateException("Goto label '" + label + "' is not defined in the program");
+        }
     }
 
 

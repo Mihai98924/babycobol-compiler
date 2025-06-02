@@ -14,6 +14,8 @@ public final class SymbolTable implements Node {
     // Map: Short name -> List of table keys
     public final Map<String, List<String>> symbolTableQuickAccesMap = new HashMap<>();
 
+    public final List<String> paragraphs = new ArrayList<>();
+
     /**
      * Register a definition under its own simple name and the fully‑qualified path
      */
@@ -34,6 +36,17 @@ public final class SymbolTable implements Node {
             existingKeys.add(fqWithoutLeadingDot);
             symbolTableQuickAccesMap.put(shortName, existingKeys);
         }
+    }
+
+    public void registerParagraph(String paragraph) {
+        paragraphs.add(paragraph);
+    }
+
+    public Optional<String> resolveParagraph(String name) {
+        return Optional.ofNullable(paragraphs.stream()
+                .filter(p -> p.equals(name))
+                .findFirst()
+                .orElse(null));
     }
 
     public Optional<DataDefinition> resolve(String name) {
