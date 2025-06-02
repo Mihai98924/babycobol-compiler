@@ -31,7 +31,7 @@ public class AstCallTest {
         Program program = processor.parse(source);
         System.out.println(program);
 
-        ProcedureList procedures = program.procedures();
+        ProcedureList procedures = program.procedures;
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
     }

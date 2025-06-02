@@ -116,7 +116,7 @@ public class AstArithmeticTest {
         Program program = processor.parse(cobolSource);
         Assert.assertNotNull("Program should not be null", program);
 
-        ProcedureList procedures = program.procedures();
+        ProcedureList procedures = program.procedures;
         System.out.println(procedures);
         Assert.assertNotNull("Procedure list should not be null", procedures);
         Assert.assertEquals("Procedure list should contain exactly 1 procedure",

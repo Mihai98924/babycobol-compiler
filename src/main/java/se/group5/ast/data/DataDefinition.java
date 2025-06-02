@@ -1,5 +1,7 @@
 package se.group5.ast.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import se.group5.ast.Identifier;
 import se.group5.ast.Node;
 
@@ -11,4 +13,8 @@ public interface DataDefinition extends Node { // (arrays are specialised elemen
     int level();
 
     Identifier name();
+
+    Object getValue();
+
+    void setValue(Object value);
 }

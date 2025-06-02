@@ -2,6 +2,7 @@ package se.group5.ast.statement;
 
 import lombok.NonNull;
 import se.group5.ast.Atomic;
+import se.group5.ast.Program;
 import se.group5.ast.data.DataElement;
 import se.group5.ast.procedure.Procedure;
 
@@ -22,6 +23,99 @@ import java.util.Objects;
  *  in {@link #validate()} and verb-specific helper methods.
  */
 public final class Arithmetic implements Procedure {
+
+    @Override
+    public void execute(Program state) {
+        switch (verb) {
+            case ADD -> {
+                double sum = 0;
+                for (Atomic source : sources)
+                {
+                    sum += (double)source.getElement().getValue();
+                }
+
+                DataElement receiver = receivers.get(0).getElement();
+                sum += (double)receiver.getValue();
+
+                if(!giving.isEmpty())
+                {
+                    for (DataElement element : giving)
+                    {
+                        element.setValue(sum);
+                    }
+                }
+                else
+                {
+                    receiver.setValue(sum);
+                }
+            }
+            case SUBTRACT -> {
+                double sum = 0;
+                    for (Atomic source : sources)
+                {
+                    sum += (double)source.getElement().getValue();
+                }
+
+                if(!giving.isEmpty())
+                {
+                    // If GIVING is present, we subtract from the only receiver
+                    DataElement receiver = receivers.get(0).getElement();
+                    sum = (double)receiver.getValue() - sum;
+
+                    for (DataElement element : giving)
+                    {
+                        element.setValue(sum);
+                    }
+                }
+                else
+                {
+                    for (Atomic source : receivers)
+                    {
+                        double value = (double)source.getElement().getValue();
+                        source.getElement().setValue(value - sum);
+                    }
+                }
+            }
+            case MULTIPLY -> {
+                double sum = (double)sources.get(0).getElement().getValue();
+
+                if(!giving.isEmpty())
+                {
+                    DataElement give = giving.get(0);
+                    give.setValue((double)receivers.get(0).getElement().getValue() * sum);
+                }
+                else
+                {
+                    for (Atomic source : receivers)
+                    {
+                        double value = (double)source.getElement().getValue();
+                        source.getElement().setValue(value * sum);
+                    }
+                }
+            }
+            case DIVIDE -> {
+                double sum = (double)sources.get(0).getElement().getValue();
+
+                if(!giving.isEmpty())
+                {
+                    for (DataElement element : giving)
+                    {
+                        element.setValue((double)receivers.get(0).getElement().getValue() / sum);
+                    }
+                    DataElement give = giving.get(0);
+                    give.setValue((double)receivers.get(0).getElement().getValue() * sum);
+                }
+                else
+                {
+                    for (Atomic source : receivers)
+                    {
+                        double value = (double)source.getElement().getValue();
+                        source.getElement().setValue(value / sum);
+                    }
+                }
+            }
+        }
+    }
 
     // ------------------------------------------------------------------
     //  Public API
@@ -191,5 +285,26 @@ public final class Arithmetic implements Procedure {
                         ", GIVING(" + String.join(", ", giving.stream().map(Object::toString).toList()) + ")") +
                 (remainder == null ? "" : ", REMAINDER(" + remainder + ")") +
                 ")";
+    }
+
+    // ---------- Execution --------------------------------------
+
+    public double add(double addend1, double addend2) {
+        return addend1 + addend2;
+    }
+
+    public double subtract(double subtract1, double subtract2) {
+        return subtract1 - subtract2;
+    }
+
+    public double multiply(double multiplicand1, double multiplicand2) {
+        return multiplicand1 * multiplicand2;
+    }
+
+    public double divide(double dividend, double divisor) {
+        if (divisor == 0) {
+            throw new ArithmeticException("Division by zero is not allowed.");
+        }
+        return dividend / divisor;
     }
 }

@@ -45,9 +45,9 @@ public class AstDataTest {
 
         Program program = processor.parse(validInput);
         Assert.assertNotNull("Program should not be null", program);
-        Assert.assertNotNull("Identity table should not be null", program.identityTable());
+        Assert.assertNotNull("Identity table should not be null", program.identityTable);
 
-        var identityTable = program.identityTable();
+        var identityTable = program.identityTable;
 
         Assert.assertTrue("MULIPLICATIONTEST is present", identityTable.resolve("PROGRAM-ID").isPresent());
         Assert.assertEquals("MULTIPLICATIONTEST", identityTable.resolve("PROGRAM-ID").get());
@@ -77,9 +77,9 @@ public class AstDataTest {
 
         Program program = processor.parse(validInput);
         Assert.assertNotNull("Program should not be null", program);
-        Assert.assertNotNull("Symbol table should not be null", program.symbolTable());
+        Assert.assertNotNull("Symbol table should not be null", program.symbolTable);
 
-        SymbolTable symbolTable = program.symbolTable();
+        SymbolTable symbolTable = program.symbolTable;
 
         assertDataDefinition(symbolTable.resolve("VAR1"), 1, "VAR1", "9999", 0);
         assertDataDefinition(symbolTable.resolve("VAR2"), 1, "VAR2", "ZZZ9", 0);
@@ -91,7 +91,7 @@ public class AstDataTest {
         Assert.assertEquals("Name mismatch for group", "SOME-GROUP", group.name().toString());
         assertDataDefinition(group.resolve("VAR5"), 3, "VAR5", "9999", 0);
 
-        ProcedureList procedures = program.procedures();
+        ProcedureList procedures = program.procedures;
         Assert.assertNotNull("Procedures aren't present", procedures);
         Assert.assertFalse("Procedures aren't present", procedures.isEmpty());
 
@@ -134,7 +134,7 @@ public class AstDataTest {
                 """;
 
         Program program = processor.parse(cobol);
-        ProcedureList procedures = program.procedures();
+        ProcedureList procedures = program.procedures;
 
         Assert.assertEquals("Exactly two procedures should be parsed (DISPLAY)", 1, procedures.size());
 

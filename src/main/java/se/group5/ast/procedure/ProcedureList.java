@@ -2,7 +2,6 @@ package se.group5.ast.procedure;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import se.group5.ast.Node;
-import se.group5.ast.Program;
 import se.group5.parser.CoBabyBoL;
 
 import java.util.ArrayList;

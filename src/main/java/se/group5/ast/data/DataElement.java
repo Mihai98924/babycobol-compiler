@@ -11,6 +11,8 @@ public final class DataElement implements DataDefinition {
     private final Representation picture;
     private final int occurs; // 0 == not an array
 
+    private Object value;
+
     public DataElement(int level, Identifier name, Representation picture) {
         this(level, name, picture, 0);
     }
@@ -42,6 +44,16 @@ public final class DataElement implements DataDefinition {
     @Override
     public Identifier name() {
         return name;
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     @Override

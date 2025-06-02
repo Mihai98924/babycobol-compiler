@@ -1,10 +1,25 @@
 package se.group5.ast;
+import lombok.Getter;
 import lombok.NonNull;
 import se.group5.ast.identity.IdentityTable;
+import se.group5.ast.procedure.Procedure;
 import se.group5.ast.procedure.ProcedureList;
 
-public record Program(IdentityTable identityTable, SymbolTable symbolTable,
-                      ProcedureList procedures) implements Node {
+public class Program implements Node {
+
+    public final IdentityTable identityTable;
+    public final SymbolTable symbolTable;
+    public final ProcedureList procedures;
+
+    @Getter
+    private ProgramInputStrategy inputStrategy;
+
+    public Program(IdentityTable identityTable, SymbolTable symbolTable,
+                   ProcedureList procedures) {
+        this.identityTable = identityTable;
+        this.symbolTable = symbolTable;
+        this.procedures = procedures;
+    }
 
     @Override
     @NonNull
@@ -14,5 +29,20 @@ public record Program(IdentityTable identityTable, SymbolTable symbolTable,
                 "  SymbolTable:   " + symbolTable.toString() + "\n" +
                 "  Procedures:   " + procedures.toString() + "\n" +
                 "}";
+    }
+
+    public void run() {
+        run(null);
+    }
+
+    public void run(ProgramInputStrategy inputStrategy)
+    {
+        this.inputStrategy = inputStrategy;
+        int index = 0;
+        while (procedures.get(index).isPresent()) {
+            Procedure procedure = procedures.get(index).get();
+            procedure.execute(this);
+            index++;
+        }
     }
 }
