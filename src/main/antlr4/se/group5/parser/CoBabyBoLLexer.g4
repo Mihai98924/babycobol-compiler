@@ -95,15 +95,6 @@ IDENTIFIER
 CONTINUE_CODE_LINE
     : [ ]+ -> channel(HIDDEN), popMode, popMode; // Return to earlier parsing mode.
 
-mode CODE;
-// Whitespace (incl. continuation) – skipped
-WS : ([ ] | CONTINUE_LINE) -> skip ;
-CONTINUE_LINE : LINE_BREAK SOL '-' -> skip ;
-
-// === UNIVERSAL TOKENS ========================================
-EOL : DOT LINE_BREAK ;
-
-
 mode ID;
 ID_EOL        : EOL       -> type(EOL), pushMode(DEFAULT_MODE);
 ID_NAME       : ~[.\r\n]+ ;
@@ -139,11 +130,15 @@ PRECISION    : '(' [0-9]+ ')' ;
 PR_SIGN      : 'S' ;               // operational sign
 PR_DECSEP    : 'V' ;               // decimal separator
 
-// === BACK TO DEFAULT MODE =====================================
 mode CODE;
+// Whitespace (incl. continuation) – skipped
+WS : ([ ] | CONTINUE_LINE) -> skip ;
+CONTINUE_LINE : LINE_BREAK SOL '-' -> skip ;
 
-CODE_EOL : EOL -> type(EOL);
-CODE_LINE : DEFAULT_LINE [ ] [ ] [ ] [ ];
+
+// === UNIVERSAL TOKENS ========================================
+EOL : DOT LINE_BREAK -> pushMode(DEFAULT_MODE);
+
 DISPLAY : D I S P L A Y ;
 
 // === KEYWORDS & RESERVED WORDS ================================
@@ -255,6 +250,11 @@ STOP                : S T O P;
 ZERO                : Z E R O;
 XOR                 : X O R;
 
+
+CODE_IDENTIFIER
+    : IDENTIFIER        -> type(IDENTIFIER)
+    ;
+
 LEVEL : [0-9] [0-9];
 
 // === OPERATORS & PUNCTUATION ================================
@@ -287,9 +287,6 @@ NUMERICLITERAL
       (('e' | 'E') (SIGN)? [0-9]+)?
     ;
 
-LETTER        : [a-zA-Z] ;
-DIGIT         : [0-9] ;
-ALPHANUMERIC  : [a-zA-Z0-9] ;
 ARG_LIT       : '≡≡≡' ;
 
 // === MISCELLANEOUS ===========================================

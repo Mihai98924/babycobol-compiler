@@ -28,7 +28,7 @@ procedure_division
 
 // ── TOP-LEVEL FUNCTION ────────────────────────────────────────
 function
-    : IDENTIFIER EOL sentence*
+    : DEFAULT_LINE IDENTIFIER EOL sentence*
     ;
 
 // === IDENTIFICATION DIVISION ==================================
@@ -57,7 +57,7 @@ sentence
     ;
 
 statement
-    : CODE_LINE WS* (
+    : DEFAULT_LINE (
           accept
         | alter
         | goto
