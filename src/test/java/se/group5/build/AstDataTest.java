@@ -169,31 +169,47 @@ public class AstDataTest {
     }
 
     @Test
-    public void copyInterpreterTest() throws IOException {
-        String cobol = """
-                              IDENTIFICATION DIVISION.
-                                  PROGRAM-ID. Prog_copy_main.
-                              DATA DIVISION.
-                                01 B PICTURE IS 99.
-                                01 CONTAINER.
-                                    03 Z.
-                                        05 X.
-                                            07 C PICTURE IS XX.
-                                    03 H.
-                                        05 X.
-                                            07 C PICTURE IS 99.
-                                            07 J.
-                                            07 Y.
-                                                11 C PICTURE IS XX.
-                                01 J LIKE Y.
-                                    03 C PICTURE IS 99.
-                              PROCEDURE DIVISION.
-                                  MOVE 42 TO C OF J Y
-                                  DISPLAY "BACK IN FIRST TREE PRINTS".
-                                         
-                """;
+    public void sufficientQualificationTest_Ambiguous_Fail() throws IOException {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 A PICTURE IS 99.
+                          03 X.
+                              05 Y.
+                                  07 C PICTURE IS 99.
+                      01 J LIKE X.
+                          03 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      MOVE HIGH-VALUES TO C OF X Y.
+           """;
 
-        Program program = processor.parse(cobol);
-        System.out.println(program.toString());
+        Assert.assertThrows(IllegalStateException.class, () -> processor.parse(source));
+    }
+
+    @Test
+    public void sufficientQualificationTest_NotAmbiguous_Pass() throws IOException {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 A PICTURE IS 99.
+                          03 X.
+                              05 Y.
+                                  07 C PICTURE IS 99.
+                      01 J LIKE X.
+                          03 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      MOVE HIGH-VALUES TO C OF J Y.
+                      MOVE HIGH-VALUES TO C OF Y OF X Y.
+           """;
+
+        Assert.assertNotNull(processor.parse(source));
     }
 }

@@ -66,6 +66,9 @@ public final class SymbolTable implements Node {
         Map<String, List<String>> symbolPaths = new HashMap<>();
         Map<String, Boolean> couldPathBeAmbiguous = new HashMap<>();
 
+        if (keys == null)
+            return "";
+
         // Start at the leaves of the path and work upwards
         for (String key : keys) {
             List<String> keyParts = Arrays.stream(key.split("\\.")).toList();
