@@ -33,11 +33,11 @@ function
 
 // === IDENTIFICATION DIVISION ==================================
 identification_clause
-    : ID_LINE clause_name ID_NAME_VAL_END clause_value ID_VALUE_VAL_END
+    : DEFAULT_LINE clause_name ID_END clause_value EOL
     ;
 
-clause_name   : ID_NAME_VAL ;
-clause_value  : ID_VALUE_VAL ;
+clause_name   : ID_NAME ;
+clause_value  : ID_VALUE ;
 
 // === DATA DIVISION ============================================
 data_item
@@ -141,7 +141,7 @@ move_arg
 
 // ── ARITHMETIC ────────────────────────────────────────────────
 add
-    : add_atomic+ to_atomic giving_identifier_list?
+    : add_atomic+ to_atomic giving_identifier_list? add?
     ;
 
 add_atomic  : ADD atomic+ ;

@@ -70,8 +70,8 @@ public class AstDataTest {
                          01 SOME-GROUP.
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
-                         ACCEPT VAR1 VAR3.
-                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
+                           ACCEPT VAR1 VAR3.
+                           DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
                 """;
 
         Program program = processor.parse(validInput);
@@ -129,7 +129,7 @@ public class AstDataTest {
                          01 VAR1 PICTURE IS 9 (04).
                          01 VAR3 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
-                         DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
+                           DISPLAY VAR1 VAR3 DELIMITED BY SPACE "HENK" DELIMITED BY "E".
                 """;
 
         Program program = processor.parse(cobol);
