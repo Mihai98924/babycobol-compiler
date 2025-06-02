@@ -98,7 +98,7 @@ CONTINUE_CODE_LINE
 mode ID;
 ID_EOL        : EOL       -> type(EOL), pushMode(DEFAULT_MODE);
 ID_NAME       : ~[.\r\n]+ ;
-ID_END        : DOT -> pushMode(ID_VALUE_MODE); // Start parsing
+ID_END        : DOT [ ]* -> pushMode(ID_VALUE_MODE); // Start parsing
 
 mode ID_VALUE_MODE;
 ID_VALUE      : ~[.\r\n]+ ;
@@ -113,6 +113,7 @@ DD_LEVEL        : LEVEL                         -> type(LEVEL), pushMode(ID_REP)
 PICTURE_IS      : P I C T U R E WS+ I S         -> pushMode(PIC_REP);
 LIKE            : L I K E                       -> pushMode(ID_REP);
 OCCURS          : O C C U R S;
+DD_INT_LIT      : INTEGERLITERAL                -> type(INTEGERLITERAL);
 TIMES           : T I M E S;
 
 mode ID_REP;
@@ -123,7 +124,7 @@ IR_ID     : IDENTIFIER                          -> type(IDENTIFIER), popMode;
 mode PIC_REP;
 PR_WS        : WS                               -> channel(HIDDEN) ;
 REPRESENTATION
-    : PR_SIGN? CHUNK (PR_DECSEP CHUNK)? WS+ PRECISION? -> popMode
+    : PR_SIGN? CHUNK (PR_DECSEP CHUNK)? WS* PRECISION? -> popMode
     ;
 CHUNK        : ('9' | 'A' | 'X' | 'Z')+ ;
 PRECISION    : '(' [0-9]+ ')' ;
@@ -132,106 +133,56 @@ PR_DECSEP    : 'V' ;               // decimal separator
 
 mode CODE;
 // Whitespace (incl. continuation) – skipped
-WS : ([ ] | CONTINUE_LINE) -> skip ;
-CONTINUE_LINE : LINE_BREAK SOL '-' -> skip ;
-
+WS
+    : ([ ] | CONTINUE_LINE)         -> skip
+    ;
+CONTINUE_LINE
+    : LINE_BREAK SOL '-'                -> skip
+    ;
 
 // === UNIVERSAL TOKENS ========================================
 EOL : DOT LINE_BREAK -> pushMode(DEFAULT_MODE);
 
-DISPLAY : D I S P L A Y ;
 
 // === KEYWORDS & RESERVED WORDS ================================
 ACCEPT              : A C C E P T;
 ALTER               : A L T E R;
-BY                  : B Y;
 CALL                : C A L L;
 COPY                : C O P Y;
-
+DISPLAY             : D I S P L A Y ;
 DELIMITED_BY        : D E L I M I T E D WS+ B Y;
 
 // ── Arithmetic prefixes that switch modes for “until …” parsing
-ADD                 : A D D      -> pushMode(ADD_MODE);
-SUBTRACT            : S U B T R A C T -> pushMode(SUBTRACT_MODE);
-MULTIPLY            : M U L T I P L Y -> pushMode(MULTIPLY_MODE);
-DIVIDE              : D I V I D E            -> pushMode(DIVIDE_MODE);
-
-REMAINDER           : R E M A I N D E R;
-
-mode ADD_MODE;
-AM_WS       : WS               -> skip;
-AM_ADD      : ADD               -> type(ADD);
-AM_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
-AM_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
-AM_ZERO     : ZERO              -> type(ZERO);
-AM_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-AM_TO_ID    : 'to' { hasNextTokenInLine(CoBabyBoLLexer.TO) }? -> type(IDENTIFIER);
-AM_TO       : TO                -> type(TO), popMode;
-AM_ID       : IDENTIFIER        -> type(IDENTIFIER);
-
-mode SUBTRACT_MODE;
-UF_WS       : WS                -> skip;
-UF_SUB      : SUBTRACT          -> type(SUBTRACT);
-UF_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
-UF_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
-UF_ZERO     : ZERO              -> type(ZERO);
-UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UF_FROM_ID  : 'from' { hasNextTokenInLine(CoBabyBoLLexer.FROM) }? -> type(IDENTIFIER);
-UF_FROM     : FROM              -> type(FROM), popMode;
-UF_ID       : IDENTIFIER        -> type(IDENTIFIER);
-
-mode MULTIPLY_MODE;
-UB_WS       : WS                -> skip;
-UB_MULT     : MULTIPLY          -> type(MULTIPLY);
-UB_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
-UB_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
-UB_ZERO     : ZERO              -> type(ZERO);
-UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UB_BY_ID    : 'by' { hasNextTokenInLine(CoBabyBoLLexer.BY) }? -> type(IDENTIFIER);
-UB_BY       : BY                -> type(BY), popMode;
-UB_ID       : IDENTIFIER        -> type(IDENTIFIER);
-
-mode DIVIDE_MODE;
-UI_WS       : WS                -> skip;
-UI_DIV      : DIVIDE            -> type(DIVIDE);
-UI_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
-UI_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
-UI_ZERO     : ZERO              -> type(ZERO);
-UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UI_INT_ID   : 'into' { hasNextTokenInLine(CoBabyBoLLexer.INTO) }? -> type(IDENTIFIER);
-UI_INTO     : INTO              -> type(INTO), popMode;
-UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
-
-mode CODE;
-
-ELSE                : E L S E;
-END                 : E N D;
-EVALUATE            : E V A L U A T E;
-GIVING              : G I V I N G;
-GO                  : G O;
-GOTO                : G O WS+ T O;
-IF                  : I F;
-LOOP                : L O O P;
-MOVE                : M O V E;
-NEXT_SENTENCE       : N E X T WS+ S E N T E N C E;
-OF                  : O F;
-OFF                 : O F F;
+ADD                 : A WS* D WS* D                 -> pushMode(ADD_MODE);
+SUBTRACT            : S WS* U WS* B WS* T WS* R WS* A WS* C WS* T       -> pushMode(SUBTRACT_MODE);
+MULTIPLY            : M WS* U WS* L WS* T WS* I WS* P WS* L WS* Y       -> pushMode(MULTIPLY_MODE);
+DIVIDE              : D WS* I WS* V WS* I WS* D WS* E           -> pushMode(DIVIDE_MODE);
+REMAINDER           : R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
+ELSE                : E WS* L WS* S WS* E;
+END                 : E WS* N WS* D;
+EVALUATE            : E WS* V WS* A WS* L WS* U WS* A WS* T WS* E;
+GIVING              : G WS* I WS* V WS* I WS* N WS* G;
+GO                  : G WS* O;
+GOTO                : G WS* O WS* WS+ T WS* O;
+IF                  : I WS* F;
+LOOP                : L WS* O WS* O WS* P;
+MOVE                : M WS* O WS* V WS* E;
+TO                  : T WS* O;
+NEXT_SENTENCE       : N WS* E WS* X WS* T WS+ S WS* E WS* N WS* T WS* E WS* N WS* C WS* E;
+OF                  : O WS* F;
+OFF                 : O WS* F WS* F;
 ON_ERROR            : O N WS+ E R R O R;
 PERFORM             : P E R F O R M;
 PROCEED             : P R O C E E D;
 REPLACING           : R E P L A C I N G;
 SIGNAL              : S I G N A L;
 THEN                : T H E N;
-TO                  : T O;
 WITH_NO_ADVANCING   : W I T H WS+ N O WS+ A D V A N C I N G;
 SIZE                : S I Z E;
 SPACE               : S P A C E;
 SPACES              : S P A C E S;
-
-FROM                : F R O M;
 HIGH_VALUES         : H I G H '-' V A L U E S;
 LOW_VALUES          : L O W '-' V A L U E S;
-INTO                : I N T O;
 USING               : U S I N G;
 BY_REFERENCE        : B Y WS+ R E F E R E N C E;
 BY_CONTENT          : B SOL* Y SOL+ C SOL* O SOL* N SOL* T SOL* E SOL* N SOL* T;
@@ -249,8 +200,6 @@ OTHER               : O T H E R;
 STOP                : S T O P;
 ZERO                : Z E R O;
 XOR                 : X O R;
-
-
 CODE_IDENTIFIER
     : IDENTIFIER        -> type(IDENTIFIER)
     ;
@@ -292,3 +241,48 @@ ARG_LIT       : '≡≡≡' ;
 // === MISCELLANEOUS ===========================================
 COMMA : ',' ;
 SIGN  : '+' | '-' ;
+
+
+mode ADD_MODE;
+AM_WS       : WS               -> skip;
+AM_ADD      : ADD               -> type(ADD);
+AM_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
+AM_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
+AM_ZERO     : ZERO              -> type(ZERO);
+AM_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
+AM_TO_ID    : 'to' { hasNextTokenInLine(CoBabyBoLLexer.TO) }? -> type(IDENTIFIER);
+AM_TO       : TO               -> type(TO), popMode;
+AM_ID       : IDENTIFIER        -> type(IDENTIFIER);
+
+mode SUBTRACT_MODE;
+UF_WS       : WS                -> skip;
+UF_SUB      : SUBTRACT          -> type(SUBTRACT);
+UF_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
+UF_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
+UF_ZERO     : ZERO              -> type(ZERO);
+UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
+UF_FROM_ID  : 'from' { hasNextTokenInLine(CoBabyBoLLexer.FROM) }? -> type(IDENTIFIER);
+FROM        : F R O M           -> popMode;
+UF_ID       : IDENTIFIER        -> type(IDENTIFIER);
+
+mode MULTIPLY_MODE;
+UB_WS       : WS                -> skip;
+UB_MULT     : MULTIPLY          -> type(MULTIPLY);
+UB_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
+UB_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
+UB_ZERO     : ZERO              -> type(ZERO);
+UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
+UB_BY_ID    : 'by' { hasNextTokenInLine(CoBabyBoLLexer.BY) }? -> type(IDENTIFIER);
+BY          : B Y               -> popMode;
+UB_ID       : IDENTIFIER        -> type(IDENTIFIER);
+
+mode DIVIDE_MODE;
+UI_WS       : WS                -> skip;
+UI_DIV      : DIVIDE            -> type(DIVIDE);
+UI_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
+UI_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
+UI_ZERO     : ZERO              -> type(ZERO);
+UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
+UI_INT_ID   : 'into' { hasNextTokenInLine(CoBabyBoLLexer.INTO) }? -> type(IDENTIFIER);
+INTO        : I N T O           -> popMode;
+UI_ID       : IDENTIFIER        -> type(IDENTIFIER);

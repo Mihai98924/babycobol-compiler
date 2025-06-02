@@ -106,13 +106,12 @@ copy
 
 // ── DISPLAY ───────────────────────────────────────────────────
 display
-    : DISPLAY WS* display_atomic_clause+ WITH_NO_ADVANCING?
+    : DISPLAY display_atomic_clause+ WITH_NO_ADVANCING?
     ;
 
 display_atomic_clause
-    : atomic WS*
+    : atomic
       (DELIMITED_BY (SIZE | SPACE | literal))?
-      WS*
     ;
 
 // ── CALL & MOVE ───────────────────────────────────────────────
