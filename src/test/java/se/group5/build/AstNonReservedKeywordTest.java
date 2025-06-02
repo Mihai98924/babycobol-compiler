@@ -5,7 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.procedure.ProcedureList;
-import se.group5.ast.statement.Arithmetic;
 import se.group5.processor.Processor;
 
 public class AstNonReservedKeywordTest {
@@ -40,6 +39,6 @@ public class AstNonReservedKeywordTest {
         Program program = processor.parse(cobol);
         ProcedureList procedures = program.procedures();
 
-        System.out.println(procedures);
+        Assert.assertEquals("[ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999)), ATOMIC(ELEM(1, to, 999999999)), ATOMIC(ELEM(1, B, 999999999)), ATOMIC(ELEM(1, C, 999999999))), TO(ATOMIC(ELEM(1, D, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999))), TO(ATOMIC(ELEM(1, B, 999999999)))), ADD(SOURCES(ATOMIC(ELEM(1, A, 999999999)), ATOMIC(ELEM(1, to, 999999999)), ATOMIC(ELEM(1, B, 999999999)), ATOMIC(ELEM(1, C, 999999999))), TO(ATOMIC(ELEM(1, D, 999999999))))]", procedures.toString());
     }
 }

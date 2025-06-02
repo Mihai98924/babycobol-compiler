@@ -19,18 +19,18 @@ public class AstMoveTest {
     @Test
     public void MoveOperation() throws Exception {
         String source = """
-                  IDENTIFICATION DIVISION.
-                      PROGRAM-ID. ADDTEST.
-                      AUTHOR. SUSPICIOUSLAWNMOWERS.
-                      DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                       01 A PICTURE IS 99.
-                       01 B PICTURE IS 99.
-                       01 C PICTURE IS 99.
-                  PROCEDURE DIVISION.
-                     MOVE C TO B.
-                     MOVE 08 TO C.
-                     MOVE SPACES TO A.
+                   IDENTIFICATION DIVISION.
+                       PROGRAM-ID. ADDTEST.
+                       AUTHOR. SUSPICIOUSLAWNMOWERS.
+                       DATE-WRITTEN. 2022-04-22.
+                   DATA DIVISION.
+                     01 A PICTURE IS 99.
+                     01 B PICTURE IS 99.
+                     01 C PICTURE IS 99.
+                   PROCEDURE DIVISION.
+                       MOVE C TO B.
+                       MOVE B TO C.
+                       MOVE SPACES TO A.
             """;
         Program program = processor.parse(source);
         System.out.println(program);
