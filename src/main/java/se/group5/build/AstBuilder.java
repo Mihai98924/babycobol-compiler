@@ -227,8 +227,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Arithmetic visitAdd(CoBabyBoL.AddContext ctx) {
-        List<Atomic> addends = ctx.add_atomic().stream()
-                .flatMap(aa -> aa.atomic().stream())
+        List<Atomic> addends = ctx.add_atomic().atomic().stream()
                 .map(a -> (Atomic) visitAtomic(a)).toList();
         Atomic target = (Atomic) visitAtomic(ctx.to_atomic().atomic());
 
