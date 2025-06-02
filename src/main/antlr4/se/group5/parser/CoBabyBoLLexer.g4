@@ -44,6 +44,8 @@ DEFAULT_LINE : SOL [ ] -> pushMode(CODE);
 // Entire COBOL comment line (column-7 '*')
 COMMENT : STAR ANY* LINE_BREAK SOL;
 
+DEFAULT_WS : WS -> skip ;
+
 mode CODE;
 // Whitespace (incl. continuation) – skipped
 WS : ([ ] | CONTINUE_LINE) -> skip ;
@@ -54,12 +56,13 @@ EOL : DOT LINE_BREAK ;
 
 // === IDENTIFICATION DIVISION TOKENS ===========================
 IDENTIFICATION_DIVISION
-    : I WS* D WS* E WS* N WS* T WS* I WS* F WS* I WS* C WS* A WS* T WS* I WS* O WS* N WS+
-      D WS* I WS* V WS* I WS* S WS* I WS* O WS* N
+    : I D E N T I F I C A T I O N WS+
+      D I V I S I O N
       -> pushMode(ID)
     ;
 
 mode ID;
+ID_WS         : WS -> skip;
 ID_EOL        : EOL       -> type(EOL);
 ID_CODE_LINE  : DEFAULT_LINE -> type(DEFAULT_LINE);
 ID_LINE       : DEFAULT_LINE [ ] [ ] [ ] [ ]           -> pushMode(ID_NAME);
@@ -68,7 +71,7 @@ ID_START_PD   : DEFAULT_LINE PROCEDURE_DIVISION                  -> type(PROCEDU
 
 mode ID_NAME;
 ID_NAME_VAL       : ~[.\r\n]+ ;
-ID_NAME_VAL_END   : DOT WS* -> pushMode(ID_VALUE);
+ID_NAME_VAL_END   : DOT -> pushMode(ID_VALUE);
 
 mode ID_VALUE;
 ID_VALUE_VAL      : ~[.\r\n]+ ;
@@ -78,24 +81,24 @@ ID_VALUE_VAL_END  : EOL -> pushMode(ID);
 mode CODE;
 
 DATA_DIVISION
-    : D WS* A WS* T WS* A WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N
+    : D A T A WS+ D I V I S I O N
       -> pushMode(DD)
     ;
 
 // === DATA DIVISION TOKENS =====================================
 mode DD;
 DD_EOL        : EOL        -> type(EOL);
-DD_WS         : WS         -> type(WS);
-PICTURE_IS    : P WS* I WS* C WS* T WS* U WS* R WS* E WS* I WS* S
+DD_WS         : WS         -> skip;
+PICTURE_IS    : P I C T U R E I S
                 -> pushMode(PIC_REP);
-LIKE          : L WS* I WS* K WS* E                         -> pushMode(ID_REP);
-OCCURS        : O WS* C WS* C WS* U WS* R WS* S             -> pushMode(DD_INT);
-TIMES         : T WS* I WS* M WS* E WS* S;
-DD_LINE       : DEFAULT_LINE [ ] [ ] WS*                    -> pushMode(DD_LVL);
+LIKE          : L I K E                         -> pushMode(ID_REP);
+OCCURS        : O C C U R S             -> pushMode(DD_INT);
+TIMES         : T I M E S;
+DD_LINE       : DEFAULT_LINE [ ] [ ]                    -> pushMode(DD_LVL);
 DD_START_PD   : DEFAULT_LINE PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
 
 mode DD_LVL;
-DD_REP_WS : WS    -> type(WS);
+DD_REP_WS : WS    -> skip;
 DD_LEVEL  : LEVEL -> type(LEVEL), pushMode(ID_REP);
 LEVEL : [0-9] [0-9];
 
@@ -104,13 +107,14 @@ DD_INT_WS : WS -> skip;
 DD_INT : INTEGERLITERAL -> type(INTEGERLITERAL), popMode;
 
 mode ID_REP;
-ID_REP_WS : WS         -> type(WS);
+ID_REP_WS : WS         -> skip;
 IR_ID     : IDENTIFIER -> type(IDENTIFIER), pushMode(DD);
 
 // === PICTURE REPRESENTATION ===================================
 mode PIC_REP;
+PIC_WS : WS -> skip;
 REPRESENTATION
-    : PR_SIGN? WS* CHUNK WS* (PR_DECSEP CHUNK)? WS* PRECISION? -> popMode
+    : PR_SIGN? CHUNK (PR_DECSEP CHUNK)? PRECISION? -> popMode
     ;
 CHUNK        : ('9' | 'A' | 'X' | 'Z')+ ;
 PRECISION    : '(' [0-9]+ ')' ;
@@ -124,76 +128,76 @@ mode CODE;
 CODE_WS : WS -> skip;
 CODE_EOL : EOL -> type(EOL);
 CODE_LINE : DEFAULT_LINE [ ] [ ] [ ] [ ];
-DISPLAY : D WS* I WS* S WS* P WS* L WS* A WS* Y ;
+DISPLAY : D I S P L A Y ;
 
 // === KEYWORDS & RESERVED WORDS ================================
-ACCEPT              : A WS* C WS* C WS* E WS* P WS* T;
-ALTER               : A WS* L WS* T WS* E WS* R;
-BY                  : B WS* Y;
-CALL                : C WS* A WS* L WS* L;
-COPY                : C WS* O WS* P WS* Y;
+ACCEPT              : A C C E P T;
+ALTER               : A L T E R;
+BY                  : B Y;
+CALL                : C A L L;
+COPY                : C O P Y;
 
-DELIMITED_BY        : D WS* E WS* L WS* I WS* M WS* I WS* T WS* E WS* D WS+ B WS* Y;
+DELIMITED_BY        : D E L I M I T E D WS+ B Y;
 
 // ── Arithmetic prefixes that switch modes for “until …” parsing
-ADD                 : A WS* D WS* D      -> pushMode(UNTIL_TO);
-SUBTRACT            : S WS* U WS* B WS* T WS* R WS* A WS* C WS* T -> pushMode(UNTIL_FROM);
-MULTIPLY            : M WS* U WS* L WS* T WS* I WS* P WS* L WS* Y -> pushMode(UNTIL_BY);
-DIVIDE              : D WS* I WS* V WS* I WS* D WS* E             -> pushMode(UNTIL_INTO);
+ADD                 : A D D      -> pushMode(UNTIL_TO);
+SUBTRACT            : S U B T R A C T -> pushMode(UNTIL_FROM);
+MULTIPLY            : M U L T I P L Y -> pushMode(UNTIL_BY);
+DIVIDE              : D I V I D E             -> pushMode(UNTIL_INTO);
 
-REMAINDER           : R WS* E WS* M WS* A WS* I WS* N WS* D WS* E WS* R;
+REMAINDER           : R E M A I N D E R;
 
-ELSE                : E WS* L WS* S WS* E;
-END                 : E WS* N WS* D;
-EVALUATE            : E WS* V WS* A WS* L WS* U WS* A WS* T WS* E;
-GIVING              : G WS* I WS* V WS* I WS* N WS* G;
-GO                  : G WS* O;
-GOTO                : G WS* O WS+ T WS* O;
-IF                  : I WS* F;
-LOOP                : L WS* O WS* O WS* P;
-MOVE                : M WS* O WS* V WS* E;
-NEXT_SENTENCE       : N WS* E WS* X WS* T WS+ S WS* E WS* N WS* T WS* E WS* N WS* C WS* E;
-OF                  : O WS* F;
-OFF                 : O WS* F WS* F;
-ON_ERROR            : O WS* N WS+ E WS* R WS* R WS* O WS* R;
-PERFORM             : P WS* E WS* R WS* F WS* O WS* R WS* M;
-PROCEED             : P WS* R WS* O WS* C WS* E WS* E WS* D;
-REPLACING           : R WS* E WS* P WS* L WS* A WS* C WS* I WS* N WS* G;
-SIGNAL              : S WS* I WS* G WS* N WS* A WS* L;
-THEN                : T WS* H WS* E WS* N;
-TO                  : T WS* O;
-WITH_NO_ADVANCING   : W WS* I WS* T WS* H WS+ N WS* O WS+ A WS* D WS* V WS* A WS* N WS* C WS* I WS* N WS* G;
-SIZE                : S WS* I WS* Z WS* E;
-SPACE               : S WS* P WS* A WS* C WS* E;
-SPACES              : S WS* P WS* A WS* C WS* E WS* S;
+ELSE                : E L S E;
+END                 : E N D;
+EVALUATE            : E V A L U A T E;
+GIVING              : G I V I N G;
+GO                  : G O;
+GOTO                : G O WS+ T O;
+IF                  : I F;
+LOOP                : L O O P;
+MOVE                : M O V E;
+NEXT_SENTENCE       : N E X T WS+ S E N T E N C E;
+OF                  : O F;
+OFF                 : O F F;
+ON_ERROR            : O N WS+ E R R O R;
+PERFORM             : P E R F O R M;
+PROCEED             : P R O C E E D;
+REPLACING           : R E P L A C I N G;
+SIGNAL              : S I G N A L;
+THEN                : T H E N;
+TO                  : T O;
+WITH_NO_ADVANCING   : W I T H WS+ N O WS+ A D V A N C I N G;
+SIZE                : S I Z E;
+SPACE               : S P A C E;
+SPACES              : S P A C E S;
 
-FROM                : F WS* R WS* O WS* M;
-HIGH_VALUES         : H WS* I WS* G WS* H WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;
-LOW_VALUES          : L WS* O WS* W WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;
-INTO                : I WS* N WS* T WS* O;
-USING               : U WS* S WS* I WS* N WS* G;
-BY_REFERENCE        : B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
+FROM                : F R O M;
+HIGH_VALUES         : H I G H '-' V A L U E S;
+LOW_VALUES          : L O W '-' V A L U E S;
+INTO                : I N T O;
+USING               : U S I N G;
+BY_REFERENCE        : B Y WS+ R E F E R E N C E;
 BY_CONTENT          : B SOL* Y SOL+ C SOL* O SOL* N SOL* T SOL* E SOL* N SOL* T;
-BY_VALUE            : B WS* Y WS+ V WS* A WS* L WS* U WS* E;
-THROUGH             : T WS* H WS* R WS* O WS* U WS* G WS* H;
-RETURNING           : R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
-AS_PRIMITIVE        : A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
-AS_STRUCT           : A WS* S WS+ S WS* T WS* R WS* U WS* C WS* T;
-ALSO                : A WS* L WS* S WS* O;
-VARYING             : V WS* A WS* R WS* Y WS* I WS* N WS* G;
-WHILE               : W WS* H WS* I WS* L WS* E;
-UNTIL               : U WS* N WS* T WS* I WS* L;
-WHEN                : W WS* H WS* E WS* N;
-OTHER               : O WS* T WS* H WS* E WS* R;
-STOP                : S WS* T WS* O WS* P;
-PROCEDURE_DIVISION  : P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS* I WS* V WS* I WS* S WS* I WS* O WS* N;
-ZERO                : Z WS* E WS* R WS* O;
-XOR                 : X WS* O WS* R;
+BY_VALUE            : B Y WS+ V A L U E;
+THROUGH             : T H R O U G H;
+RETURNING           : R E T U R N I N G;
+AS_PRIMITIVE        : A S WS+ P R I M I T I V E;
+AS_STRUCT           : A S WS+ S T R U C T;
+ALSO                : A L S O;
+VARYING             : V A R Y I N G;
+WHILE               : W H I L E;
+UNTIL               : U N T I L;
+WHEN                : W H E N;
+OTHER               : O T H E R;
+STOP                : S T O P;
+PROCEDURE_DIVISION  : P R O C E D U R E WS+ D I V I S I O N;
+ZERO                : Z E R O;
+XOR                 : X O R;
 
 // === OPERATORS & PUNCTUATION ================================
-AND : A WS* N WS* D;
-OR  : O WS* R;
-NOT : N WS* O WS* T;
+AND : A N D;
+OR  : O R;
+NOT : N O T;
 
 MATH_OP : PLUS | HYPHEN | STAR | SLASH | (STAR STAR);
 
@@ -210,7 +214,7 @@ RPAR : ')' ;
 
 // === LITERALS =================================================
 STRINGLITERAL
-    : '"'  (WS* ~["\n\r] | '""' | '\'')* '"'
+    : '"'  (~["\n\r] | '""' | '\'')* '"'
     | '\'' (~['\n\r]     | '\'\'' | '"')* '\''
     ;
 

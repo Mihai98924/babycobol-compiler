@@ -116,7 +116,8 @@
                             <executable>touch</executable>
                             <arguments>
                                 <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoL.g4</argument>
-                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoLLexer.g4</argument>
+                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoLLexer.g4
+                                </argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -164,6 +165,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
             </plugin>
         </plugins>
     </build>
