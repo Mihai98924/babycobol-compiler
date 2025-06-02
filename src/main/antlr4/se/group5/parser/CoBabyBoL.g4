@@ -48,7 +48,7 @@ data_item
     ;
 
 picture_clause : PICTURE_IS REPRESENTATION ;
-like_clause    : LIKE IDENTIFIER ;
+like_clause    : LIKE WS* identifier;
 occurs_clause  : OCCURS INTEGERLITERAL TIMES ;
 
 // === PROCEDURE DIVISION =======================================
@@ -141,7 +141,7 @@ move_arg
 
 // ── ARITHMETIC ────────────────────────────────────────────────
 add
-    : add_atomic+ to_atomic giving_identifier_list?
+    : add_atomic to_atomic giving_identifier_list?
     ;
 
 add_atomic  : ADD atomic+ ;
@@ -211,7 +211,7 @@ atomic_through
     : atomic (THROUGH atomic)? (ALSO atomic_through)?
     ;
 
-argument_literal : ARG_LIT literal ARG_LIT ;
+argument_literal : ARG_LIT ARG_LIT_ATOMIC;
 
 math_expr
     : (LPAR math_expr RPAR | numeric_literal | IDENTIFIER)

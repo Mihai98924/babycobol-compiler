@@ -96,7 +96,7 @@ DD_START_PD   : PROCEDURE_DIVISION -> type(PROCEDURE_DIVISION), pushMode(CODE);
 
 mode DD_LVL;
 DD_REP_WS : WS    -> type(WS);
-DD_LEVEL  : LEVEL -> type(LEVEL), pushMode(ID_REP);
+LEVEL  : [0-9] [0-9] -> pushMode(ID_REP);
 
 mode ID_REP;
 ID_REP_WS : WS         -> type(WS);
@@ -184,8 +184,6 @@ PROCEDURE_DIVISION  : P WS* R WS* O WS* C WS* E WS* D WS* U WS* R WS* E WS+ D WS
 ZERO                : Z WS* E WS* R WS* O;
 XOR                 : X WS* O WS* R;
 
-LEVEL : [0-9] [0-9];
-
 // === OPERATORS & PUNCTUATION ================================
 AND : A WS* N WS* D;
 OR  : O WS* R;
@@ -220,7 +218,9 @@ IDENTIFIER    : [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)* ;
 LETTER        : [a-zA-Z] ;
 DIGIT         : [0-9] ;
 ALPHANUMERIC  : [a-zA-Z0-9] ;
-ARG_LIT       : '≡≡≡' ;
+//ARG_LIT : '≡≡≡';
+ARG_LIT: '===' -> pushMode(ARG_LIT_MODE);
+// === MISCELLANEOUS ===============================================================
 
 // === MISCELLANEOUS ===========================================
 COMMA : ',' ;
@@ -234,8 +234,8 @@ UT_NUMERIC  : NUMERICLITERAL   -> type(NUMERICLITERAL);
 UT_INTEGER  : INTEGERLITERAL   -> type(INTEGERLITERAL);
 UT_ZERO     : ZERO             -> type(ZERO);
 UT_STRING   : STRINGLITERAL    -> type(STRINGLITERAL);
-UT_ID       : ({ noMatchInLine(CoBabyBoLLexer.TO) }? IDENTIFIER) -> type(IDENTIFIER);
 UT_TO       : TO  -> type(TO), popMode;
+UT_ID       : ({ noMatchInLine(CoBabyBoLLexer.TO) }? IDENTIFIER) -> type(IDENTIFIER);
 
 mode UNTIL_FROM;
 UF_WS       : WS  -> channel(HIDDEN);
@@ -244,8 +244,8 @@ UF_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UF_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UF_ZERO     : ZERO              -> type(ZERO);
 UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UF_ID       : ({ noMatchInLine(CoBabyBoLLexer.FROM) }? IDENTIFIER) -> type(IDENTIFIER);
 UF_FROM     : FROM -> type(FROM), popMode;
+UF_ID       : ({ noMatchInLine(CoBabyBoLLexer.FROM) }? IDENTIFIER) -> type(IDENTIFIER);
 
 mode UNTIL_BY;
 UB_WS       : WS  -> channel(HIDDEN);
@@ -254,8 +254,8 @@ UB_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UB_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UB_ZERO     : ZERO              -> type(ZERO);
 UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UB_ID       : ({ noMatchInLine(CoBabyBoLLexer.BY) }? IDENTIFIER) -> type(IDENTIFIER);
 UB_BY       : BY  -> type(BY), popMode;
+UB_ID       : ({ noMatchInLine(CoBabyBoLLexer.BY) }? IDENTIFIER) -> type(IDENTIFIER);
 
 mode UNTIL_INTO;
 UI_WS       : WS  -> channel(HIDDEN);
@@ -264,5 +264,10 @@ UI_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UI_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UI_ZERO     : ZERO              -> type(ZERO);
 UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UI_INTO     : { noMatchInLine(CoBabyBoLLexer.INTO) }? INTO -> type(INTO), popMode;
 UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
+UI_INTO     : { noMatchInLine(CoBabyBoLLexer.INTO) }? INTO -> type(INTO), popMode;
+
+mode ARG_LIT_MODE;
+
+T_ARG_LIT: '===';
+ARG_LIT_ATOMIC: ((IDENTIFIER | NUMERICLITERAL | ZERO | INTEGERLITERAL | STRINGLITERAL) DOT? WS*)+ T_ARG_LIT -> popMode;
