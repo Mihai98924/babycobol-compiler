@@ -26,13 +26,14 @@ public class Processor {
     /**
      * Parse COBOL from a class-path resource and build the AST + symbol table in one go.
      */
-    public Program parseFile(String resourcePath) throws IOException {
-        InputStream in = getClass().getResourceAsStream(resourcePath);
-        if (in == null) throw new IOException("Resource not found on class-path: " + resourcePath);
-
+    public Program parseFile(String filePath) throws IOException {
+        FileInputStream in = new FileInputStream(filePath);
+        if(in == null)
+            throw new FileNotFoundException("File not found: " + filePath);
         String cleaned = stripCobolComments(in);
-        return buildResult(parseFromCharStream(CharStreams.fromString(cleaned, resourcePath)));
+        return buildResult(parseFromCharStream(CharStreams.fromString(cleaned, filePath)));
     }
+
 
     /**
      * Convert the ANTLR parse tree into a {@link ParseResult}.

@@ -33,6 +33,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
         if (ctx.procedure_division() != null) visit(ctx.procedure_division());
+        if (ctx.function() != null) ctx.function().forEach(this::visit);
 
         return new Program(
                 identityTable,
@@ -142,7 +143,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
 
-        procedures.add(display);
+        procedures.add(display, ctx);
         return display;
     }
 
@@ -188,7 +189,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 })
                 .toList();
         Accept accept = new Accept(targets);
-        procedures.add(accept);
+        procedures.add(accept, ctx);
         return accept;
     }
 
@@ -205,7 +206,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 : ctx.giving_identifier_list().IDENTIFIER()
                 .stream().map(i -> (DataElement) symbolTable.resolve(i.getText()).get()).toList();
         Arithmetic add = Arithmetic.add(addends, target, giving);
-        procedures.add(add);
+        procedures.add(add, ctx);
         return add;
     }
 
@@ -235,7 +236,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic divide = Arithmetic.divide(divisor, dividends, giving, remainder);
-        procedures.add(divide);
+        procedures.add(divide, ctx);
         return divide;
     }
 
@@ -255,7 +256,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic multiply = Arithmetic.multiply(multiplier, multiplicands, giving);
-        procedures.add(multiply);
+        procedures.add(multiply, ctx);
         return multiply;
     }
 
@@ -281,17 +282,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .toList();
 
         Arithmetic subtract = Arithmetic.subtract(subtrahends, minuends, giving);
-        procedures.add(subtract);
+        procedures.add(subtract, ctx);
         return subtract;
     }
 
     public Node visitMove(CoBabyBoL.MoveContext ctx) {
         Object moveType;
-        if(ctx.move_arg().HIGH_VALUES() != null){
+        if (ctx.move_arg().HIGH_VALUES() != null) {
             moveType = Move.MoveType.HIGH_VALUES;
-        } else if (ctx.move_arg().LOW_VALUES() != null){
+        } else if (ctx.move_arg().LOW_VALUES() != null) {
             moveType = Move.MoveType.LOW_VALUES;
-        } else if (ctx.move_arg().SPACES() != null){
+        } else if (ctx.move_arg().SPACES() != null) {
             moveType = Move.MoveType.SPACES;
         } else {
             moveType = (Atomic) visitAtomic(ctx.move_arg().atomic());
@@ -302,8 +303,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                     var name = t.getText();
                     var identifier = symbolTable.resolveIdentifier(name);
                     Representation repr = ((DataElement) symbolTable.resolve(name).get()).picture();
-                    if (moveType instanceof Atomic){
-                        if(((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
+                    if (moveType instanceof Atomic) {
+                        if (((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
                             throw new IllegalStateException("Move with literal '" + ((Atomic) moveType).getLiteral().raw() + "' does not match target '" + repr + "'");
                         } else if (((Atomic) moveType).getElement() != null && !repr.matches(((Atomic) moveType).getElement().picture().toString())) {
                             throw new IllegalStateException("Move with identifier '" + ((Atomic) moveType).getElement().name() + "' does not match target '" + identifier.get() + "'");
@@ -313,70 +314,58 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 }
         ).toList();
         Move move = new Move(moveType, targets);
-        procedures.add(move);
+        procedures.add(move, ctx);
         return move;
     }
 
     public Node visitCall(CoBabyBoL.CallContext ctx) {
-        AlphanumericLiteral filename = null;
+
+        var filename = new AlphanumericLiteral(ctx.file_name().getText()).value().replace("\"", "");
+        File file = new File(filename);
+        if (!file.exists()) {
+            throw new IllegalStateException("File '" + filename + "' cannot be found");
+        }
+        Processor processor = new Processor();
+        Program program = null;
+        try {
+            program = processor.parseFile(file.getAbsolutePath());
+        } catch (IOException e) {
+            throw new IllegalStateException("Error processing file '" + filename + "': " + e.getMessage(), e);
+        }
         List<Object> args = new ArrayList<>();
-        if(ctx.call_function() == null){
-            filename = new AlphanumericLiteral(ctx.file_name().getText());
-            File file = new File(filename.raw()+ ".baby");
-            if(!file.exists()){
-                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
-            }
-            if(ctx.using_clause() != null){
-                var options = ctx.using_clause();
+        if (ctx.call_function().isEmpty()) {
+            if (ctx.using_clause() != null) {
+                var options = ctx.using_clause().by_with_as();
+                System.err.println(options);
                 for (var option : options) {
-//                    if (option.by_reference() != null) {
-//                        if(option.by_reference().IDENTIFIER() == null || option.by_reference().atomic() != null) {
-//                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
-//                        }
-//                        var identifier = symbolTable.resolveIdentifier(option.by_reference().IDENTIFIER().getText());
-//                        if(identifier.isEmpty()) {
-//                            throw new IllegalStateException("Identifier '" + option.by_reference().IDENTIFIER().getText() + "' is not an element or not declared");
-//                        }
-//                        args.add(identifier.get());
-//                    } else if (option.by_content() != null) {
-//                        if(option.by_content().atomic() != null) {
-//                            var atomic = (Atomic) visit(option.by_content().atomic());
-//                            if(atomic.getElement() != null) {
-//                                args.add(atomic.getElement());
-//                            } else if(atomic.getLiteral() != null) {
-//                                args.add(atomic.getLiteral());
-//                            }
-//                        }
-//                    } else if(option.by_value() != null) {
-//                        if(option.by_value().atomic() != null) {
-//                            var atomic = (Atomic) visit(option.by_value().atomic());
-//                            if(atomic.getElement() != null) {
-//                                args.add(atomic.getElement());
-//                            } else if(atomic.getLiteral() != null) {
-//                                args.add(atomic.getLiteral());
-//                            }
-//                        }
-//                    }
+                    if (option.as_clause() != null) {
+                        throw new IllegalStateException("AS clause is not supported in CALL without a function name");
+                    }
+                    if (option.by_clause() != null) {
+                        if (option.by_clause().by_reference() != null && option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
+                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+                        }
+                    }
                 }
             }
+        } else {
+            var callFunctions = ctx.call_function().stream().map(
+                    t -> {
+                        var name = t.getText();
+                        return name;
+                    }
+            );
+            var options = ctx.using_clause().by_with_as();
+            if (ctx.using_clause().isEmpty() || options.isEmpty()) {
+                throw new IllegalStateException("Call to function '" + filename + "' must have USING clause");
+            }
+            args.addAll(options);
 
         }
-//        else if(ctx.call_option_2() != null){
-//            filename = new AlphanumericLiteral(ctx.call_option_2().file_name().getText());
-//            File file = new File(filename.raw()+ ".baby");
-//            if(!file.exists()){
-//                throw new IllegalStateException("File '" + filename.raw()+ ".baby" + "' cannot be found");
-//            }
-//            Processor processor = new Processor();
-//            try {
-//                Program program = processor.parse(String.valueOf(file));
-//            } catch (IOException e) {
-//                throw new IllegalStateException("Error parsing file '" + filename.raw() + ".baby': " + e.getMessage(), e);
-//            }
-//        }
-        Call call = new Call(filename, args);
-        procedures.add(call);
-        return call;
+//        Call call = new Call(filename, args);
+//        procedures.add(call);
+//        return call;
+        return null;
     }
 
 
