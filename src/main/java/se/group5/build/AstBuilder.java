@@ -1,5 +1,9 @@
 package se.group5.build;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import se.group5.ast.*;
 import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
@@ -16,7 +20,11 @@ import se.group5.ast.statement.Display;
 import se.group5.ast.statement.Move;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
+import se.group5.parser.CoBabyBoLLexer;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -71,12 +79,21 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             pic = (Representation) visit(ctx.picture_clause(0));
 
         } else if (ctx.like_clause(0) != null) {
-            Identifier ref = new Identifier(ctx.like_clause(0).IDENTIFIER().getText());
+            Identifier ref = (Identifier) visit(ctx.like_clause(0).identifier());
 
-            pic = symbolTable.resolve(ref.value())
+            String partiallyQualifiedIdentifier = ref.value();
+            List<String> identifierPath = Arrays.stream(partiallyQualifiedIdentifier.split("\\.")).toList();
+            String identifier = identifierPath.get(identifierPath.size() - 1);
+
+            String fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(identifierPath, identifier);
+
+            pic = symbolTable.resolve(fullyQualifiedIdentifier)
                     .filter(DataElement.class::isInstance)
                     .map(DataElement.class::cast).map(DataElement::picture)
-                    .orElseThrow(() -> new IllegalStateException("LIKE reference '" + ref + "' is not an element or not declared"));
+                    .orElse(null);
+
+            if(pic == null)
+                id = new Identifier(fullyQualifiedIdentifier + "." + id.value());
         }
 
         // Instantiate either an element or a group
@@ -162,14 +179,29 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return new Atomic(literal);
     }
 
+    private static int recurrenceLevel = 0;
     @Override
     public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
+        recurrenceLevel++;
         if (ctx.identifier() != null) {
             Identifier identifier = (Identifier) visit(ctx.identifier());
+            recurrenceLevel--;
+            String currentIdentifierText = ctx.IDENTIFIER().getText();
+            String fullIdentifier = identifier.value() + "." + currentIdentifierText;
+            if(recurrenceLevel == 0)
+            {
+                List<String> pathElements = Arrays.stream(fullIdentifier.split("\\.")).toList();
+                boolean isIdentifierAmbiguous =
+                        symbolTable.getFullyQualifiedIdentifier(pathElements, currentIdentifierText) == null;
+                if (isIdentifierAmbiguous) {
+                    throw new IllegalStateException("Identifier '" + currentIdentifierText + "' is ambiguous in the context of " + pathElements);
+                }
+            }
             return new Identifier(
-                    identifier.value() + "." + ctx.IDENTIFIER().getText()
+                    fullIdentifier
             );
         }
+        recurrenceLevel--;
         return new Identifier(ctx.IDENTIFIER().getText());
     }
 
@@ -208,7 +240,6 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         procedures.add(add);
         return add;
     }
-
 
     @Override
     public Arithmetic visitDivide(CoBabyBoL.DivideContext ctx) {
@@ -334,6 +365,50 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             return visit(ctx.numeric_literal());
         }
         return visit(ctx.alphanumeric_literal());
+    }
+
+    @Override
+    public Node visitFile_name(CoBabyBoL.File_nameContext ctx) {
+        return visit(ctx.alphanumeric_literal());
+    }
+
+    @Override
+    public Node visitCopy(CoBabyBoL.CopyContext ctx) {
+        try {
+            Literal fileNameLiteral = (Literal) visit(ctx.file_name());
+            String fileName = fileNameLiteral.raw();
+            fileName = fileName.substring(1, fileName.length() - 1);
+
+            Path path = Paths.get("/Users/jakubstepniewski/Downloads/recombined_formatted/" + fileName);
+            String content = Files.readString(path);
+
+            if (ctx.REPLACING() != null) {
+                List<CoBabyBoL.Argument_literalContext> args = ctx.argument_literal();
+                for (int i = 0; i < args.size(); i += 2) {
+                    String from = args.get(i).ARG_LIT_ATOMIC().getText();
+                    from = from.substring(0, from.length() - 3);
+
+                    String to = args.get(i + 1).ARG_LIT_ATOMIC().getText();
+                    to = to.substring(0, to.length() - 3);
+
+                    content = content.replaceAll("(?<=\\s)" + from + "(?=\\s)", to);
+                }
+            }
+
+            CharStream charStream = CharStreams.fromString(content);
+            CoBabyBoLLexer lexer = new CoBabyBoLLexer(charStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CoBabyBoL parser = new CoBabyBoL(tokens);
+
+            ParseTree tree = parser.program();
+
+            return this.visit(tree);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }
 

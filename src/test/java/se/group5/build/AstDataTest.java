@@ -16,6 +16,7 @@ import se.group5.ast.statement.Accept;
 import se.group5.ast.statement.Display;
 import se.group5.processor.Processor;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -165,5 +166,34 @@ public class AstDataTest {
         // ─── toString() – round‑trip serialisation check ───────────────────────
         String expected = "DISPLAY(ATOMIC(ELEM(1, VAR1, 9999)), ATOMIC(ELEM(1, VAR3, 9999)) DELIMITED BY SPACE, ATOMIC(AlphanumericLiteral[value=\"HENK\"]) DELIMITED BY AlphanumericLiteral[value=\"E\"])";
         Assert.assertEquals("DISPLAY.toString() must match exactly", expected, display.toString());
+    }
+
+    @Test
+    public void copyInterpreterTest() throws IOException {
+        String cobol = """
+                              IDENTIFICATION DIVISION.
+                                  PROGRAM-ID. Prog_copy_main.
+                              DATA DIVISION.
+                                01 B PICTURE IS 99.
+                                01 CONTAINER.
+                                    03 Z.
+                                        05 X.
+                                            07 C PICTURE IS XX.
+                                    03 H.
+                                        05 X.
+                                            07 C PICTURE IS 99.
+                                            07 J.
+                                            07 Y.
+                                                11 C PICTURE IS XX.
+                                01 J LIKE Y.
+                                    03 C PICTURE IS 99.
+                              PROCEDURE DIVISION.
+                                  MOVE 42 TO C OF J Y
+                                  DISPLAY "BACK IN FIRST TREE PRINTS".
+                                         
+                """;
+
+        Program program = processor.parse(cobol);
+        System.out.println(program.toString());
     }
 }

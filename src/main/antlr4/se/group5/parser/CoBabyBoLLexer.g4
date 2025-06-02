@@ -220,7 +220,9 @@ IDENTIFIER    : [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)* ;
 LETTER        : [a-zA-Z] ;
 DIGIT         : [0-9] ;
 ALPHANUMERIC  : [a-zA-Z0-9] ;
-ARG_LIT       : '≡≡≡' ;
+//ARG_LIT : '≡≡≡';
+ARG_LIT: '===' -> pushMode(ARG_LIT_MODE);
+// === MISCELLANEOUS ===============================================================
 
 // === MISCELLANEOUS ===========================================
 COMMA : ',' ;
@@ -266,3 +268,13 @@ UI_ZERO     : ZERO              -> type(ZERO);
 UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 UI_INTO     : { noMatchInLine(CoBabyBoLLexer.INTO) }? INTO -> type(INTO), popMode;
 UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
+
+// TODO verify if this is needed
+//mode ADD_REP;
+//
+//ATOMIC: IDENTIFIER | NUMERICLITERAL | ZERO | INTEGERLITERAL | STRINGLITERAL;
+//ADD_REPRESENTATION: WS* (ATOMIC WS*)+ TO -> popMode;
+
+mode ARG_LIT_MODE;
+
+ARG_LIT_ATOMIC: (SOL? (DOT | COMMA | SOL)? SOL? (IDENTIFIER | NUMERICLITERAL | ZERO | INTEGERLITERAL | STRINGLITERAL) SOL? (DOT | COMMA | SOL)? SOL?)+ ARG_LIT-> popMode;
