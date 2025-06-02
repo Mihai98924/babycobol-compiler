@@ -167,7 +167,7 @@ LOW_VALUES          : L WS* O WS* W WS* '-' WS* V WS* A WS* L WS* U WS* E WS* S;
 INTO                : I WS* N WS* T WS* O;
 USING               : U WS* S WS* I WS* N WS* G;
 BY_REFERENCE        : B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
-BY_CONTENT          : B SOL* Y SOL+ C SOL* O SOL* N SOL* T SOL* E SOL* N SOL* T;
+BY_CONTENT          : B WS* Y WS+ C WS* O WS* N WS* T WS* E WS* N WS* T;
 BY_VALUE            : B WS* Y WS+ V WS* A WS* L WS* U WS* E;
 THROUGH             : T WS* H WS* R WS* O WS* U WS* G WS* H;
 RETURNING           : R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;

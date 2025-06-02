@@ -14,14 +14,14 @@ import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
-import se.group5.ast.statement.Accept;
-import se.group5.ast.statement.Arithmetic;
-import se.group5.ast.statement.Display;
-import se.group5.ast.statement.Move;
+import se.group5.ast.statement.*;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
+import se.group5.processor.Processor;
 import se.group5.parser.CoBabyBoLLexer;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +40,18 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
+        if (ctx.function() != null) {
+            var paragraphs = ctx.function().stream().map(
+                    t-> t.IDENTIFIER().getText()
+            ).toList();
+            for (String name : paragraphs) {
+                if (symbolTable.resolve(name).isPresent()) {
+                    throw new IllegalStateException("Function with name '" + name + "' already exists as an identifier.");
+                }
+                symbolTable.registerParagraph(name);
+            }
+            ctx.function().forEach(this::visit);
+        }
         if (ctx.procedure_division() != null) visit(ctx.procedure_division());
 
         return new Program(
@@ -159,7 +171,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
 
-        procedures.add(display);
+        procedures.add(display, ctx);
         return display;
     }
 
@@ -220,7 +232,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 })
                 .toList();
         Accept accept = new Accept(targets);
-        procedures.add(accept);
+        procedures.add(accept, ctx);
         return accept;
     }
 
@@ -236,7 +248,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 : ctx.giving_identifier_list().IDENTIFIER()
                 .stream().map(i -> (DataElement) symbolTable.resolve(i.getText()).get()).toList();
         Arithmetic add = Arithmetic.add(addends, target, giving);
-        procedures.add(add);
+        procedures.add(add, ctx);
         return add;
     }
 
@@ -265,7 +277,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic divide = Arithmetic.divide(divisor, dividends, giving, remainder);
-        procedures.add(divide);
+        procedures.add(divide, ctx);
         return divide;
     }
 
@@ -285,7 +297,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic multiply = Arithmetic.multiply(multiplier, multiplicands, giving);
-        procedures.add(multiply);
+        procedures.add(multiply, ctx);
         return multiply;
     }
 
@@ -311,17 +323,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .toList();
 
         Arithmetic subtract = Arithmetic.subtract(subtrahends, minuends, giving);
-        procedures.add(subtract);
+        procedures.add(subtract, ctx);
         return subtract;
     }
 
     public Node visitMove(CoBabyBoL.MoveContext ctx) {
         Object moveType;
-        if(ctx.move_arg().HIGH_VALUES() != null){
+        if (ctx.move_arg().HIGH_VALUES() != null) {
             moveType = Move.MoveType.HIGH_VALUES;
-        } else if (ctx.move_arg().LOW_VALUES() != null){
+        } else if (ctx.move_arg().LOW_VALUES() != null) {
             moveType = Move.MoveType.LOW_VALUES;
-        } else if (ctx.move_arg().SPACES() != null){
+        } else if (ctx.move_arg().SPACES() != null) {
             moveType = Move.MoveType.SPACES;
         } else {
             moveType = (Atomic) visitAtomic(ctx.move_arg().atomic());
@@ -332,8 +344,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                     var name = t.getText();
                     var identifier = symbolTable.resolveIdentifier(name);
                     Representation repr = ((DataElement) symbolTable.resolve(name).get()).picture();
-                    if (moveType instanceof Atomic){
-                        if(((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
+                    if (moveType instanceof Atomic) {
+                        if (((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
                             throw new IllegalStateException("Move with literal '" + ((Atomic) moveType).getLiteral().raw() + "' does not match target '" + repr + "'");
                         } else if (((Atomic) moveType).getElement() != null && !repr.matches(((Atomic) moveType).getElement().picture().toString())) {
                             throw new IllegalStateException("Move with identifier '" + ((Atomic) moveType).getElement().name() + "' does not match target '" + identifier.get() + "'");
@@ -343,8 +355,72 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 }
         ).toList();
         Move move = new Move(moveType, targets);
-        procedures.add(move);
+        procedures.add(move, ctx);
         return move;
+    }
+
+    public Node visitCall(CoBabyBoL.CallContext ctx) {
+
+        var filename = new AlphanumericLiteral(ctx.file_name().getText()).value().replace("\"", "");
+        File file = new File(filename);
+        if (!file.exists()) {
+            throw new IllegalStateException("File '" + filename + "' cannot be found");
+        }
+        Processor processor = new Processor();
+        Program program = null;
+        try {
+            program = processor.parseFile(file.getAbsolutePath());
+        } catch (IOException e) {
+            throw new IllegalStateException("Error processing file '" + filename + "': " + e.getMessage(), e);
+        }
+        List<Object> args = new ArrayList<>();
+        if (ctx.call_function().isEmpty()) {
+            if (ctx.using_clause() != null) {
+                var options = ctx.using_clause().by_with_as();
+                System.err.println(options);
+                for (var option : options) {
+                    if (option.as_clause() != null) {
+                        throw new IllegalStateException("AS clause is not supported in CALL without a function name");
+                    }
+                    if (option.by_clause() != null) {
+                        if (option.by_clause().by_reference() != null && option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
+                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+                        }
+                    }
+                }
+            }
+        } else {
+            var callFunctions = ctx.call_function().stream().map(
+                    t -> {
+                        var name = t.getText();
+                        return name;
+                    }
+            );
+            var options = ctx.using_clause().by_with_as();
+            if (ctx.using_clause().isEmpty() || options.isEmpty()) {
+                throw new IllegalStateException("Call to function '" + filename + "' must have USING clause");
+            }
+            args.addAll(options);
+
+        }
+//        Call call = new Call(filename, args);
+//        procedures.add(call);
+//        return call;
+        return null;
+    }
+
+    @Override
+    public Node visitGoto(CoBabyBoL.GotoContext ctx) {
+        var label = ctx.procedure_name().IDENTIFIER().getText();
+        try {
+            String paragraph = symbolTable.resolveParagraph(label).get();
+            GoTo goTo = new GoTo(paragraph);
+            procedures.add(goTo, ctx);
+            return goTo;
+        }
+        catch (NoSuchElementException e) {
+            throw new IllegalStateException("Goto label '" + label + "' is not defined in the program");
+        }
     }
 
 
