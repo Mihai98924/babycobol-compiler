@@ -102,27 +102,27 @@
 
         <plugins>
 
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <executions>
-                    <execution>
-                        <id>fix-parser-generation</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>touch</executable>
-                            <arguments>
-                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoL.g4</argument>
-                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoLLexer.g4
-                                </argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <artifactId>exec-maven-plugin</artifactId>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>fix-parser-generation</id>-->
+<!--                        <phase>generate-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>exec</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <executable>touch</executable>-->
+<!--                            <arguments>-->
+<!--                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoL.g4</argument>-->
+<!--                                <argument>${project.basedir}/src/main/antlr4/se/group5/parser/CoBabyBoLLexer.g4-->
+<!--                                </argument>-->
+<!--                            </arguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <!-- Java compiler (with Lombok) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -97,7 +97,9 @@ perform
       (atomic TIMES)?
     ;
 
-signal      : SIGNAL (procedure_name | OFF) ON_ERROR ;
+signal
+    : SIGNAL (procedure_name | OFF) ON_ERROR
+    ;
 
 copy
     : COPY file_name
@@ -249,11 +251,27 @@ literal
     | alphanumeric_literal
     ;
 
-numeric_literal        : NUMERICLITERAL | ZERO | INTEGERLITERAL ;
-alphanumeric_literal   : STRINGLITERAL ;
+numeric_literal
+    : NUMERICLITERAL
+    | ZERO
+    | INTEGERLITERAL
+    ;
 
-file_name      : alphanumeric_literal ;
-procedure_name : IDENTIFIER ;
-function_name  : IDENTIFIER ;
+alphanumeric_literal
+    : STRINGLITERAL
+    ;
+
+file_name
+    : alphanumeric_literal
+    ;
+
+procedure_name
+    : IDENTIFIER
+    ;
+
+function_name
+    : IDENTIFIER
+    ;
+
 program_name   : IDENTIFIER ;
 level          : LEVEL ;

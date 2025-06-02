@@ -89,7 +89,7 @@ DATA_DIVISION
 mode DD;
 DD_EOL        : EOL        -> type(EOL);
 DD_WS         : WS         -> skip;
-PICTURE_IS    : P I C T U R E I S
+PICTURE_IS    : P I C T U R E WS+ I S
                 -> pushMode(PIC_REP);
 LIKE          : L I K E                         -> pushMode(ID_REP);
 OCCURS        : O C C U R S             -> pushMode(DD_INT);
