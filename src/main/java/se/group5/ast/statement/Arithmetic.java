@@ -103,7 +103,7 @@ public final class Arithmetic implements Procedure {
                         element.setValue((double)receivers.get(0).getElement().getValue() / sum);
                     }
                     DataElement give = giving.get(0);
-                    give.setValue((double)receivers.get(0).getElement().getValue() * sum);
+                    give.setValue((double)receivers.get(0).getElement().getValue() / sum);
                 }
                 else
                 {
