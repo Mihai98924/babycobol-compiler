@@ -26,6 +26,38 @@ public class Display implements Procedure {
     @Override
     public void execute(Program state) {
 
+        String newline = noAdvancing ? "" : "\n";
+
+        for (Argument argument : arguments) {
+            String argumentValue = argument.atomic().getElement().getValue().toString();
+
+            if (argument.delimiter() != null) {
+                Delimiter delimiter = argument.delimiter();
+
+                switch (delimiter.type){
+                    case SPACE -> {
+                        state.getDisplayStrategy().display(argumentValue + newline);
+                    }
+                    case SIZE -> {
+                        String result = argument.atomic.getElement().picture().convert(argumentValue);
+                        state.getDisplayStrategy().display(result + newline);
+                    }
+                    case LITERAL -> {
+                        String literal = delimiter.literal().raw();
+                        int idx = argumentValue.indexOf(literal);
+                        String result = idx != -1 ? argumentValue.substring(0, idx) : null;
+
+                        if (result == null)
+                            throw new IllegalArgumentException("Argument " + argument +
+                                    " has substring literal: " + literal);
+
+                        state.getDisplayStrategy().display(result + newline);
+                    }
+                }
+            } else {
+                state.getDisplayStrategy().display(argumentValue + newline);
+            }
+        }
     }
 
     /**
