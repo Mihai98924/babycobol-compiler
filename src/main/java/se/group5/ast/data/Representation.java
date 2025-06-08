@@ -78,6 +78,19 @@ public final class Representation implements Node {
         return true;
     }
 
+    public String convert(String text) {
+        if(matches(text)) return text;
+
+        if (text.length() < pattern.size())
+            throw new IllegalArgumentException("Text length is shorter than PICTURE length");
+
+        String substring = text.substring(0, pattern.size());
+        if(matches(substring))
+            return substring;
+        else
+            throw new IllegalArgumentException("Text does not match PICTURE");
+    }
+
     @Override
     public String toString() {
         return pattern.stream().map(s -> String.valueOf(s.glyph)).reduce("", String::concat);

@@ -14,6 +14,9 @@ public class Program implements Node {
     @Getter
     private ProgramInputStrategy inputStrategy;
 
+    @Getter
+    private ProgramDisplayStrategy displayStrategy;
+
     public Program(IdentityTable identityTable, SymbolTable symbolTable,
                    ProcedureList procedures) {
         this.identityTable = identityTable;
@@ -32,12 +35,18 @@ public class Program implements Node {
     }
 
     public void run() {
-        run(null);
+        run(null, null);
     }
 
-    public void run(ProgramInputStrategy inputStrategy)
+    public void run(ProgramInputStrategy inputStrategy) {
+        run(inputStrategy, null);
+    }
+
+    public void run(ProgramInputStrategy inputStrategy, ProgramDisplayStrategy displayStrategy)
     {
         this.inputStrategy = inputStrategy;
+        this.displayStrategy = displayStrategy;
+
         int index = 0;
         while (procedures.get(index).isPresent()) {
             Procedure procedure = procedures.get(index).get();
