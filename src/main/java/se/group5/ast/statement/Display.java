@@ -26,6 +26,11 @@ public class Display implements Procedure {
     @Override
     public void execute(Program state) {
 
+        if(state.getDisplayStrategy() == null) {
+            System.out.println("Display strategy is null");
+            return;
+        }
+
         String newline = noAdvancing ? "" : "\n";
 
         for (Argument argument : arguments) {

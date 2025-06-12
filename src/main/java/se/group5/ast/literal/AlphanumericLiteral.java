@@ -10,4 +10,8 @@ public record AlphanumericLiteral(String value) implements Literal {
     public String raw() {
         return value;
     }
+
+    public String getText() {
+        return value.substring(1, value.length() - 1);
+    }
 }

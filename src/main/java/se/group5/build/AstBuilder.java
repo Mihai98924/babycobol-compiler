@@ -272,7 +272,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
         DataElement remainder = null;
         if (ctx.remainder() != null) {
-            String remName = ctx.remainder().REMAINDER().getText();
+            String remName = ctx.remainder().IDENTIFIER().getText();
             remainder = (DataElement) symbolTable.resolve(remName).get();
         }
 
