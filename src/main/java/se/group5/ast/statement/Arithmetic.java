@@ -3,15 +3,14 @@ package se.group5.ast.statement;
 import lombok.NonNull;
 import se.group5.ast.Atomic;
 import se.group5.ast.Program;
+import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
+import se.group5.ast.data.DataGroup;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.Procedure;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Generic representation of the four COBOL arithmetic verbs.
@@ -225,6 +224,34 @@ public final class Arithmetic implements Procedure {
             throw new IllegalArgumentException("Unsupported type for source: " + firstSource);
         }
 
+        // TODO "any of the three arguments can be an identifier defined with a numeric picture clause (free from A and X)"
+        // What free from A and X means?
+
+        // First is a composite
+        if(firstSource.isComposite())
+        {
+            DataGroup sourceGroup = firstSource.getGroup();
+            DataGroup receiverGroup = receiver.getGroup();
+
+            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                if(receiverGroup.children.containsKey(entry.getKey())) {
+                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    if (type.get() == Type.NUMERIC) {
+                        receiverDefinition.setValue((double)receiverDefinition.getValue() +
+                                (double)entry.getValue().getValue());
+                    } else {
+                        receiverDefinition.setValue(entry.getValue().getValue().toString() +
+                                receiverDefinition.getValue().toString());
+                    }
+                }
+            }
+
+            // TODO MOVE when giving is a composite
+
+            return;
+        }
+
+        // Regular
         for (Atomic source : sources) {
             if(type.get() == Type.NUMERIC) {
                 if(source.isLiteral()) {
@@ -382,6 +409,16 @@ public final class Arithmetic implements Procedure {
                 type = Optional.of(Type.NUMERIC);
             } else {
                 throw new IllegalArgumentException("Unsupported literal: " + atomic.getLiteral());
+            }
+        } else if(atomic.isComposite()) {
+            DataGroup group = atomic.getGroup();
+            DataDefinition firstChild = group.children.values().stream().findFirst().get();
+            if (firstChild.getValue() instanceof String) {
+                type = Optional.of(Type.STRING);
+            } else if (firstChild.getValue() instanceof Double) {
+                type = Optional.of(Type.NUMERIC);
+            } else {
+                throw new IllegalArgumentException("Unsupported identifier value: " + group.getValue());
             }
         } else {
             DataElement element = atomic.getElement();

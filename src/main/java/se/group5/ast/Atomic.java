@@ -9,6 +9,7 @@ import se.group5.ast.literal.Literal;
 public class Atomic implements Node {
     Literal literal;
     DataElement element;
+    DataGroup group;
 
     public Atomic(Literal literal) {
         this.literal = literal;
@@ -16,6 +17,10 @@ public class Atomic implements Node {
 
     public Atomic(DataElement element) {
         this.element = element;
+    }
+
+    public Atomic(DataGroup group) {
+        this.group = group;
     }
 
     public int length() {
@@ -38,6 +43,6 @@ public class Atomic implements Node {
     }
 
     public boolean isComposite() {
-        return element != null && element.picture() == null;
+        return group != null;
     }
 }

@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
@@ -182,9 +183,12 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             Identifier identifier = (Identifier) visit(ctx.identifier());
             String name = identifier.toString();
             Optional<DataDefinition> def = symbolTable.resolve(name);
-            if (def.isEmpty() || !(def.get() instanceof DataElement))
+            if (def.isEmpty() || !(def.get() instanceof DataElement || def.get() instanceof DataGroup))
                 throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not a data definition or not declared");
-            return new Atomic((DataElement) def.get());
+            if(def.get() instanceof DataGroup)
+                return new Atomic((DataGroup) def.get());
+            else
+                return new Atomic((DataElement) def.get());
         }
 
         Literal literal = (Literal) visit(ctx.literal());
@@ -220,15 +224,16 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitAccept(CoBabyBoL.AcceptContext ctx) {
-        List<Identifier> targets = ctx.IDENTIFIER()
-                .stream()
-                .map(t -> {
-                    var name = t.getText();
-                    var identifier = symbolTable.resolveIdentifier(name);
-                    if (identifier.isEmpty()) {
-                        throw new IllegalStateException("LIKE reference '" + t + "' is not an element or not declared");
-                    }
-                    return identifier.get();
+        List<Identifier> targets = ctx.identifier().stream()
+                .map(idCtx -> {
+                    Identifier id = (Identifier) visit(idCtx);
+
+                    String partiallyQualifiedIdentifier = id.value();
+                    List<String> identifierPath = Arrays.stream(partiallyQualifiedIdentifier.split("\\.")).toList();
+                    String identifier = identifierPath.get(identifierPath.size() - 1);
+
+                    String fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(identifierPath, identifier);
+                    return new Identifier(fullyQualifiedIdentifier);
                 })
                 .toList();
         Accept accept = new Accept(targets);
