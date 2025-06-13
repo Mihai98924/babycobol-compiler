@@ -2,6 +2,7 @@ package se.group5.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
@@ -13,11 +14,11 @@ import java.io.IOException;
 
 @Slf4j
 public class ProcessorArithmeticTest {
-    private static Processor processor;
-    private static ProgramInputStrategy strategy, divisionStrategy, compositesStrategy;
+    private Processor processor;
+    private ProgramInputStrategy strategy, divisionStrategy, compositesStrategy;
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         processor = new Processor();
         strategy = new ProgramInputStrategy() {
             final String[] inputs = {"1", "2", "3"};
@@ -323,7 +324,7 @@ public class ProcessorArithmeticTest {
                                   07 A PICTURE IS 99.
                                   07 D PICTURE IS 99.
                   PROCEDURE DIVISION.
-                      ACCEPT A OF X A OF Y B.
+                      ACCEPT A OF X A OF Y B D.
                       ADD X TO Y.
                       DISPLAY D.
            """;
@@ -539,6 +540,73 @@ public class ProcessorArithmeticTest {
 
         // Assert
         Assert.assertEquals(-5.0, (double)program.symbolTable.table.get("C").getValue(), 0.001);
+    }
+
+    @Test
+    public void programRunTest_SubtractComposites_Returns_Passes() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 D PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B.
+                      SUBTRACT X FROM Y.
+                      DISPLAY D.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+
+        // Assert
+        Assert.assertEquals(1.0, (double)program.symbolTable.table.get("CONTAINER.UB.Y.A").getValue(), 0.001);
+        Assert.assertEquals(3.0, (double)program.symbolTable.table.get("B").getValue(), 0.001);
+    }
+
+    @Test
+    public void programRunTest_SubtractMultipleCompositeElements_Returns_Passes() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      SUBTRACT X FROM Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+
+        // Assert
+        Assert.assertEquals(1.0, (double)program.symbolTable.table.get("CONTAINER.UB.Y.A").getValue(), 0.001);
+        Assert.assertEquals(1.0, (double)program.symbolTable.table.get("CONTAINER.UB.Y.B").getValue(), 0.001);
     }
 
     // MULTIPLICATION

@@ -301,6 +301,26 @@ public final class Arithmetic implements Procedure {
 
     private void executeSubtract() {
         Atomic firstReceiver = receivers.get(0);
+        Atomic firstSource = sources.get(0);
+
+        // First is a composite
+        if(firstSource.isComposite())
+        {
+            DataGroup sourceGroup = firstSource.getGroup();
+            DataGroup receiverGroup = firstReceiver.getGroup();
+
+            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                if(receiverGroup.children.containsKey(entry.getKey())) {
+                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    receiverDefinition.setValue((double)receiverDefinition.getValue() -
+                            (double)entry.getValue().getValue());
+                }
+            }
+
+            // TODO MOVE when giving is a composite
+
+            return;
+        }
 
         double sum = 0;
         for (Atomic source : sources) {
