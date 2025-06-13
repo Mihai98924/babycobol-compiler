@@ -3,12 +3,14 @@ package se.group5.ast.statement;
 import lombok.NonNull;
 import se.group5.ast.Atomic;
 import se.group5.ast.Program;
+import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
+import se.group5.ast.data.DataGroup;
+import se.group5.ast.literal.AlphanumericLiteral;
+import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.Procedure;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Generic representation of the four COBOL arithmetic verbs.
@@ -27,93 +29,10 @@ public final class Arithmetic implements Procedure {
     @Override
     public void execute(Program state) {
         switch (verb) {
-            case ADD -> {
-                double sum = 0;
-                for (Atomic source : sources)
-                {
-                    sum += (double)source.getElement().getValue();
-                }
-
-                DataElement receiver = receivers.get(0).getElement();
-                sum += (double)receiver.getValue();
-
-                if(!giving.isEmpty())
-                {
-                    for (DataElement element : giving)
-                    {
-                        element.setValue(sum);
-                    }
-                }
-                else
-                {
-                    receiver.setValue(sum);
-                }
-            }
-            case SUBTRACT -> {
-                double sum = 0;
-                    for (Atomic source : sources)
-                {
-                    sum += (double)source.getElement().getValue();
-                }
-
-                if(!giving.isEmpty())
-                {
-                    // If GIVING is present, we subtract from the only receiver
-                    DataElement receiver = receivers.get(0).getElement();
-                    sum = (double)receiver.getValue() - sum;
-
-                    for (DataElement element : giving)
-                    {
-                        element.setValue(sum);
-                    }
-                }
-                else
-                {
-                    for (Atomic source : receivers)
-                    {
-                        double value = (double)source.getElement().getValue();
-                        source.getElement().setValue(value - sum);
-                    }
-                }
-            }
-            case MULTIPLY -> {
-                double sum = (double)sources.get(0).getElement().getValue();
-
-                if(!giving.isEmpty())
-                {
-                    DataElement give = giving.get(0);
-                    give.setValue((double)receivers.get(0).getElement().getValue() * sum);
-                }
-                else
-                {
-                    for (Atomic source : receivers)
-                    {
-                        double value = (double)source.getElement().getValue();
-                        source.getElement().setValue(value * sum);
-                    }
-                }
-            }
-            case DIVIDE -> {
-                double sum = (double)sources.get(0).getElement().getValue();
-
-                if(!giving.isEmpty())
-                {
-                    for (DataElement element : giving)
-                    {
-                        element.setValue((double)receivers.get(0).getElement().getValue() / sum);
-                    }
-                    DataElement give = giving.get(0);
-                    give.setValue((double)receivers.get(0).getElement().getValue() / sum);
-                }
-                else
-                {
-                    for (Atomic source : receivers)
-                    {
-                        double value = (double)source.getElement().getValue();
-                        source.getElement().setValue(value / sum);
-                    }
-                }
-            }
+            case ADD -> executeAdd();
+            case SUBTRACT -> executeSubtract();
+            case MULTIPLY -> executeMultiply();
+            case DIVIDE -> executeDivide();
         }
     }
 
@@ -289,22 +208,248 @@ public final class Arithmetic implements Procedure {
 
     // ---------- Execution --------------------------------------
 
-    public double add(double addend1, double addend2) {
-        return addend1 + addend2;
+    enum Type {
+        STRING,
+        NUMERIC
     }
+    private void executeAdd() {
+        Atomic receiver = receivers.get(0);
 
-    public double subtract(double subtract1, double subtract2) {
-        return subtract1 - subtract2;
-    }
+        StringBuilder sb = new StringBuilder();
+        double sum = 0;
 
-    public double multiply(double multiplicand1, double multiplicand2) {
-        return multiplicand1 * multiplicand2;
-    }
-
-    public double divide(double dividend, double divisor) {
-        if (divisor == 0) {
-            throw new ArithmeticException("Division by zero is not allowed.");
+        Atomic firstSource = sources.get(0);
+        Optional<Type> type = getLiteralType(firstSource);
+        if(type.isEmpty()) {
+            throw new IllegalArgumentException("Unsupported type for source: " + firstSource);
         }
-        return dividend / divisor;
+
+        // TODO "any of the three arguments can be an identifier defined with a numeric picture clause (free from A and X)"
+        // What free from A and X means?
+
+        // First is a composite
+        if(firstSource.isComposite())
+        {
+            DataGroup sourceGroup = firstSource.getGroup();
+            DataGroup receiverGroup = receiver.getGroup();
+
+            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                if(receiverGroup.children.containsKey(entry.getKey())) {
+                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    if (type.get() == Type.NUMERIC) {
+                        receiverDefinition.setValue((double)receiverDefinition.getValue() +
+                                (double)entry.getValue().getValue());
+                    } else {
+                        receiverDefinition.setValue(entry.getValue().getValue().toString() +
+                                receiverDefinition.getValue().toString());
+                    }
+                }
+            }
+
+            // TODO MOVE when giving is a composite
+
+            return;
+        }
+
+        // Regular
+        for (Atomic source : sources) {
+            if(type.get() == Type.NUMERIC) {
+                if(source.isLiteral()) {
+                    sum += Double.parseDouble(source.getLiteral().raw());
+                } else {
+                    sum += (double) source.getElement().getValue();
+                }
+            } else {
+                if (source.isLiteral()) {
+                    sb.append(((AlphanumericLiteral)source.getLiteral()).getText());
+                } else {
+                    sb.append(source.getElement().getValue().toString());
+                }
+            }
+        }
+
+        if (receiver.isLiteral()) {
+            if (type.get() == Type.STRING) {
+                sb.append(((AlphanumericLiteral)receiver.getLiteral()).getText());
+            } else {
+                sum += Double.parseDouble(receiver.getLiteral().raw());
+            }
+        } else {
+            DataElement element = receiver.getElement();
+            if (type.get() == Type.STRING) {
+                sb.append(element.getValue().toString());
+            } else {
+                sum += (double) element.getValue();
+            }
+            if (giving.isEmpty()) {
+                if (type.get() == Type.STRING) {
+                    element.setValue(sb.toString());
+                } else {
+                    element.setValue(sum);
+                }
+            }
+        }
+
+        for (DataElement giving : giving) {
+            if (type.get() == Type.STRING) {
+                giving.setValue(sb.toString());
+            } else {
+                giving.setValue(sum);
+            }
+        }
+    }
+
+    private void executeSubtract() {
+        Atomic firstReceiver = receivers.get(0);
+        Atomic firstSource = sources.get(0);
+
+        // First is a composite
+        if(firstSource.isComposite())
+        {
+            DataGroup sourceGroup = firstSource.getGroup();
+            DataGroup receiverGroup = firstReceiver.getGroup();
+
+            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                if(receiverGroup.children.containsKey(entry.getKey())) {
+                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    receiverDefinition.setValue((double)receiverDefinition.getValue() -
+                            (double)entry.getValue().getValue());
+                }
+            }
+
+            // TODO MOVE when giving is a composite
+
+            return;
+        }
+
+        double sum = 0;
+        for (Atomic source : sources) {
+            if(source.isLiteral()) {
+                sum += Double.parseDouble(source.getLiteral().raw());
+            } else {
+                sum += (double)source.getElement().getValue();
+            }
+        }
+
+        if(giving.isEmpty()) {
+            for (Atomic receiver : receivers) {
+                double value = (double) receiver.getElement().getValue();
+                receiver.getElement().setValue(value - sum);
+            }
+        } else {
+            if(firstReceiver.isLiteral()) {
+                sum = Double.parseDouble(firstReceiver.getLiteral().raw()) - sum;
+            } else {
+                sum = (double)firstReceiver.getElement().getValue() - sum;
+            }
+        }
+
+        // If GIVING is present, we set the value to all giving elements
+        for (DataElement giving : giving) {
+            giving.setValue(sum);
+        }
+    }
+
+    private void executeMultiply() {
+        Atomic firstReceiver = receivers.get(0);
+
+        double value;
+        if(sources.get(0).isLiteral()) {
+            value = Double.parseDouble(sources.get(0).getLiteral().raw());
+        } else {
+            value = (double)sources.get(0).getElement().getValue();
+        }
+
+        if (firstReceiver.isLiteral()) {
+            value *= Double.parseDouble(firstReceiver.getLiteral().raw());
+        } else if(giving.isEmpty()) {
+            for (Atomic receiver : receivers) {
+                receiver.getElement().setValue((double)receiver.getElement().getValue() * value);
+            }
+        } else {
+            value *= (double)firstReceiver.getElement().getValue();
+        }
+
+        for (DataElement giving : giving) {
+            giving.setValue(value);
+        }
+    }
+
+    private void executeDivide() {
+        // When remainder is present truncate doubles
+        Atomic firstReceiver = receivers.get(0);
+
+        double value, remainderValue = -1;
+        if(sources.get(0).isLiteral()) {
+            value = Double.parseDouble(sources.get(0).getLiteral().raw());
+        } else {
+            value = (double)sources.get(0).getElement().getValue();
+        }
+
+        if (firstReceiver.isLiteral()) {
+            if(remainder == null) {
+                value = Double.parseDouble(firstReceiver.getLiteral().raw()) / value;
+            } else {
+                int firstValue = (int)Double.parseDouble(firstReceiver.getLiteral().raw());
+                int valueInt = (int)value;
+                remainderValue = firstValue % valueInt;
+                value = (double) (firstValue / valueInt);
+            }
+        } else if(giving.isEmpty()) {
+            for (Atomic receiver : receivers) {
+                receiver.getElement().setValue((double)receiver.getElement().getValue() / value);
+            }
+        } else {
+            if(remainder == null) {
+                value = (double)firstReceiver.getElement().getValue() / value;
+            } else {
+                int firstValue = ((Double)firstReceiver.getElement().getValue()).intValue();
+                int valueInt = (int)value;
+                remainderValue = firstValue % valueInt;
+                value = (double) (firstValue / valueInt);
+            }
+        }
+
+        if (remainder != null) {
+            remainder.setValue(remainderValue);
+            giving.get(0).setValue(value);
+        } else {
+            for (DataElement giving : giving) {
+                giving.setValue(value);
+            }
+        }
+    }
+
+    private Optional<Type> getLiteralType(Atomic atomic) {
+        Optional<Type> type;
+        if (atomic.isLiteral()) {
+            if (atomic.getLiteral() instanceof AlphanumericLiteral) {
+                type = Optional.of(Type.STRING);
+            } else if (atomic.getLiteral() instanceof NumericLiteral) {
+                type = Optional.of(Type.NUMERIC);
+            } else {
+                throw new IllegalArgumentException("Unsupported literal: " + atomic.getLiteral());
+            }
+        } else if(atomic.isComposite()) {
+            DataGroup group = atomic.getGroup();
+            DataDefinition firstChild = group.children.values().stream().findFirst().get();
+            if (firstChild.getValue() instanceof String) {
+                type = Optional.of(Type.STRING);
+            } else if (firstChild.getValue() instanceof Double) {
+                type = Optional.of(Type.NUMERIC);
+            } else {
+                throw new IllegalArgumentException("Unsupported identifier value: " + group.getValue());
+            }
+        } else {
+            DataElement element = atomic.getElement();
+            if (element.getValue() instanceof String) {
+                type = Optional.of(Type.STRING);
+            } else if (element.getValue() instanceof Double) {
+                type = Optional.of(Type.NUMERIC);
+            } else {
+                throw new IllegalArgumentException("Unsupported identifier value: " + element.getValue());
+            }
+        }
+        return type;
     }
 }

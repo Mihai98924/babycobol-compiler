@@ -88,8 +88,10 @@ PROCEDURE_DIVISION
       D WS* I WS* V WS* I WS* S WS* I WS* O WS* N -> pushMode(CODE) // Go to parsing of CODE (procedure division)
     ;
 
+AZ : [a-zA-Z];
+AZ_DIGIT : [a-zA-Z0-9];
 IDENTIFIER
-    : [a-zA-Z0-9]+ ([-_]+ [a-zA-Z0-9]+)* -> pushMode(CODE) // Go to parsing of CODE (function)
+    : ([a-zA-Z][0-9]* | [0-9]+[a-zA-Z][0-9]*)+ -> pushMode(CODE) // Go to parsing of CODE (function)
     ;
 
 CONTINUE_CODE_LINE
@@ -109,7 +111,7 @@ IV_END  : EOL -> type(EOL), popMode, pushMode(DEFAULT_MODE);
 mode DD;
 DD_EOL          : EOL                           -> type(EOL), pushMode(DEFAULT_MODE);
 DD_WS           : WS                            -> channel(HIDDEN);
-DD_LEVEL        : LEVEL                         -> type(LEVEL), pushMode(ID_REP);
+LEVEL           : ([0-9] [0-9] | [0-9])         -> pushMode(ID_REP);
 PICTURE_IS      : P I C T U R E WS+ I S         -> pushMode(PIC_REP);
 LIKE            : L I K E                       -> pushMode(ID_REP);
 OCCURS          : O C C U R S;
@@ -204,8 +206,6 @@ CODE_IDENTIFIER
     : IDENTIFIER        -> type(IDENTIFIER)
     ;
 
-LEVEL : [0-9] [0-9];
-
 // === OPERATORS & PUNCTUATION ================================
 AND : A WS* N WS* D;
 OR  : O WS* R;
@@ -252,7 +252,7 @@ AM_ZERO     : ZERO              -> type(ZERO);
 AM_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 AM_TO_ID    : 'to' { hasNextTokenInLine(CoBabyBoLLexer.TO) }? -> type(IDENTIFIER);
 AM_TO       : TO               -> type(TO), popMode;
-AM_ID       : IDENTIFIER        -> type(IDENTIFIER);
+AM_ID       : IDENTIFIER -> type(IDENTIFIER);
 
 mode SUBTRACT_MODE;
 UF_WS       : WS                -> skip;

@@ -80,7 +80,7 @@ statement
     ;
 
 // ── STATEMENTS ────────────────────────────────────────────────
-accept      : ACCEPT IDENTIFIER+ ;
+accept      : ACCEPT identifier+ ;
 alter       : ALTER procedure_name TO PROCEED TO procedure_name ;
 goto        : GOTO procedure_name ;
 
