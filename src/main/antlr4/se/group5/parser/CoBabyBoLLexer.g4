@@ -252,6 +252,7 @@ AM_ZERO     : ZERO              -> type(ZERO);
 AM_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 AM_TO_ID    : 'to' { hasNextTokenInLine(CoBabyBoLLexer.TO) }? -> type(IDENTIFIER);
 AM_TO       : TO               -> type(TO), popMode;
+AM_OF       : OF        -> type(OF);
 AM_ID       : IDENTIFIER -> type(IDENTIFIER);
 
 mode SUBTRACT_MODE;
@@ -263,6 +264,7 @@ UF_ZERO     : ZERO              -> type(ZERO);
 UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 UF_FROM_ID  : 'from' { hasNextTokenInLine(CoBabyBoLLexer.FROM) }? -> type(IDENTIFIER);
 FROM        : F R O M           -> popMode;
+UF_OF       : OF        -> type(OF);
 UF_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode MULTIPLY_MODE;
@@ -274,6 +276,7 @@ UB_ZERO     : ZERO              -> type(ZERO);
 UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 UB_BY_ID    : 'by' { hasNextTokenInLine(CoBabyBoLLexer.BY) }? -> type(IDENTIFIER);
 BY          : B Y               -> popMode;
+UB_OF       : OF        -> type(OF);
 UB_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode DIVIDE_MODE;
@@ -285,6 +288,7 @@ UI_ZERO     : ZERO              -> type(ZERO);
 UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
 UI_INT_ID   : 'into' { hasNextTokenInLine(CoBabyBoLLexer.INTO) }? -> type(IDENTIFIER);
 INTO        : I N T O           -> popMode;
+UI_OF       : OF        -> type(OF);
 UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode ARG_LIT_MODE;

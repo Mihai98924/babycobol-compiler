@@ -3,9 +3,7 @@ package se.group5.ast.statement;
 import lombok.NonNull;
 import se.group5.ast.Atomic;
 import se.group5.ast.Program;
-import se.group5.ast.data.DataDefinition;
-import se.group5.ast.data.DataElement;
-import se.group5.ast.data.DataGroup;
+import se.group5.ast.data.*;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.Procedure;
@@ -213,19 +211,20 @@ public final class Arithmetic implements Procedure {
         NUMERIC
     }
     private void executeAdd() {
+        // VARIABLES
+        Atomic firstSource = sources.get(0);
         Atomic receiver = receivers.get(0);
 
-        StringBuilder sb = new StringBuilder();
-        double sum = 0;
-
-        Atomic firstSource = sources.get(0);
+        // VALIDATE
         Optional<Type> type = getLiteralType(firstSource);
         if(type.isEmpty()) {
             throw new IllegalArgumentException("Unsupported type for source: " + firstSource);
         }
+        validatePictureClausesToExcludeAandX();
 
-        // TODO "any of the three arguments can be an identifier defined with a numeric picture clause (free from A and X)"
-        // What free from A and X means?
+        // VARIABLES
+        StringBuilder sb = new StringBuilder();
+        double sum = 0;
 
         // First is a composite
         if(firstSource.isComposite())
@@ -300,8 +299,12 @@ public final class Arithmetic implements Procedure {
     }
 
     private void executeSubtract() {
+        // VARIABLES
         Atomic firstReceiver = receivers.get(0);
         Atomic firstSource = sources.get(0);
+
+        // VALIDATE
+        validatePictureClausesToExcludeAandX();
 
         // First is a composite
         if(firstSource.isComposite())
@@ -322,6 +325,7 @@ public final class Arithmetic implements Procedure {
             return;
         }
 
+        // If first is not a composite
         double sum = 0;
         for (Atomic source : sources) {
             if(source.isLiteral()) {
@@ -351,9 +355,13 @@ public final class Arithmetic implements Procedure {
     }
 
     private void executeMultiply() {
+        // VARIABLES
         Atomic firstReceiver = receivers.get(0);
-
         double value;
+
+        // VALIDATE
+        validatePictureClausesToExcludeAandX();
+
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
         } else {
@@ -376,10 +384,13 @@ public final class Arithmetic implements Procedure {
     }
 
     private void executeDivide() {
-        // When remainder is present truncate doubles
+        // VARIABLES
         Atomic firstReceiver = receivers.get(0);
-
         double value, remainderValue = -1;
+
+        // VALIDATE
+        validatePictureClausesToExcludeAandX();
+
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
         } else {
@@ -417,6 +428,47 @@ public final class Arithmetic implements Procedure {
             for (DataElement giving : giving) {
                 giving.setValue(value);
             }
+        }
+    }
+
+    private void validatePictureClausesToExcludeAandX() {
+        // Check if identifiers are defined with picture clauses without A and X
+        for (Atomic source : sources) {
+            if(source.isElement())
+                validateDataElement(source.getElement());
+            else if(source.isComposite())
+                validateDataGroup(source.getGroup());
+        }
+
+        for (Atomic rec : receivers) {
+            if(rec.isElement())
+                validateDataElement(rec.getElement());
+            else if(rec.isComposite())
+                validateDataGroup(rec.getGroup());
+        }
+
+        for (DataElement giving : giving) {
+            validateDataElement(giving);
+            // TODO Giving can be a composite (now it is only a DataElement)
+        }
+    }
+
+    private void validateDataGroup(DataGroup group) {
+        for (DataDefinition child : group.children.values()) {
+            if (child instanceof DataElement element) {
+                validateDataElement(element);
+            } else {
+                throw new IllegalArgumentException("A Composite can only contain identifiers: " + child);
+            }
+        }
+    }
+
+    private void validateDataElement(DataElement element) {
+        Representation picture = element.picture();
+        boolean containsX = picture.containsSymbol(PictureSymbol.ALPHANUM);
+        boolean containsA = picture.containsSymbol(PictureSymbol.ALPHA);
+        if(containsX || containsA) {
+            throw new IllegalArgumentException("Addition of identifiers with A and X in picture clauses is not supported: " + element);
         }
     }
 
