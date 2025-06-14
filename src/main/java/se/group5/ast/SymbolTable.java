@@ -67,6 +67,18 @@ public final class SymbolTable implements Node {
     }
 
     /**
+     * Get the fully qualified identifier for a given partially qualified identifier.
+     * If the identifier is ambiguous, it returns null.
+     * @param partiallyQualifiedIdentifier The identifier to resolve
+     * @return The fully qualified identifier or null if ambiguous
+     */
+    public String getFullyQualifiedIdentifier(String partiallyQualifiedIdentifier) {
+        List<String> pathElements = Arrays.stream(partiallyQualifiedIdentifier.split("\\.")).toList();
+        String identifier = pathElements.get(pathElements.size() - 1);
+        return getFullyQualifiedIdentifier(pathElements, identifier);
+    }
+
+    /**
      * Get the fully qualified identifier for a given path and identifier.
      * If the identifier is ambiguous, it returns null.
      *

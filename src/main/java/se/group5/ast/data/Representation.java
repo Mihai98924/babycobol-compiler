@@ -55,6 +55,10 @@ public final class Representation implements Node {
         return pattern;
     }
 
+    public boolean containsSymbol(PictureSymbol symbol) {
+        return pattern.stream().anyMatch(pic -> pic.glyph == symbol.glyph);
+    }
+
     /**
      * Quick helper that tells whether supplied text already matches the picture
      */

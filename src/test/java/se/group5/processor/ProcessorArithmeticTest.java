@@ -372,6 +372,126 @@ public class ProcessorArithmeticTest {
         Assert.assertEquals(7.0, (double)program.symbolTable.table.get("CONTAINER.UB.Y.B").getValue(), 0.001);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_AddIdentifiers_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      ADD A OF X TO B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_AddComposites_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      ADD X TO Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_AddIdentifiers_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      ADD B OF X TO B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_AddComposites_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      ADD X TO Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
     // SUBTRACTION
 
     @Test
@@ -609,6 +729,127 @@ public class ProcessorArithmeticTest {
         Assert.assertEquals(1.0, (double)program.symbolTable.table.get("CONTAINER.UB.Y.B").getValue(), 0.001);
     }
 
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_SubtractIdentifiers_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      SUBTRACT A OF X FROM B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_SubtractComposites_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      SUBTRACT X FROM Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_SubtractIdentifiers_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      SUBTRACT B OF X FROM B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_SubtractComposites_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      SUBTRACT X FROM Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
     // MULTIPLICATION
 
     @Test
@@ -750,6 +991,66 @@ public class ProcessorArithmeticTest {
         Assert.assertEquals(12.0, (double)program.symbolTable.table.get("A").getValue(), 0.001);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_MultiplicationIdentifiers_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      MULTIPLY A OF X BY B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_MultiplicationIdentifiers_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      MULTIPLY B OF X BY B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
     // DIVISION
 
     @Test
@@ -878,5 +1179,65 @@ public class ProcessorArithmeticTest {
         program.run(divisionStrategy, System.out::print);
 
         Assert.assertEquals(3.0, (double)program.symbolTable.table.get("C").getValue(), 0.001);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_DivisionIdentifiers_HasPictureClauseX_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 9X.
+                                  07 B PICTURE IS 99.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      DIVIDE A OF X INTO B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void programRunTest_DivisionIdentifiers_HasPictureClauseA_Fail() throws IOException {
+        // Arrange
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 CONTAINER.
+                          03 UA.
+                              05 X.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 9A.
+                          03 UB.
+                              05 Y.
+                                  07 A PICTURE IS 99.
+                                  07 B PICTURE IS 99.
+                                  07 C PICTURE IS 99.
+                  PROCEDURE DIVISION.
+                      ACCEPT A OF X A OF Y B OF UA B OF UB.
+                      DIVIDE B OF X INTO B OF Y.
+                      DISPLAY C.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(compositesStrategy);
     }
 }

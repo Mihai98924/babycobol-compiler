@@ -181,10 +181,16 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
         if (ctx.identifier() != null) {
             Identifier identifier = (Identifier) visit(ctx.identifier());
-            String name = identifier.toString();
-            Optional<DataDefinition> def = symbolTable.resolve(name);
+            String fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(identifier.value());
+            if (fullyQualifiedIdentifier == null) {
+                throw new IllegalStateException("Identifier '" + identifier.value() +
+                        "' is ambiguous or not declared!");
+            }
+
+            Optional<DataDefinition> def = symbolTable.resolve(fullyQualifiedIdentifier);
             if (def.isEmpty() || !(def.get() instanceof DataElement || def.get() instanceof DataGroup))
-                throw new IllegalStateException("Identifier reference in Atomic '" + name + "' is not a data definition or not declared");
+                throw new IllegalStateException("Identifier reference in Atomic '" + identifier.value()
+                        + "' is not a data definition or not declared");
             if(def.get() instanceof DataGroup)
                 return new Atomic((DataGroup) def.get());
             else

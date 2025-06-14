@@ -45,4 +45,8 @@ public class Atomic implements Node {
     public boolean isComposite() {
         return group != null;
     }
+
+    public boolean isElement() {
+        return element != null;
+    }
 }
