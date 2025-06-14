@@ -353,13 +353,37 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         List<Identifier> targets = ctx.identifier().stream().map(
                 t -> {
                     var name = t.getText();
+                    var fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(name);
                     var identifier = symbolTable.resolveIdentifier(name);
-                    Representation repr = ((DataElement) symbolTable.resolve(name).get()).picture();
-                    if (moveType instanceof Atomic) {
-                        if (((Atomic) moveType).getLiteral() != null && !repr.matches(((Atomic) moveType).getLiteral().raw())) {
-                            throw new IllegalStateException("Move with literal '" + ((Atomic) moveType).getLiteral().raw() + "' does not match target '" + repr + "'");
-                        } else if (((Atomic) moveType).getElement() != null && !repr.matches(((Atomic) moveType).getElement().picture().toString())) {
-                            throw new IllegalStateException("Move with identifier '" + ((Atomic) moveType).getElement().name() + "' does not match target '" + identifier.get() + "'");
+                    var dataRepresentation = symbolTable.resolve(fullyQualifiedIdentifier);
+
+                    if(dataRepresentation.isEmpty())
+                        throw new IllegalStateException("Identifier '" + name + "' is not defined in the program");
+
+                    if (moveType instanceof Atomic moveAtomic) {
+                        if(dataRepresentation.get() instanceof DataElement dataElement) {
+                            var repr = dataElement.picture();
+                            if (moveAtomic.isLiteral() && !repr.matches(moveAtomic.getLiteral().raw())) {
+                                throw new IllegalStateException("Move with literal '" +
+                                        moveAtomic.getLiteral().raw() + "' does not match target '" + repr + "'");
+
+                            } else if (moveAtomic.isElement() && !repr.matches(moveAtomic.getElement().picture().toString())) {
+                                throw new IllegalStateException("Move with identifier '" +
+                                        moveAtomic.getElement().name() + "' does not match target '" + identifier.get() + "'");
+                            }
+                        } else if (dataRepresentation.get() instanceof DataGroup dataGroup) {
+                            for (DataDefinition child : dataGroup.children.values()) {
+                                if (child instanceof DataElement dataElement) {
+                                    var repr = dataElement.picture();
+                                    if (moveAtomic.isLiteral() && !repr.matches(moveAtomic.getLiteral().raw())) {
+                                        throw new IllegalStateException("Move with literal '" +
+                                                moveAtomic.getLiteral().raw() + "' does not match target '" + repr + "'");
+                                    } else if (moveAtomic.isElement() && !repr.matches(moveAtomic.getElement().picture().toString())) {
+                                        throw new IllegalStateException("Move with identifier '" +
+                                                moveAtomic.getElement().name() + "' does not match target '" + identifier.get() + "'");
+                                    }
+                                }
+                            }
                         }
                     }
                     return identifier.get();
