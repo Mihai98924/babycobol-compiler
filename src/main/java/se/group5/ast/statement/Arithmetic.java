@@ -205,19 +205,14 @@ public final class Arithmetic implements Procedure {
     }
 
     // ---------- Execution --------------------------------------
-
-    enum Type {
-        STRING,
-        NUMERIC
-    }
     private void executeAdd() {
         // VARIABLES
         Atomic firstSource = sources.get(0);
         Atomic receiver = receivers.get(0);
 
         // VALIDATE
-        Optional<Type> type = getLiteralType(firstSource);
-        if(type.isEmpty()) {
+        Type type = firstSource.getType();
+        if(type == Type.UNKNOWN) {
             throw new IllegalArgumentException("Unsupported type for source: " + firstSource);
         }
         validatePictureClausesToExcludeAandX();
@@ -235,12 +230,17 @@ public final class Arithmetic implements Procedure {
             for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
                 if(receiverGroup.children.containsKey(entry.getKey())) {
                     DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    if (type.get() == Type.NUMERIC) {
-                        receiverDefinition.setValue((double)receiverDefinition.getValue() +
-                                (double)entry.getValue().getValue());
-                    } else {
-                        receiverDefinition.setValue(entry.getValue().getValue().toString() +
-                                receiverDefinition.getValue().toString());
+                    switch (type) {
+                        case NUMERIC:
+                            receiverDefinition.setValue((double)receiverDefinition.getValue() +
+                                    (double)entry.getValue().getValue());
+                            break;
+                        case ALPHANUMERIC:
+                            receiverDefinition.setValue(entry.getValue().getValue().toString() +
+                                    receiverDefinition.getValue().toString());
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported type for addition: " + type);
                     }
                 }
             }
@@ -252,7 +252,7 @@ public final class Arithmetic implements Procedure {
 
         // Regular
         for (Atomic source : sources) {
-            if(type.get() == Type.NUMERIC) {
+            if(type == Type.NUMERIC) {
                 if(source.isLiteral()) {
                     sum += Double.parseDouble(source.getLiteral().raw());
                 } else {
@@ -268,20 +268,20 @@ public final class Arithmetic implements Procedure {
         }
 
         if (receiver.isLiteral()) {
-            if (type.get() == Type.STRING) {
+            if (type == Type.ALPHANUMERIC) {
                 sb.append(((AlphanumericLiteral)receiver.getLiteral()).getText());
             } else {
                 sum += Double.parseDouble(receiver.getLiteral().raw());
             }
         } else {
             DataElement element = receiver.getElement();
-            if (type.get() == Type.STRING) {
+            if (type == Type.ALPHANUMERIC) {
                 sb.append(element.getValue().toString());
             } else {
                 sum += (double) element.getValue();
             }
             if (giving.isEmpty()) {
-                if (type.get() == Type.STRING) {
+                if (type == Type.ALPHANUMERIC) {
                     element.setValue(sb.toString());
                 } else {
                     element.setValue(sum);
@@ -290,7 +290,7 @@ public final class Arithmetic implements Procedure {
         }
 
         for (DataElement giving : giving) {
-            if (type.get() == Type.STRING) {
+            if (type == Type.ALPHANUMERIC) {
                 giving.setValue(sb.toString());
             } else {
                 giving.setValue(sum);
@@ -433,75 +433,23 @@ public final class Arithmetic implements Procedure {
 
     private void validatePictureClausesToExcludeAandX() {
         // Check if identifiers are defined with picture clauses without A and X
-        for (Atomic source : sources) {
-            if(source.isElement())
-                validateDataElement(source.getElement());
-            else if(source.isComposite())
-                validateDataGroup(source.getGroup());
-        }
+        List<Atomic> atomics = new ArrayList<>();
+        atomics.addAll(sources);
+        atomics.addAll(receivers);
 
-        for (Atomic rec : receivers) {
-            if(rec.isElement())
-                validateDataElement(rec.getElement());
-            else if(rec.isComposite())
-                validateDataGroup(rec.getGroup());
+        for (Atomic atomic : atomics) {
+            if(atomic.doesPictureContainAnySymbols(
+                    PictureSymbol.ALPHA,
+                    PictureSymbol.ALPHANUM
+            )) {
+                throw new IllegalArgumentException(
+                        "Addition of identifiers with A and X in picture clauses" +
+                                " is not supported: " + atomic);
+            }
         }
 
         for (DataElement giving : giving) {
-            validateDataElement(giving);
             // TODO Giving can be a composite (now it is only a DataElement)
         }
-    }
-
-    private void validateDataGroup(DataGroup group) {
-        for (DataDefinition child : group.children.values()) {
-            if (child instanceof DataElement element) {
-                validateDataElement(element);
-            } else {
-                throw new IllegalArgumentException("A Composite can only contain identifiers: " + child);
-            }
-        }
-    }
-
-    private void validateDataElement(DataElement element) {
-        Representation picture = element.picture();
-        boolean containsX = picture.containsSymbol(PictureSymbol.ALPHANUM);
-        boolean containsA = picture.containsSymbol(PictureSymbol.ALPHA);
-        if(containsX || containsA) {
-            throw new IllegalArgumentException("Addition of identifiers with A and X in picture clauses is not supported: " + element);
-        }
-    }
-
-    private Optional<Type> getLiteralType(Atomic atomic) {
-        Optional<Type> type;
-        if (atomic.isLiteral()) {
-            if (atomic.getLiteral() instanceof AlphanumericLiteral) {
-                type = Optional.of(Type.STRING);
-            } else if (atomic.getLiteral() instanceof NumericLiteral) {
-                type = Optional.of(Type.NUMERIC);
-            } else {
-                throw new IllegalArgumentException("Unsupported literal: " + atomic.getLiteral());
-            }
-        } else if(atomic.isComposite()) {
-            DataGroup group = atomic.getGroup();
-            DataDefinition firstChild = group.children.values().stream().findFirst().get();
-            if (firstChild.getValue() instanceof String) {
-                type = Optional.of(Type.STRING);
-            } else if (firstChild.getValue() instanceof Double) {
-                type = Optional.of(Type.NUMERIC);
-            } else {
-                throw new IllegalArgumentException("Unsupported identifier value: " + group.getValue());
-            }
-        } else {
-            DataElement element = atomic.getElement();
-            if (element.getValue() instanceof String) {
-                type = Optional.of(Type.STRING);
-            } else if (element.getValue() instanceof Double) {
-                type = Optional.of(Type.NUMERIC);
-            } else {
-                throw new IllegalArgumentException("Unsupported identifier value: " + element.getValue());
-            }
-        }
-        return type;
     }
 }

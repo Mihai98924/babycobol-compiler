@@ -9,7 +9,7 @@ import java.util.List;
  * Parsed PICTURE-string held in canonical form so that runtime
  * checks (ACCEPT/DISPLAY) can validate values easily.
  */
-public final class Representation implements Node {
+public final class Representation implements Node, Typeable {
     private final List<PictureSymbol> pattern;
 
     public Representation(String raw) {
@@ -98,5 +98,13 @@ public final class Representation implements Node {
     @Override
     public String toString() {
         return pattern.stream().map(s -> String.valueOf(s.glyph)).reduce("", String::concat);
+    }
+
+    @Override
+    public Type getType() {
+        if(pattern.contains(PictureSymbol.ALPHANUM) || pattern.contains(PictureSymbol.ALPHA))
+            return Type.ALPHANUMERIC;
+        else
+            return Type.NUMERIC;
     }
 }
