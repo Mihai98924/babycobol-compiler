@@ -50,7 +50,14 @@ public final class SymbolTable implements Node {
     }
 
     public Optional<DataDefinition> resolve(String name) {
-        return Optional.ofNullable(table.get(name));
+        if (table.containsKey(name)) return Optional.ofNullable(table.get(name));
+
+        var possibleMatches = table.keySet().stream().filter((key) -> key.endsWith(name)).toList();
+        if (possibleMatches.size() >= 2) {
+            throw new IllegalStateException("Identifier '" + name + "' is ambiguous in the symbol table");
+        }
+
+        return Optional.ofNullable(table.get(possibleMatches.iterator().next()));
     }
 
     public Optional<Identifier> resolveIdentifier(String name) {

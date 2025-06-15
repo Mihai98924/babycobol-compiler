@@ -201,7 +201,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return new Atomic(literal);
     }
 
-    private static int recurrenceLevel = 0;
+    private int recurrenceLevel = 0;
     @Override
     public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
         recurrenceLevel++;
@@ -352,10 +352,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
         List<Identifier> targets = ctx.identifier().stream().map(
                 t -> {
-                    var name = t.getText();
-                    var fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(name);
-                    var identifier = symbolTable.resolveIdentifier(name);
-                    var dataRepresentation = symbolTable.resolve(fullyQualifiedIdentifier);
+                    var identifier = (Identifier) visitIdentifier(t);
+                    var name = identifier.value();
+                    var dataRepresentation = symbolTable.resolve(name);
 
                     if(dataRepresentation.isEmpty())
                         throw new IllegalStateException("Identifier '" + name + "' is not defined in the program");
@@ -369,7 +368,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
                             } else if (moveAtomic.isElement() && !repr.matches(moveAtomic.getElement().picture().toString())) {
                                 throw new IllegalStateException("Move with identifier '" +
-                                        moveAtomic.getElement().name() + "' does not match target '" + identifier.get() + "'");
+                                        moveAtomic.getElement().name() + "' does not match target '" + identifier + "'");
                             }
                         } else if (dataRepresentation.get() instanceof DataGroup dataGroup) {
                             for (DataDefinition child : dataGroup.children.values()) {
@@ -380,13 +379,13 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                                                 moveAtomic.getLiteral().raw() + "' does not match target '" + repr + "'");
                                     } else if (moveAtomic.isElement() && !repr.matches(moveAtomic.getElement().picture().toString())) {
                                         throw new IllegalStateException("Move with identifier '" +
-                                                moveAtomic.getElement().name() + "' does not match target '" + identifier.get() + "'");
+                                                moveAtomic.getElement().name() + "' does not match target '" + identifier + "'");
                                     }
                                 }
                             }
                         }
                     }
-                    return identifier.get();
+                    return identifier;
                 }
         ).toList();
         Move move = new Move(moveType, targets);
