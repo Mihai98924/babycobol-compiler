@@ -408,40 +408,36 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         } catch (IOException e) {
             throw new IllegalStateException("Error processing file '" + filename + "': " + e.getMessage(), e);
         }
-        List<Object> args = new ArrayList<>();
+        HashMap<Call.CallArgs, Object> args = new HashMap<>();
         if (ctx.call_function().isEmpty()) {
             if (ctx.using_clause() != null) {
                 var options = ctx.using_clause().by_with_as();
-                System.err.println(options);
                 for (var option : options) {
-                    if (option.as_clause() != null) {
+                    if (option.as_clause().size() > 1) {
                         throw new IllegalStateException("AS clause is not supported in CALL without a function name");
                     }
                     if (option.by_clause() != null) {
-                        if (option.by_clause().by_reference() != null && option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
-                            throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+                        if(option.by_clause().by_reference() != null) {
+                            if(option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
+                                throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
+                            }
+                            else {
+                                args.put(Call.CallArgs.BY_REFERENCE, visitAtomic(option.by_clause().by_reference().atomic()));
+                            }
+                        }
+                        if(option.by_clause().by_value() != null) {
+                            args.put(Call.CallArgs.BY_VALUE, visitAtomic(option.by_clause().by_value().atomic()));
+                        }
+                        if(option.by_clause().by_content() != null) {
+                            args.put(Call.CallArgs.BY_CONTENT, visitAtomic(option.by_clause().by_content().atomic()));
                         }
                     }
                 }
             }
-        } else {
-            var callFunctions = ctx.call_function().stream().map(
-                    t -> {
-                        var name = t.getText();
-                        return name;
-                    }
-            );
-            var options = ctx.using_clause().by_with_as();
-            if (ctx.using_clause().isEmpty() || options.isEmpty()) {
-                throw new IllegalStateException("Call to function '" + filename + "' must have USING clause");
-            }
-            args.addAll(options);
-
         }
-//        Call call = new Call(filename, args);
-//        procedures.add(call);
-//        return call;
-        return null;
+        Call call = new Call(program, args);
+        procedures.add(call, ctx);
+        return call;
     }
 
     @Override
