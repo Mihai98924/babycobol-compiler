@@ -27,7 +27,7 @@ public final class Arithmetic implements Procedure {
     public void execute(Program state) {
         switch (verb) {
             case ADD -> executeAdd(state);
-            case SUBTRACT -> executeSubtract();
+            case SUBTRACT -> executeSubtract(state);
             case MULTIPLY -> executeMultiply();
             case DIVIDE -> executeDivide();
         }
@@ -260,7 +260,6 @@ public final class Arithmetic implements Procedure {
                 }
             }
 
-            // TODO MOVE when giving is a composite
             if (!giving.isEmpty()) {
                 Move move = new Move(aggregatedGroup, giving.stream().map(DataDefinition::name).toList());
                 move.execute(state);
@@ -317,14 +316,20 @@ public final class Arithmetic implements Procedure {
         }
     }
 
-    private void executeSubtract() {
+    private void executeSubtract(Program state) {
         // VARIABLES
         Atomic firstReceiver = receivers.get(0);
         Atomic firstSource = sources.get(0);
+        // Copied group element
+        // If GIVING is present, we will set the value to all giving elements
+        Atomic aggregatedGroup = null;
 
         // VALIDATE
         validatePictureClausesToExcludeAandX();
 
+        if(!giving.isEmpty()) {
+            aggregatedGroup = firstReceiver.clone();
+        }
         // First is a composite
         if(firstSource.isComposite())
         {
@@ -334,12 +339,21 @@ public final class Arithmetic implements Procedure {
             for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
                 if(receiverGroup.children.containsKey(entry.getKey())) {
                     DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    if(giving.isEmpty()){
+                        receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    } else {
+                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                    }
+
                     receiverDefinition.setValue((double)receiverDefinition.getValue() -
                             (double)entry.getValue().getValue());
                 }
             }
 
-            // TODO MOVE when giving is a composite
+            if (!giving.isEmpty()) {
+                Move move = new Move(aggregatedGroup, giving.stream().map(DataDefinition::name).toList());
+                move.execute(state);
+            }
 
             return;
         }
