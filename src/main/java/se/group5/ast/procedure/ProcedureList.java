@@ -2,6 +2,7 @@ package se.group5.ast.procedure;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import se.group5.ast.Node;
+import se.group5.ast.Program;
 import se.group5.parser.CoBabyBoL;
 
 import java.util.ArrayList;
@@ -45,5 +46,11 @@ public class ProcedureList implements Node {
     @Override
     public String toString() {
         return procedures.toString();
+    }
+
+    public void execute(Program program) {
+        for (var procedure : procedures) {
+            procedure.execute(program);
+        }
     }
 }
