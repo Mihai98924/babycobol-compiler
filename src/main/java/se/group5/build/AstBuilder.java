@@ -254,10 +254,11 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .map(a -> (Atomic) visitAtomic(a)).toList();
         Atomic target = (Atomic) visitAtomic(ctx.to_atomic().atomic());
 
-        List<DataElement> giving = ctx.giving_identifier_list() == null
+        List<DataDefinition> giving = ctx.giving_identifier_list() == null
                 ? List.of()
                 : ctx.giving_identifier_list().IDENTIFIER()
-                .stream().map(i -> (DataElement) symbolTable.resolve(i.getText()).get()).toList();
+                .stream().map(i -> (DataDefinition) symbolTable.resolve(
+                        symbolTable.getFullyQualifiedIdentifier(i.getText())).get()).toList();
         Arithmetic add = Arithmetic.add(addends, target, giving);
         procedures.add(add, ctx);
         return add;
@@ -272,11 +273,11 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();
 
-        List<DataElement> giving = ctx.giving_identifier_list() == null
+        List<DataDefinition> giving = ctx.giving_identifier_list() == null
                 ? List.of()
                 : ctx.giving_identifier_list().IDENTIFIER()
                 .stream()
-                .map(g -> (DataElement) symbolTable
+                .map(g -> symbolTable
                         .resolve(g.getText())
                         .get())
                 .toList();
@@ -324,11 +325,11 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .map(a -> (Atomic) visitAtomic(a))
                 .toList();
 
-        List<DataElement> giving = ctx.giving_identifier_list() == null
+        List<DataDefinition> giving = ctx.giving_identifier_list() == null
                 ? List.of()
                 : ctx.giving_identifier_list().IDENTIFIER()
                 .stream()
-                .map(i -> (DataElement) symbolTable
+                .map(i -> symbolTable
                         .resolve(i.getText())
                         .get())
                 .toList();

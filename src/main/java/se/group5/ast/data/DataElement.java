@@ -13,10 +13,6 @@ public final class DataElement implements DataDefinition {
 
     private Object value;
 
-    public DataElement(int level, Identifier name, Representation picture) {
-        this(level, name, picture, 0);
-    }
-
     public DataElement(int level, Identifier name, Representation picture, int occurs) {
         this.level = level;
         this.name = name;
@@ -59,5 +55,36 @@ public final class DataElement implements DataDefinition {
     @Override
     public String toString() {
         return (isArray() ? "ARRAY" : "ELEM") + "(" + level + ", " + name + ", " + picture + ")";
+    }
+
+    @Override
+    public Type getType() {
+        if(picture != null) {
+            return picture.getType();
+        } else {
+            return Type.UNKNOWN;
+        }
+    }
+
+    @Override
+    public boolean doesPictureContainAnySymbols(PictureSymbol... symbols) {
+        if (picture == null) {
+            return false;
+        }
+        for (PictureSymbol symbol : symbols) {
+            if (picture.symbols().contains(symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public DataDefinition clone() {
+        try {
+            return (DataElement) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

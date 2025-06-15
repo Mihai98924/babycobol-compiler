@@ -1,15 +1,14 @@
 package se.group5.ast;
 
 import lombok.Getter;
-import se.group5.ast.data.DataElement;
-import se.group5.ast.data.DataGroup;
+import se.group5.ast.data.*;
 import se.group5.ast.literal.Literal;
 
 @Getter
-public class Atomic implements Node {
-    Literal literal;
-    DataElement element;
-    DataGroup group;
+public class Atomic implements Node, Typeable, Pictureable, Cloneable {
+    protected Literal literal;
+    protected DataElement element;
+    protected DataGroup group;
 
     public Atomic(Literal literal) {
         this.literal = literal;
@@ -48,5 +47,43 @@ public class Atomic implements Node {
 
     public boolean isElement() {
         return element != null;
+    }
+
+    @Override
+    public Type getType() {
+        if(isElement()) {
+            return element.getType();
+        } else if (isLiteral()) {
+            return literal.getType();
+        } else if(isComposite()) {
+            return group.getType();
+        } else {
+            return Type.UNKNOWN;
+        }
+    }
+
+    @Override
+    public boolean doesPictureContainAnySymbols(PictureSymbol... symbols) {
+        if(isElement()) {
+            return element.doesPictureContainAnySymbols(symbols);
+        } else if (isComposite()) {
+            return group.doesPictureContainAnySymbols(symbols);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Atomic clone() {
+        try {
+            Atomic atomic = (Atomic) super.clone();
+            if(atomic.getGroup() != null)
+                atomic.group = (DataGroup) atomic.getGroup().clone();
+            if(atomic.getElement() != null)
+                atomic.element = (DataElement) atomic.getElement().clone();
+            return atomic;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
