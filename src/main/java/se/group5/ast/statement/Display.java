@@ -26,19 +26,26 @@ public class Display implements Procedure {
     @Override
     public void execute(Program state) {
 
-        if(state.getDisplayStrategy() == null) {
+        if (state.getDisplayStrategy() == null) {
             return;
         }
 
         String newline = noAdvancing ? "" : "\n";
 
         for (Argument argument : arguments) {
-            String argumentValue = argument.atomic().getElement().getValue().toString();
+            Atomic atomic = argument.atomic();
+            String value;
+            if (atomic.isLiteral()) {
+                value = atomic.getLiteral().raw();
+            } else {
+                value = atomic.getElement().getValue().toString();
+            }
+            String argumentValue = value;
 
             if (argument.delimiter() != null) {
                 Delimiter delimiter = argument.delimiter();
 
-                switch (delimiter.type){
+                switch (delimiter.type) {
                     case SPACE -> {
                         state.getDisplayStrategy().display(argumentValue + newline);
                     }

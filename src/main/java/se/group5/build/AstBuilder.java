@@ -33,8 +33,8 @@ import java.util.*;
 public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     private final IdentityTable identityTable = new IdentityTable();
     private final SymbolTable symbolTable = new SymbolTable();
-    private final ProcedureList procedures = new ProcedureList();
     private final Deque<DataGroup> groupStack = new ArrayDeque<>();
+    private ProcedureList procedures = new ProcedureList();
 
     @Override
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
@@ -142,7 +142,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitAlphanumeric_literal(CoBabyBoL.Alphanumeric_literalContext ctx) {
-        return new AlphanumericLiteral(ctx.STRINGLITERAL().getText());
+        String text = ctx.getText();
+        int length = text.length();
+        return new AlphanumericLiteral(text.substring(1, length - 1));
     }
 
     @Override
@@ -511,11 +513,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitFunction(CoBabyBoL.FunctionContext ctx) {
         Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
         visitChildren(ctx);
-        Function function = new Function(
-                symbolTable,
-                procedures
-        );
-        procedures.clear();
+        Function function = new Function(procedures);
+        procedures = new ProcedureList();
         symbolTable.registerFunc(identifier, function);
         return function;
     }
