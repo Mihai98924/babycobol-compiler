@@ -172,7 +172,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
 
     @Override
-    public Node visitAtomic(CoBabyBoL.AtomicContext ctx) {
+    public Atomic visitAtomic(CoBabyBoL.AtomicContext ctx) {
         if (ctx.identifier() != null) {
             Identifier identifier = (Identifier) visit(ctx.identifier());
             String fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(identifier.value());
@@ -438,8 +438,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitGoto(CoBabyBoL.GotoContext ctx) {
-        var identifier = ctx.procedure_name().IDENTIFIER().getText();
-        var goTo = new GoTo(identifier, symbolTable);
+        Atomic atomic = visitAtomic(ctx.atomic());
+        var goTo = new GoTo(atomic, symbolTable);
         procedures.add(goTo);
         return goTo;
     }
