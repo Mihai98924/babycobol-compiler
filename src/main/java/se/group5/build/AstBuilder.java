@@ -342,7 +342,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         } else if (ctx.move_arg().SPACES() != null) {
             moveType = Move.MoveType.SPACES;
         } else {
-            moveType = (Atomic) visitAtomic(ctx.move_arg().atomic());
+            moveType = visitAtomic(ctx.move_arg().atomic());
         }
 
         List<Identifier> targets = ctx.identifier().stream().map(
@@ -431,6 +431,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
         Call call = new Call(program, args);
+
         procedures.add(call);
         return call;
     }
@@ -438,14 +439,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     @Override
     public Node visitGoto(CoBabyBoL.GotoContext ctx) {
         var identifier = ctx.procedure_name().IDENTIFIER().getText();
-        try {
-            Function function = symbolTable.resolveFunc(identifier).get();
-            GoTo goTo = new GoTo(function);
-            procedures.add(goTo);
-            return goTo;
-        } catch (NoSuchElementException e) {
-            throw new IllegalStateException("Goto label '" + identifier + "' is not defined in the program");
-        }
+        var goTo = new GoTo(identifier, symbolTable);
+        procedures.add(goTo);
+        return goTo;
     }
 
 
@@ -479,7 +475,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             String fileName = fileNameLiteral.raw();
             fileName = fileName.substring(1, fileName.length() - 1);
 
-            Path path = Paths.get("/Users/jakubstepniewski/Downloads/recombined_formatted/" + fileName);
+            Path path = Paths.get(fileName);
             String content = Files.readString(path);
 
             if (ctx.REPLACING() != null) {

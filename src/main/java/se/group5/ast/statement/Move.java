@@ -7,6 +7,7 @@ import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
 import se.group5.ast.data.DataGroup;
 import se.group5.ast.data.PictureSymbol;
+import se.group5.ast.literal.Literal;
 import se.group5.ast.procedure.Procedure;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
                 }
             }
         } else if(type instanceof Atomic atomic) {
-            if(atomic.isComposite()) {
+            if (atomic.isComposite()) {
                 for (DataDefinition atomicData : atomic.getGroup().children.values()) {
                     // Logic for DataElements
                     for (Identifier target : targets) {
@@ -103,19 +104,31 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
                         }
                     }
                 }
-            } else if(atomic.isElement()) {
+            } else if (atomic.isElement()) {
                 // Logic for DataElements
                 DataElement element = atomic.getElement();
-                for(Identifier target : targets) {
+                for (Identifier target : targets) {
                     String fullyQualifiedIdentifier = state.symbolTable.getFullyQualifiedIdentifier(target.value());
                     DataDefinition data = state.symbolTable.table.get(fullyQualifiedIdentifier);
-                    if(data instanceof DataElement dataElement) {
+                    if (data instanceof DataElement dataElement) {
                         //TODO Do the identifiers have to be the same for not composite elements?
 //                        if (!dataElement.name().value().equals(atomic.getElement().name().value()))
 //                            continue;
 
                         // TODO apply type checking here
                         dataElement.setValue(element.getValue());
+                    } else {
+                        throw new IllegalArgumentException("MOVE field can only be applied to other" +
+                                " non composite fields!");
+                    }
+                }
+            } else if (atomic.isLiteral()) {
+                Literal literal = atomic.getLiteral();
+                for (Identifier target : targets) {
+                    String fullyQualifiedIdentifier = state.symbolTable.getFullyQualifiedIdentifier(target.value());
+                    DataDefinition data = state.symbolTable.table.get(fullyQualifiedIdentifier);
+                    if (data instanceof DataElement dataElement) {
+                        dataElement.setValue(literal.raw());
                     } else {
                         throw new IllegalArgumentException("MOVE field can only be applied to other" +
                                 " non composite fields!");
