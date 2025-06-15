@@ -1,15 +1,13 @@
 package se.group5.ast.data;
 
-import se.group5.ast.Atomic;
 import se.group5.ast.Identifier;
-import se.group5.ast.data.arithmetic.ArithmeticBase;
 
 import java.util.*;
 
 /**
  * 01 – 49 group entries that contain children but no direct representation.
  */
-public final class DataGroup extends ArithmeticBase<DataDefinition> implements DataDefinition {
+public final class DataGroup implements DataDefinition {
     private final int level;
     private final Identifier name;
     public final Map<String, DataDefinition> children = new HashMap<>();
@@ -72,10 +70,5 @@ public final class DataGroup extends ArithmeticBase<DataDefinition> implements D
             }
         }
         return false;
-    }
-
-    @Override
-    public DataDefinition add(Atomic other) {
-        return this;
     }
 }

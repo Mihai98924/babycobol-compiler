@@ -5,7 +5,6 @@ import se.group5.ast.Atomic;
 import se.group5.ast.Program;
 import se.group5.ast.data.*;
 import se.group5.ast.literal.AlphanumericLiteral;
-import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.Procedure;
 
 import java.util.*;
