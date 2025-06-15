@@ -68,7 +68,7 @@ public class AstDataTest {
                          01 VAR2 PICTURE IS ZZZ9.
                          01 VAR3 LIKE VAR1.
                          01 VAR4 LIKE VAR2 OCCURS 9 TIMES.
-                         01 SOME-GROUP.
+                         01 SOMEGROUP.
                             03 VAR5 PICTURE IS 9 (04).
                        PROCEDURE DIVISION.
                            ACCEPT VAR1 VAR3.
@@ -86,9 +86,9 @@ public class AstDataTest {
         assertDataDefinition(symbolTable.resolve("VAR3"), 1, "VAR3", "9999", 0);
         assertDataDefinition(symbolTable.resolve("VAR4"), 1, "VAR4", "ZZZ9", 9);
 
-        Assert.assertTrue("SOME-GROUP is present", symbolTable.resolve("SOME-GROUP").isPresent());
-        DataGroup group = (DataGroup) symbolTable.resolve("SOME-GROUP").get();
-        Assert.assertEquals("Name mismatch for group", "SOME-GROUP", group.name().toString());
+        Assert.assertTrue("SOME-GROUP is present", symbolTable.resolve("SOMEGROUP").isPresent());
+        DataGroup group = (DataGroup) symbolTable.resolve("SOMEGROUP").get();
+        Assert.assertEquals("Name mismatch for group", "SOMEGROUP", group.name().toString());
         assertDataDefinition(group.resolve("VAR5"), 3, "VAR5", "9999", 0);
 
         ProcedureList procedures = program.procedures;
@@ -206,8 +206,8 @@ public class AstDataTest {
                       01 J LIKE X.
                           03 C PICTURE IS 99.
                   PROCEDURE DIVISION.
-                      MOVE HIGH-VALUES TO C OF J Y.
-                      MOVE HIGH-VALUES TO C OF Y OF X Y.
+                      MOVE HIGH-VALUES TO C OF J.
+                      MOVE HIGH-VALUES TO C OF Y OF X OF CONTAINER.
            """;
 
         Assert.assertNotNull(processor.parse(source));

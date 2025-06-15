@@ -111,12 +111,16 @@ IV_END  : EOL -> type(EOL), popMode, pushMode(DEFAULT_MODE);
 mode DD;
 DD_EOL          : EOL                           -> type(EOL), pushMode(DEFAULT_MODE);
 DD_WS           : WS                            -> channel(HIDDEN);
-LEVEL           : ([0-9] [0-9] | [0-9])         -> pushMode(ID_REP);
+LEVEL           : (([0-9] [0-9])
+                | [0-9])                         -> pushMode(ID_REP);
 PICTURE_IS      : P I C T U R E WS+ I S         -> pushMode(PIC_REP);
 LIKE            : L I K E                       -> pushMode(ID_REP);
-OCCURS          : O C C U R S;
-DD_INT_LIT      : INTEGERLITERAL                -> type(INTEGERLITERAL);
+OCCURS          : O C C U R S                   -> pushMode(DD_INT);
 TIMES           : T I M E S;
+
+mode DD_INT;
+DD_INT_WS       : WS                            -> channel(HIDDEN);
+DD_INT_LIT      : INTEGERLITERAL                -> type(INTEGERLITERAL), popMode;
 
 mode ID_REP;
 ID_REP_WS : WS                                  -> skip;
@@ -136,10 +140,10 @@ PR_DECSEP    : 'V' ;               // decimal separator
 mode CODE;
 // Whitespace (incl. continuation) – skipped
 WS
-    : ([ ] | CONTINUE_LINE)         -> skip
+    : ([ ] | CONTINUE_LINE)             -> channel(HIDDEN)
     ;
 CONTINUE_LINE
-    : LINE_BREAK SOL '-'                -> skip
+    : LINE_BREAK SOL '-'                -> channel(HIDDEN)
     ;
 
 // === UNIVERSAL TOKENS ========================================
@@ -244,16 +248,15 @@ SIGN  : '+' | '-' ;
 
 
 mode ADD_MODE;
-AM_WS       : WS               -> skip;
+AM_WS       : WS                -> skip;
 AM_ADD      : ADD               -> type(ADD);
 AM_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 AM_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 AM_ZERO     : ZERO              -> type(ZERO);
 AM_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-AM_TO_ID    : 'to' { hasNextTokenInLine(CoBabyBoLLexer.TO) }? -> type(IDENTIFIER);
-AM_TO       : TO               -> type(TO), popMode;
-AM_OF       : OF        -> type(OF);
-AM_ID       : IDENTIFIER -> type(IDENTIFIER);
+AM_TO       : TO                -> type(TO), popMode;
+AM_OF       : OF                -> type(OF);
+AM_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode SUBTRACT_MODE;
 UF_WS       : WS                -> skip;
@@ -262,9 +265,8 @@ UF_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UF_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UF_ZERO     : ZERO              -> type(ZERO);
 UF_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UF_FROM_ID  : 'from' { hasNextTokenInLine(CoBabyBoLLexer.FROM) }? -> type(IDENTIFIER);
 FROM        : F R O M           -> popMode;
-UF_OF       : OF        -> type(OF);
+UF_OF       : OF                -> type(OF);
 UF_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode MULTIPLY_MODE;
@@ -274,9 +276,8 @@ UB_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UB_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UB_ZERO     : ZERO              -> type(ZERO);
 UB_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UB_BY_ID    : 'by' { hasNextTokenInLine(CoBabyBoLLexer.BY) }? -> type(IDENTIFIER);
 BY          : B Y               -> popMode;
-UB_OF       : OF        -> type(OF);
+UB_OF       : OF                -> type(OF);
 UB_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode DIVIDE_MODE;
@@ -286,9 +287,8 @@ UI_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
 UI_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
 UI_ZERO     : ZERO              -> type(ZERO);
 UI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
-UI_INT_ID   : 'into' { hasNextTokenInLine(CoBabyBoLLexer.INTO) }? -> type(IDENTIFIER);
 INTO        : I N T O           -> popMode;
-UI_OF       : OF        -> type(OF);
+UI_OF       : OF                -> type(OF);
 UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
 mode ARG_LIT_MODE;

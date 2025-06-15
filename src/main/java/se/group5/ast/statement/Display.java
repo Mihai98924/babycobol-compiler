@@ -27,7 +27,6 @@ public class Display implements Procedure {
     public void execute(Program state) {
 
         if(state.getDisplayStrategy() == null) {
-            System.out.println("Display strategy is null");
             return;
         }
 
