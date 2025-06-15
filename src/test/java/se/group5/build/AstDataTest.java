@@ -158,13 +158,13 @@ public class AstDataTest {
         Assert.assertEquals("Delimiter type must be SPACE", Display.DelimiterType.SPACE, arg2.delimiter().type());
 
         Display.Argument arg3 = display.getArguments().get(2);
-        Assert.assertEquals("Third atomic should be \"HENK\"", "ATOMIC(AlphanumericLiteral[value=\"HENK\"])", arg3.atomic().toString());
+        Assert.assertEquals("Third atomic should be \"HENK\"", "ATOMIC(AlphanumericLiteral[value=HENK])", arg3.atomic().toString());
         Assert.assertNotNull("Third argument must have a delimiter", arg3.delimiter());
         Assert.assertEquals("Delimiter type must be LITERAL", Display.DelimiterType.LITERAL, arg3.delimiter().type());
-        Assert.assertEquals("Delimiter literal must be \"E\"", "AlphanumericLiteral[value=\"E\"]", arg3.delimiter().literal().toString());
+        Assert.assertEquals("Delimiter literal must be \"E\"", "AlphanumericLiteral[value=E]", arg3.delimiter().literal().toString());
 
         // ─── toString() – round‑trip serialisation check ───────────────────────
-        String expected = "DISPLAY(ATOMIC(ELEM(1, VAR1, 9999)), ATOMIC(ELEM(1, VAR3, 9999)) DELIMITED BY SPACE, ATOMIC(AlphanumericLiteral[value=\"HENK\"]) DELIMITED BY AlphanumericLiteral[value=\"E\"])";
+        String expected = "DISPLAY(ATOMIC(ELEM(1, VAR1, 9999)), ATOMIC(ELEM(1, VAR3, 9999)) DELIMITED BY SPACE, ATOMIC(AlphanumericLiteral[value=HENK]) DELIMITED BY AlphanumericLiteral[value=E])";
         Assert.assertEquals("DISPLAY.toString() must match exactly", expected, display.toString());
     }
 

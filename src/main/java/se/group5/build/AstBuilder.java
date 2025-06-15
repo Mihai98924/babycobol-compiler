@@ -14,6 +14,9 @@ import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.literal.NumericLiteral;
 import se.group5.ast.procedure.ProcedureList;
+import se.group5.ast.signal.OffSignal;
+import se.group5.ast.signal.ProcedureSignal;
+import se.group5.ast.signal.Signal;
 import se.group5.ast.statement.*;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
@@ -438,10 +441,29 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitGoto(CoBabyBoL.GotoContext ctx) {
-        Atomic atomic = visitAtomic(ctx.atomic());
-        var goTo = new GoTo(atomic, symbolTable);
+        String id = ctx.atomic().identifier().getText();
+        var elem = symbolTable.resolve(id);
+        Atomic atomic;
+        if (elem.isPresent()) {
+            atomic = visitAtomic(ctx.atomic());
+        } else {
+            atomic = new Atomic(new AlphanumericLiteral(id));
+        }
+        GoTo goTo = new GoTo(atomic, symbolTable);
         procedures.add(goTo);
         return goTo;
+    }
+
+    public Node visitSignal(CoBabyBoL.SignalContext ctx) {
+        Signal signal;
+        if (ctx.atomic() != null) {
+            Atomic procedureName = visitAtomic(ctx.atomic());
+            signal = new ProcedureSignal(procedureName, symbolTable);
+        } else {
+            signal = new OffSignal();
+        }
+        procedures.add(signal);
+        return signal;
     }
 
 
