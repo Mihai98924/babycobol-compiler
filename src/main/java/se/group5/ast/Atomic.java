@@ -10,8 +10,6 @@ public class Atomic implements Node, Typeable, Pictureable {
     protected DataElement element;
     protected DataGroup group;
 
-    public Atomic() {}
-
     public Atomic(Literal literal) {
         this.literal = literal;
     }

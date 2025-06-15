@@ -229,7 +229,7 @@ public final class Arithmetic implements Procedure {
             for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
                 if(receiverGroup.children.containsKey(entry.getKey())) {
                     DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    switch (type) {
+                    switch (entry.getValue().getType()) {
                         case NUMERIC:
                             receiverDefinition.setValue((double)receiverDefinition.getValue() +
                                     (double)entry.getValue().getValue());
