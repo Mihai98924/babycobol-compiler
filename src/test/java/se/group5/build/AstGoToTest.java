@@ -55,4 +55,36 @@ public class AstGoToTest {
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
     }
+
+    @Test
+    public void GoToDynamicOperation() throws Exception {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 A PICTURE IS AAA.
+                  PROCEDURE DIVISION.
+                      MOVE "AAA" TO A.
+                      GO TO A.
+                      MOVE "BBB" TO A.
+                      GO TO A.
+                      MOVE "CCC" TO A.
+                      GO TO A.
+                  AAA.
+                      DISPLAY "This is 1.".
+                  BBB.
+                      DISPLAY "This is 2.".
+                  CCC.
+                      DISPLAY "This is 3".
+           """;
+        Program program = processor.parse(source);
+        System.out.println(program);
+
+        ProcedureList procedures = program.procedures;
+        program.run(strategy, System.out::println);
+        Assert.assertNotNull("Program should not be null", program);
+        Assert.assertNotNull("Procedure list should not be null", procedures);
+    }
 }
