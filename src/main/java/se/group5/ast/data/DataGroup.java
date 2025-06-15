@@ -10,7 +10,7 @@ import java.util.*;
 public final class DataGroup implements DataDefinition {
     private final int level;
     private final Identifier name;
-    public final Map<String, DataDefinition> children = new HashMap<>();
+    public Map<String, DataDefinition> children = new HashMap<>();
 
 
     public DataGroup(int level, Identifier name) {
@@ -70,5 +70,21 @@ public final class DataGroup implements DataDefinition {
             }
         }
         return false;
+    }
+
+    @Override
+    public DataDefinition clone() {
+        DataGroup cloned = null;
+        try {
+            cloned = (DataGroup) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        cloned.children = new HashMap<>();
+        for (Map.Entry<String, DataDefinition> entry : this.children.entrySet()) {
+            if(entry.getValue() instanceof DataElement dataElement)
+                cloned.children.put(entry.getKey(), dataElement.clone());
+        }
+        return cloned;
     }
 }

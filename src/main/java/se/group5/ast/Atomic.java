@@ -5,7 +5,7 @@ import se.group5.ast.data.*;
 import se.group5.ast.literal.Literal;
 
 @Getter
-public class Atomic implements Node, Typeable, Pictureable {
+public class Atomic implements Node, Typeable, Pictureable, Cloneable {
     protected Literal literal;
     protected DataElement element;
     protected DataGroup group;
@@ -70,6 +70,20 @@ public class Atomic implements Node, Typeable, Pictureable {
             return group.doesPictureContainAnySymbols(symbols);
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public Atomic clone() {
+        try {
+            Atomic atomic = (Atomic) super.clone();
+            if(atomic.getGroup() != null)
+                atomic.group = (DataGroup) atomic.getGroup().clone();
+            if(atomic.getElement() != null)
+                atomic.element = (DataElement) atomic.getElement().clone();
+            return atomic;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

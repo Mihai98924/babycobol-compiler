@@ -78,4 +78,13 @@ public final class DataElement implements DataDefinition {
         }
         return false;
     }
+
+    @Override
+    public DataDefinition clone() {
+        try {
+            return (DataElement) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

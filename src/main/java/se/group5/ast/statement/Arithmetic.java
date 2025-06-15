@@ -26,7 +26,7 @@ public final class Arithmetic implements Procedure {
     @Override
     public void execute(Program state) {
         switch (verb) {
-            case ADD -> executeAdd();
+            case ADD -> executeAdd(state);
             case SUBTRACT -> executeSubtract();
             case MULTIPLY -> executeMultiply();
             case DIVIDE -> executeDivide();
@@ -48,7 +48,7 @@ public final class Arithmetic implements Procedure {
     public static Arithmetic add(
             List<@NonNull Atomic> addends,
             @NonNull Atomic target,
-            List<DataElement> giving) {
+            List<DataDefinition> giving) {
         return new Arithmetic(
                 Verb.ADD, addends, List.of(target), giving, null
         );
@@ -57,7 +57,7 @@ public final class Arithmetic implements Procedure {
     public static Arithmetic subtract(
             List<@NonNull Atomic> subtrahends,
             List<@NonNull Atomic> minuends,
-            List<DataElement> giving) {
+            List<DataDefinition> giving) {
         return new Arithmetic(
                 Verb.SUBTRACT, subtrahends, minuends, giving, null
         );
@@ -66,7 +66,7 @@ public final class Arithmetic implements Procedure {
     public static Arithmetic multiply(
             @NonNull Atomic multiplier,
             List<@NonNull Atomic> multiplicands,
-            DataElement giving) {
+            DataDefinition giving) {
         return new Arithmetic(
                 Verb.MULTIPLY, List.of(multiplier), multiplicands,
                 giving == null ? Collections.emptyList() : List.of(giving),
@@ -77,7 +77,7 @@ public final class Arithmetic implements Procedure {
     public static Arithmetic divide(
             @NonNull Atomic divisor,
             List<@NonNull Atomic> dividend,
-            List<DataElement> giving,
+            List<DataDefinition> giving,
             DataElement remainder) {
         return new Arithmetic(
                 Verb.DIVIDE, List.of(divisor), dividend,
@@ -95,7 +95,7 @@ public final class Arithmetic implements Procedure {
     public List<Atomic> receivers() { return receivers; }
 
     /** Optional identifiers after GIVING */
-    public List<DataElement> giving() { return giving; }
+    public List<DataDefinition> giving() { return giving; }
 
     /** Optional remainder (DIVIDE only) */
     public DataElement remainder() { return remainder; }
@@ -107,14 +107,14 @@ public final class Arithmetic implements Procedure {
     private final Verb verb;
     private final List<Atomic> sources;
     private final List<Atomic> receivers;
-    private final List<DataElement> giving;
+    private final List<DataDefinition> giving;
     private final DataElement remainder;
 
     private Arithmetic(
             Verb verb,
             List<Atomic> sources,
             List<Atomic> receivers,
-            List<DataElement> giving,
+            List<DataDefinition> giving,
             DataElement remainder) {
 
         this.verb       = Objects.requireNonNull(verb);
@@ -204,10 +204,13 @@ public final class Arithmetic implements Procedure {
     }
 
     // ---------- Execution --------------------------------------
-    private void executeAdd() {
+    private void executeAdd(Program state) {
         // VARIABLES
         Atomic firstSource = sources.get(0);
         Atomic receiver = receivers.get(0);
+        // Copied group element
+        // If GIVING is present, we will set the value to all giving elements
+        Atomic aggregatedGroup = null;
 
         // VALIDATE
         Type type = firstSource.getType();
@@ -225,10 +228,23 @@ public final class Arithmetic implements Procedure {
         {
             DataGroup sourceGroup = firstSource.getGroup();
             DataGroup receiverGroup = receiver.getGroup();
+            if(!giving.isEmpty()) {
+                aggregatedGroup = receiver.clone();
+            }
 
             for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
                 if(receiverGroup.children.containsKey(entry.getKey())) {
-                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    DataDefinition receiverDefinition;
+                    if(giving.isEmpty()){
+                        receiverDefinition = receiverGroup.children.get(entry.getKey());
+                    } else {
+                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                    }
+
+                    if(receiverDefinition == null) {
+                        continue;
+                    }
+
                     switch (entry.getValue().getType()) {
                         case NUMERIC:
                             receiverDefinition.setValue((double)receiverDefinition.getValue() +
@@ -245,6 +261,10 @@ public final class Arithmetic implements Procedure {
             }
 
             // TODO MOVE when giving is a composite
+            if (!giving.isEmpty()) {
+                Move move = new Move(aggregatedGroup, giving.stream().map(DataDefinition::name).toList());
+                move.execute(state);
+            }
 
             return;
         }
@@ -288,7 +308,7 @@ public final class Arithmetic implements Procedure {
             }
         }
 
-        for (DataElement giving : giving) {
+        for (DataDefinition giving : giving) {
             if (type == Type.ALPHANUMERIC) {
                 giving.setValue(sb.toString());
             } else {
@@ -348,7 +368,7 @@ public final class Arithmetic implements Procedure {
         }
 
         // If GIVING is present, we set the value to all giving elements
-        for (DataElement giving : giving) {
+        for (DataDefinition giving : giving) {
             giving.setValue(sum);
         }
     }
@@ -377,7 +397,7 @@ public final class Arithmetic implements Procedure {
             value *= (double)firstReceiver.getElement().getValue();
         }
 
-        for (DataElement giving : giving) {
+        for (DataDefinition giving : giving) {
             giving.setValue(value);
         }
     }
@@ -424,7 +444,7 @@ public final class Arithmetic implements Procedure {
             remainder.setValue(remainderValue);
             giving.get(0).setValue(value);
         } else {
-            for (DataElement giving : giving) {
+            for (DataDefinition giving : giving) {
                 giving.setValue(value);
             }
         }
@@ -447,8 +467,15 @@ public final class Arithmetic implements Procedure {
             }
         }
 
-        for (DataElement giving : giving) {
-            // TODO Giving can be a composite (now it is only a DataElement)
+        for (DataDefinition giving : giving) {
+            if(giving.doesPictureContainAnySymbols(
+                    PictureSymbol.ALPHA,
+                    PictureSymbol.ALPHANUM
+            )) {
+                throw new IllegalArgumentException(
+                        "Addition of identifiers with A and X in picture clauses" +
+                                " is not supported: " + giving);
+            }
         }
     }
 }
