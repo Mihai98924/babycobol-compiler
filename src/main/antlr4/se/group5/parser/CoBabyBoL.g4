@@ -82,7 +82,7 @@ statement
 // ── STATEMENTS ────────────────────────────────────────────────
 accept      : ACCEPT identifier+ ;
 alter       : ALTER procedure_name TO PROCEED TO procedure_name ;
-goto        : GOTO procedure_name ;
+goto        : GOTO atomic ;
 
 if
     : IF boolean_expression
