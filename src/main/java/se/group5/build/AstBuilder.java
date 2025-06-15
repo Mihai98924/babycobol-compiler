@@ -354,7 +354,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 t -> {
                     var identifier = (Identifier) visitIdentifier(t);
                     var name = identifier.value();
-                    var dataRepresentation = symbolTable.resolve(name);
+                    var fullyQualifiedIdentifier = symbolTable.getFullyQualifiedIdentifier(identifier.value());
+                    identifier = symbolTable.resolveIdentifier(fullyQualifiedIdentifier).get();
+                    var dataRepresentation = symbolTable.resolve(fullyQualifiedIdentifier);
 
                     if(dataRepresentation.isEmpty())
                         throw new IllegalStateException("Identifier '" + name + "' is not defined in the program");

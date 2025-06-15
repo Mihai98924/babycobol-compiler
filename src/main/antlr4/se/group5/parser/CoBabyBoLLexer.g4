@@ -88,8 +88,6 @@ PROCEDURE_DIVISION
       D WS* I WS* V WS* I WS* S WS* I WS* O WS* N -> pushMode(CODE) // Go to parsing of CODE (procedure division)
     ;
 
-AZ : [a-zA-Z];
-AZ_DIGIT : [a-zA-Z0-9];
 IDENTIFIER
     : ([a-zA-Z][0-9]* | [0-9]+[a-zA-Z][0-9]*)+ -> pushMode(CODE) // Go to parsing of CODE (function)
     ;

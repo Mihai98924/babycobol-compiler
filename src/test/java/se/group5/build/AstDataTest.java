@@ -206,8 +206,8 @@ public class AstDataTest {
                       01 J LIKE X.
                           03 C PICTURE IS 99.
                   PROCEDURE DIVISION.
-                      MOVE HIGH-VALUES TO C OF J.
-                      MOVE HIGH-VALUES TO C OF Y OF X OF CONTAINER.
+                      MOVE HIGH-VALUES TO C OF J Y.
+                      MOVE HIGH-VALUES TO C OF Y OF X Y.
            """;
 
         Assert.assertNotNull(processor.parse(source));
