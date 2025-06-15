@@ -1,9 +1,12 @@
 package se.group5.ast;
+
 import lombok.Getter;
 import lombok.NonNull;
 import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.procedure.Procedure;
 import se.group5.ast.procedure.ProcedureList;
+import se.group5.ast.signal.OffSignal;
+import se.group5.ast.signal.ProcedureSignal;
 
 public class Program implements Node {
 
@@ -42,15 +45,31 @@ public class Program implements Node {
         run(inputStrategy, null);
     }
 
-    public void run(ProgramInputStrategy inputStrategy, ProgramDisplayStrategy displayStrategy)
-    {
+    public void run(ProgramInputStrategy inputStrategy, ProgramDisplayStrategy displayStrategy) {
         this.inputStrategy = inputStrategy;
         this.displayStrategy = displayStrategy;
+
+        ProcedureSignal errorHandler = null;
 
         int index = 0;
         while (procedures.get(index).isPresent()) {
             Procedure procedure = procedures.get(index).get();
-            procedure.execute(this);
+            try {
+                if (procedure instanceof ProcedureSignal) {
+                    errorHandler = (ProcedureSignal) procedure;
+                } else if (procedure instanceof OffSignal) {
+                    errorHandler = null;
+                } else {
+                    procedure.execute(this);
+                }
+            } catch (RuntimeException e) {
+                if (errorHandler != null) {
+                    errorHandler.execute(this);
+                } else {
+                    throw e;
+                }
+            }
+
             index++;
         }
     }

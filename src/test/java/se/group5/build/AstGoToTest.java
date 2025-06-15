@@ -33,8 +33,6 @@ public class AstGoToTest {
                       PROGRAM-ID. ADDTEST.
                       AUTHOR. SUSPICIOUSLAWNMOWERS.
                       DATE-WRITTEN. 2022-04-22.
-                  DATA DIVISION.
-                      01 A PICTURE IS 99.
                   PROCEDURE DIVISION.
                       DISPLAY "Hello World!".
                       GO TO AB.

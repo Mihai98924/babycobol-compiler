@@ -44,8 +44,11 @@ public final class SymbolTable implements Node {
         if (possibleMatches.size() >= 2) {
             throw new IllegalStateException("Identifier '" + name + "' is ambiguous in the symbol table");
         }
+        if (possibleMatches.size() == 1) {
+            return Optional.of(table.get(possibleMatches.iterator().next()));
+        }
 
-        return Optional.ofNullable(table.get(possibleMatches.iterator().next()));
+        return Optional.empty();
     }
 
     public Optional<Identifier> resolveIdentifier(String name) {
