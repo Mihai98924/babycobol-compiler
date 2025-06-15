@@ -17,8 +17,8 @@ import se.group5.ast.procedure.ProcedureList;
 import se.group5.ast.statement.*;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
-import se.group5.processor.Processor;
 import se.group5.parser.CoBabyBoLLexer;
+import se.group5.processor.Processor;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
@@ -42,16 +41,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
         if (ctx.function() != null) {
-            var paragraphs = ctx.function().stream().map(
-                    t-> t.IDENTIFIER().getText()
-            ).toList();
-            for (String name : paragraphs) {
-                if (symbolTable.resolve(name).isPresent()) {
-                    throw new IllegalStateException("Function with name '" + name + "' already exists as an identifier.");
-                }
-                symbolTable.registerParagraph(name);
+            for (var function : ctx.function()) {
+                visitFunction(function);
             }
-            ctx.function().forEach(this::visit);
         }
         if (ctx.procedure_division() != null) visit(ctx.procedure_division());
 
@@ -105,7 +97,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                     .map(DataElement.class::cast).map(DataElement::picture)
                     .orElse(null);
 
-            if(pic == null)
+            if (pic == null)
                 id = new Identifier(fullyQualifiedIdentifier + "." + id.value());
         }
 
@@ -172,7 +164,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
 
-        procedures.add(display, ctx);
+        procedures.add(display);
         return display;
     }
 
@@ -191,7 +183,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             if (def.isEmpty() || !(def.get() instanceof DataElement || def.get() instanceof DataGroup))
                 throw new IllegalStateException("Identifier reference in Atomic '" + identifier.value()
                         + "' is not a data definition or not declared");
-            if(def.get() instanceof DataGroup)
+            if (def.get() instanceof DataGroup)
                 return new Atomic((DataGroup) def.get());
             else
                 return new Atomic((DataElement) def.get());
@@ -202,6 +194,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     }
 
     private int recurrenceLevel = 0;
+
     @Override
     public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
         recurrenceLevel++;
@@ -210,8 +203,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             recurrenceLevel--;
             String currentIdentifierText = ctx.IDENTIFIER().getText();
             String fullIdentifier = identifier.value() + "." + currentIdentifierText;
-            if(recurrenceLevel == 0)
-            {
+            if (recurrenceLevel == 0) {
                 List<String> pathElements = Arrays.stream(fullIdentifier.split("\\.")).toList();
                 boolean isIdentifierAmbiguous =
                         symbolTable.getFullyQualifiedIdentifier(pathElements, currentIdentifierText) == null;
@@ -243,7 +235,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 })
                 .toList();
         Accept accept = new Accept(targets);
-        procedures.add(accept, ctx);
+        procedures.add(accept);
         return accept;
     }
 
@@ -259,7 +251,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 : ctx.giving_identifier_list().IDENTIFIER()
                 .stream().map(i -> (DataElement) symbolTable.resolve(i.getText()).get()).toList();
         Arithmetic add = Arithmetic.add(addends, target, giving);
-        procedures.add(add, ctx);
+        procedures.add(add);
         return add;
     }
 
@@ -288,7 +280,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic divide = Arithmetic.divide(divisor, dividends, giving, remainder);
-        procedures.add(divide, ctx);
+        procedures.add(divide);
         return divide;
     }
 
@@ -308,7 +300,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
 
         Arithmetic multiply = Arithmetic.multiply(multiplier, multiplicands, giving);
-        procedures.add(multiply, ctx);
+        procedures.add(multiply);
         return multiply;
     }
 
@@ -334,7 +326,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 .toList();
 
         Arithmetic subtract = Arithmetic.subtract(subtrahends, minuends, giving);
-        procedures.add(subtract, ctx);
+        procedures.add(subtract);
         return subtract;
     }
 
@@ -358,11 +350,11 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                     identifier = symbolTable.resolveIdentifier(fullyQualifiedIdentifier).get();
                     var dataRepresentation = symbolTable.resolve(fullyQualifiedIdentifier);
 
-                    if(dataRepresentation.isEmpty())
+                    if (dataRepresentation.isEmpty())
                         throw new IllegalStateException("Identifier '" + name + "' is not defined in the program");
 
                     if (moveType instanceof Atomic moveAtomic) {
-                        if(dataRepresentation.get() instanceof DataElement dataElement) {
+                        if (dataRepresentation.get() instanceof DataElement dataElement) {
                             var repr = dataElement.picture();
                             if (moveAtomic.isLiteral() && !repr.matches(moveAtomic.getLiteral().raw())) {
                                 throw new IllegalStateException("Move with literal '" +
@@ -391,7 +383,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 }
         ).toList();
         Move move = new Move(moveType, targets);
-        procedures.add(move, ctx);
+        procedures.add(move);
         return move;
     }
 
@@ -418,18 +410,17 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                         throw new IllegalStateException("AS clause is not supported in CALL without a function name");
                     }
                     if (option.by_clause() != null) {
-                        if(option.by_clause().by_reference() != null) {
-                            if(option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
+                        if (option.by_clause().by_reference() != null) {
+                            if (option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
                                 throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
-                            }
-                            else {
+                            } else {
                                 args.put(Call.CallArgs.BY_REFERENCE, visitAtomic(option.by_clause().by_reference().atomic()));
                             }
                         }
-                        if(option.by_clause().by_value() != null) {
+                        if (option.by_clause().by_value() != null) {
                             args.put(Call.CallArgs.BY_VALUE, visitAtomic(option.by_clause().by_value().atomic()));
                         }
-                        if(option.by_clause().by_content() != null) {
+                        if (option.by_clause().by_content() != null) {
                             args.put(Call.CallArgs.BY_CONTENT, visitAtomic(option.by_clause().by_content().atomic()));
                         }
                     }
@@ -437,21 +428,20 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
         }
         Call call = new Call(program, args);
-        procedures.add(call, ctx);
+        procedures.add(call);
         return call;
     }
 
     @Override
     public Node visitGoto(CoBabyBoL.GotoContext ctx) {
-        var label = ctx.procedure_name().IDENTIFIER().getText();
+        var identifier = ctx.procedure_name().IDENTIFIER().getText();
         try {
-            String paragraph = symbolTable.resolveParagraph(label).get();
-            GoTo goTo = new GoTo(paragraph);
-            procedures.add(goTo, ctx);
+            Function function = symbolTable.resolveFunc(identifier).get();
+            GoTo goTo = new GoTo(function);
+            procedures.add(goTo);
             return goTo;
-        }
-        catch (NoSuchElementException e) {
-            throw new IllegalStateException("Goto label '" + label + "' is not defined in the program");
+        } catch (NoSuchElementException e) {
+            throw new IllegalStateException("Goto label '" + identifier + "' is not defined in the program");
         }
     }
 
@@ -510,12 +500,23 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             ParseTree tree = parser.program();
 
             return this.visit(tree);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public Node visitFunction(CoBabyBoL.FunctionContext ctx) {
+        Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
+        visitChildren(ctx);
+        Function function = new Function(
+                symbolTable,
+                procedures
+        );
+        procedures.clear();
+        symbolTable.registerFunc(identifier, function);
+        return function;
     }
 }
 

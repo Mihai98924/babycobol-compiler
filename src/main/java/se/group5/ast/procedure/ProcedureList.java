@@ -11,28 +11,12 @@ import java.util.Optional;
 
 public class ProcedureList implements Node {
     private final List<Procedure> procedures = new ArrayList<>();
-    private HashMap<ParserRuleContext, List<Procedure>> procedureMap = new HashMap<>();
 
     /**
      * Add a Procedure to the list
      */
-    public void add(Procedure procedure, ParserRuleContext ctx) {
+    public void add(Procedure procedure) {
         procedures.add(procedure);
-        if (procedureMap.containsKey(getAncestorContext(ctx))) {
-            procedureMap.get(getAncestorContext(ctx)).add(procedure);
-        } else {
-            procedureMap.put(getAncestorContext(ctx), new ArrayList<>(List.of(procedure)));
-        }
-    }
-
-    private ParserRuleContext getAncestorContext(ParserRuleContext ctx) {
-        if (ctx == null) {
-            return null;
-        }
-        if (ctx instanceof CoBabyBoL.Procedure_divisionContext || ctx instanceof CoBabyBoL.FunctionContext) {
-            return ctx;
-        }
-        return getAncestorContext(ctx.getParent());
     }
 
     /**
@@ -52,6 +36,10 @@ public class ProcedureList implements Node {
 
     public int size() {
         return procedures.size();
+    }
+
+    public void clear() {
+        this.procedures.clear();
     }
 
     @Override

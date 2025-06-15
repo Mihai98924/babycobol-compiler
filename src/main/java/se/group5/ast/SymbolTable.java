@@ -14,7 +14,7 @@ public final class SymbolTable implements Node {
     // Map: Short name -> List of table keys
     public final Map<String, List<String>> symbolTableQuickAccesMap = new HashMap<>();
 
-    public final List<String> paragraphs = new ArrayList<>();
+    public final Map<String, Function> functions = new HashMap<>();
 
     /**
      * Register a definition under its own simple name and the fully‑qualified path
@@ -27,26 +27,14 @@ public final class SymbolTable implements Node {
         table.put(fqWithoutLeadingDot, def);
 
         List<String> existingKeys = symbolTableQuickAccesMap.get(shortName);
-        if(existingKeys == null) {
+        if (existingKeys == null) {
             symbolTableQuickAccesMap.put(shortName, new ArrayList<>() {{
                 add(fqWithoutLeadingDot);
             }});
-        }
-        else {
+        } else {
             existingKeys.add(fqWithoutLeadingDot);
             symbolTableQuickAccesMap.put(shortName, existingKeys);
         }
-    }
-
-    public void registerParagraph(String paragraph) {
-        paragraphs.add(paragraph);
-    }
-
-    public Optional<String> resolveParagraph(String name) {
-        return Optional.ofNullable(paragraphs.stream()
-                .filter(p -> p.equals(name))
-                .findFirst()
-                .orElse(null));
     }
 
     public Optional<DataDefinition> resolve(String name) {
@@ -76,6 +64,7 @@ public final class SymbolTable implements Node {
     /**
      * Get the fully qualified identifier for a given partially qualified identifier.
      * If the identifier is ambiguous, it returns null.
+     *
      * @param partiallyQualifiedIdentifier The identifier to resolve
      * @return The fully qualified identifier or null if ambiguous
      */
@@ -115,7 +104,7 @@ public final class SymbolTable implements Node {
         for (String pathElement : path) {
             Map<String, List<String>> tmpPath = new HashMap<>(symbolPaths);
             for (Map.Entry<String, List<String>> symbolPath : symbolPaths.entrySet()) {
-                if(!couldPathBeAmbiguous.get(symbolPath.getKey())) {
+                if (!couldPathBeAmbiguous.get(symbolPath.getKey())) {
                     continue;
                 }
 
@@ -142,5 +131,17 @@ public final class SymbolTable implements Node {
                 .toList();
 
         return trueKeys.size() == 1 ? trueKeys.get(0) : null;
+    }
+
+    public void registerFunc(Identifier identifier, Function function) {
+        functions.put(identifier.value(), function);
+    }
+
+    public Optional<Function> resolveFunc(Identifier identifier) {
+        return resolveFunc(identifier.value());
+    }
+
+    public Optional<Function> resolveFunc(String identifier) {
+        return Optional.ofNullable(functions.get(identifier));
     }
 }
