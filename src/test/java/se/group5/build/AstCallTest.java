@@ -26,7 +26,7 @@ public class AstCallTest {
                   DATA DIVISION.
                       01 A PICTURE IS 99.
                   PROCEDURE DIVISION.
-                      CALL "HELLO.baby" USING BY VALUE 5 BY REFERENCE A BY CONTENT 6.
+                      CALL "src/test/resources/programs/test_0.baby".
            """;
         Program program = processor.parse(source);
         System.out.println(program);
