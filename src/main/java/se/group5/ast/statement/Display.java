@@ -67,7 +67,7 @@ public class Display implements Procedure {
                             throw new IllegalArgumentException("Argument " + argument +
                                     " has substring literal: " + literal);
 
-                        state.getDisplayStrategy().display(result + literal + newline);
+                        state.getDisplayStrategy().display(result + newline);
                     }
                 }
             } else {
