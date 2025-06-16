@@ -172,7 +172,7 @@ public final class Arithmetic implements Procedure {
     /** Composite-field compatibility for ADD/SUBTRACT (shared rule). */
     private void validateCompositeCompatibility() {
         if (verb == Verb.ADD || verb == Verb.SUBTRACT) {
-            boolean compositeSource = sources.size() == 1 && sources.get(0).isComposite();
+            boolean compositeSource = sources.stream().allMatch(Atomic::isComposite);
             boolean compositeReceiver = receivers.size() == 1 && receivers.get(0).isComposite();
             if (compositeSource ^ compositeReceiver) {
                 error("Both operands must be composite or both simple.");
@@ -226,36 +226,47 @@ public final class Arithmetic implements Procedure {
         // First is a composite
         if(firstSource.isComposite())
         {
-            DataGroup sourceGroup = firstSource.getGroup();
             DataGroup receiverGroup = receiver.getGroup();
             if(!giving.isEmpty()) {
                 aggregatedGroup = receiver.clone();
             }
+            for (Atomic atomic : sources) {
+                DataGroup sourceGroup = atomic.getGroup();
+                for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                    if(receiverGroup.children.containsKey(entry.getKey())) {
+                        DataDefinition receiverDefinition;
+                        if(giving.isEmpty()){
+                            receiverDefinition = receiverGroup.children.get(entry.getKey());
+                        } else {
+                            receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        }
 
-            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
-                if(receiverGroup.children.containsKey(entry.getKey())) {
-                    DataDefinition receiverDefinition;
-                    if(giving.isEmpty()){
-                        receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    } else {
-                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
-                    }
+                        if(receiverDefinition == null) {
+                            continue;
+                        }
 
-                    if(receiverDefinition == null) {
-                        continue;
-                    }
-
-                    switch (entry.getValue().getType()) {
-                        case NUMERIC:
-                            receiverDefinition.setValue((double)receiverDefinition.getValue() +
-                                    (double)entry.getValue().getValue());
-                            break;
-                        case ALPHANUMERIC:
-                            receiverDefinition.setValue(entry.getValue().getValue().toString() +
-                                    receiverDefinition.getValue().toString());
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unsupported type for addition: " + type);
+                        Object receiverValue = receiverDefinition.getValue();
+                        Object entryValue = entry.getValue().getValue();
+                        switch (entry.getValue().getType()) {
+                            case NUMERIC:
+                                if(receiverValue != null || entryValue != null)
+                                    receiverDefinition.setValue((receiverValue != null ? (double)receiverValue : 0) +
+                                            (entryValue != null ? (double)entryValue : 0));
+                                else
+                                    receiverDefinition.setValue(null);
+                                break;
+                            case ALPHANUMERIC:
+                                if(receiverValue != null || entryValue != null)
+                                    receiverDefinition.setValue((receiverValue != null ? receiverValue.toString() : "") +
+                                            (entryValue != null ? (double)entryValue : 0));
+                                else
+                                    receiverDefinition.setValue(null);
+                                receiverDefinition.setValue(entry.getValue().getValue().toString() +
+                                        receiverDefinition.getValue().toString());
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unsupported type for addition: " + type);
+                        }
                     }
                 }
             }
@@ -338,20 +349,26 @@ public final class Arithmetic implements Procedure {
         // First is a composite
         if(firstSource.isComposite())
         {
-            DataGroup sourceGroup = firstSource.getGroup();
             DataGroup receiverGroup = firstReceiver.getGroup();
+            for (Atomic atomic : sources) {
+                DataGroup sourceGroup = atomic.getGroup();
+                for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                    if (receiverGroup.children.containsKey(entry.getKey())) {
+                        DataDefinition receiverDefinition;
+                        if (giving.isEmpty()) {
+                            receiverDefinition = receiverGroup.children.get(entry.getKey());
+                        } else {
+                            receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        }
 
-            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
-                if(receiverGroup.children.containsKey(entry.getKey())) {
-                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    if(giving.isEmpty()){
-                        receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    } else {
-                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        Object receiverValue = receiverDefinition.getValue();
+                        Object entryValue = entry.getValue().getValue();
+                        if(receiverValue != null || entryValue != null)
+                            receiverDefinition.setValue((receiverValue != null ? (double)receiverValue : 0) -
+                                    (entryValue != null ? (double)entryValue : 0));
+                        else
+                            receiverDefinition.setValue(null);
                     }
-
-                    receiverDefinition.setValue((double)receiverDefinition.getValue() -
-                            (double)entry.getValue().getValue());
                 }
             }
 
