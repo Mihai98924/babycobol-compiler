@@ -53,30 +53,28 @@ occurs_clause  : OCCURS INTEGERLITERAL TIMES ;
 
 // === PROCEDURE DIVISION =======================================
 sentence
-    : statement* EOL
+    : (DEFAULT_LINE statement EOL)
     ;
 
 statement
-    : DEFAULT_LINE (
-          accept
-        | alter
-        | goto
-        | if
-        | perform
-        | signal
-        | copy
-        | display
-        | call
-        | add
-        | divide
-        | move
-        | multiply
-        | subtract
-        | loop
-        | evaluate
-        | next_sentence
-        | stop
-      )
+    : accept
+    | alter
+    | goto
+    | if
+    | perform
+    | signal
+    | copy
+    | display
+    | call
+    | add
+    | divide
+    | move
+    | multiply
+    | subtract
+    | loop
+    | evaluate
+    | next_sentence
+    | stop
     ;
 
 // ── STATEMENTS ────────────────────────────────────────────────
