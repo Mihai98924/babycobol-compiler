@@ -31,6 +31,6 @@ public record Call(Program program, HashMap<CallArgs, Object> callArgs) implemen
 
     @Override
     public void execute(Program state) {
-        
+        program.run(state.getInputStrategy(), state.getDisplayStrategy());
     }
 }
