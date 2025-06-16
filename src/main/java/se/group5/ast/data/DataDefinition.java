@@ -15,4 +15,5 @@ public interface DataDefinition extends Node, Typeable, Pictureable, Cloneable {
     Object getValue();
 
     void setValue(Object value);
+    void setValue(Object value, boolean applyPictureToValue);
 }

@@ -278,7 +278,7 @@ public final class Arithmetic implements Procedure {
                 }
             } else {
                 if (source.isLiteral()) {
-                    sb.append(((AlphanumericLiteral)source.getLiteral()).getText());
+                    sb.append(source.getLiteral().raw());
                 } else {
                     sb.append(source.getElement().getValue().toString());
                 }
@@ -287,31 +287,36 @@ public final class Arithmetic implements Procedure {
 
         if (receiver.isLiteral()) {
             if (type == Type.ALPHANUMERIC) {
-                sb.append(((AlphanumericLiteral)receiver.getLiteral()).getText());
+                sb.append(receiver.getLiteral().raw());
             } else {
                 sum += Double.parseDouble(receiver.getLiteral().raw());
             }
         } else {
             DataElement element = receiver.getElement();
             if (type == Type.ALPHANUMERIC) {
-                sb.append(element.getValue().toString());
+                if(element.getType() == Type.NUMERIC) {
+                    String elementValue = element.convert();
+                    sb.append(elementValue);
+                } else {
+                    sb.append(element.getValue().toString());
+                }
             } else {
                 sum += (double) element.getValue();
             }
             if (giving.isEmpty()) {
                 if (type == Type.ALPHANUMERIC) {
-                    element.setValue(sb.toString());
+                    element.setValue(sb.toString(), true);
                 } else {
-                    element.setValue(sum);
+                    element.setValue(sum, true);
                 }
             }
         }
 
         for (DataDefinition giving : giving) {
             if (type == Type.ALPHANUMERIC) {
-                giving.setValue(sb.toString());
+                giving.setValue(sb.toString(), true);
             } else {
-                giving.setValue(sum);
+                giving.setValue(sum, true);
             }
         }
     }
@@ -325,7 +330,7 @@ public final class Arithmetic implements Procedure {
         Atomic aggregatedGroup = null;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(!giving.isEmpty()) {
             aggregatedGroup = firstReceiver.clone();
@@ -393,7 +398,7 @@ public final class Arithmetic implements Procedure {
         double value;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
@@ -422,7 +427,7 @@ public final class Arithmetic implements Procedure {
         double value, remainderValue = -1;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
@@ -465,13 +470,17 @@ public final class Arithmetic implements Procedure {
     }
 
     private void validatePictureClausesToExcludeAandX() {
+        validatePictureClausesToExcludeAandX(false);
+    }
+
+    private void validatePictureClausesToExcludeAandX(boolean always) {
         // Check if identifiers are defined with picture clauses without A and X
         List<Atomic> atomics = new ArrayList<>();
         atomics.addAll(sources);
         atomics.addAll(receivers);
 
         for (Atomic atomic : atomics) {
-            if(atomic.doesPictureContainAnySymbols(
+            if((always || atomic.getType() == Type.NUMERIC || atomic.getType() == Type.COMPOSITE) && atomic.doesPictureContainAnySymbols(
                     PictureSymbol.ALPHA,
                     PictureSymbol.ALPHANUM
             )) {
@@ -482,7 +491,7 @@ public final class Arithmetic implements Procedure {
         }
 
         for (DataDefinition giving : giving) {
-            if(giving.doesPictureContainAnySymbols(
+            if((always || giving.getType() == Type.NUMERIC || giving.getType() == Type.COMPOSITE) && giving.doesPictureContainAnySymbols(
                     PictureSymbol.ALPHA,
                     PictureSymbol.ALPHANUM
             )) {
