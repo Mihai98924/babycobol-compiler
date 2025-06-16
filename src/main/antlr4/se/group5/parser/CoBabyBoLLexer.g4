@@ -116,12 +116,16 @@ LIKE            : L I K E                       -> pushMode(ID_REP);
 OCCURS          : O C C U R S                   -> pushMode(DD_INT);
 TIMES           : T I M E S;
 
+DD_OF     : OF                                  -> type(OF);
+DD_ID     : IDENTIFIER                          -> type(IDENTIFIER);
+
 mode DD_INT;
 DD_INT_WS       : WS                            -> channel(HIDDEN);
 DD_INT_LIT      : INTEGERLITERAL                -> type(INTEGERLITERAL), popMode;
 
 mode ID_REP;
 ID_REP_WS : WS                                  -> skip;
+IR_OF     : OF                                  -> type(OF);
 IR_ID     : IDENTIFIER                          -> type(IDENTIFIER), popMode;
 
 // === PICTURE REPRESENTATION ===================================

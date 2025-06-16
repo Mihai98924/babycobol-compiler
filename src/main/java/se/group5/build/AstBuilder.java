@@ -97,8 +97,14 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                     .map(DataElement.class::cast).map(DataElement::picture)
                     .orElse(null);
 
-            if (pic == null)
-                id = new Identifier(fullyQualifiedIdentifier + "." + id.value());
+            if (pic == null) {
+                String identifierPrefix = fullyQualifiedIdentifier != null &&
+                        fullyQualifiedIdentifier.indexOf('.') != -1 ?
+                        fullyQualifiedIdentifier.substring(0, fullyQualifiedIdentifier.lastIndexOf('.')) :
+                        fullyQualifiedIdentifier;
+
+                id = new Identifier(identifierPrefix + "." + id.value());
+            }
         }
 
         // Instantiate either an element or a group
