@@ -38,7 +38,7 @@ public class Display implements Procedure {
             if (atomic.isLiteral()) {
                 value = atomic.getLiteral().raw();
             } else {
-                value = atomic.getElement().getValue().toString();
+                value = atomic.getElement().convert();
             }
             String argumentValue = value;
 

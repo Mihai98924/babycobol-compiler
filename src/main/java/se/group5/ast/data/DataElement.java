@@ -61,29 +61,36 @@ public final class DataElement implements DataDefinition {
 
     public String convert() {
 
-        double unsignedDouble = (double) value;
-        boolean valueIsNegative = false;
-        if (unsignedDouble < 0) {
-            valueIsNegative = true;
-            unsignedDouble = Math.abs((double) value);
-        }
-
-        String usignedDoubleString = Double.toString(unsignedDouble);
-        // remove .0
-        if (usignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
-            usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
-        }
-
-        String convertedRepresentation = picture.convert(usignedDoubleString);
-        if (picture.containsSymbol(PictureSymbol.SIGN)) {
-            if (valueIsNegative) {
-                convertedRepresentation = "-" + convertedRepresentation;
-            } else {
-                convertedRepresentation = " " + convertedRepresentation;
+        if(getType() == Type.NUMERIC) {
+            double unsignedDouble = (double) value;
+            boolean valueIsNegative = false;
+            if (unsignedDouble < 0) {
+                valueIsNegative = true;
+                unsignedDouble = Math.abs((double) value);
             }
-        }
 
-        return convertedRepresentation;
+            String usignedDoubleString = Double.toString(unsignedDouble);
+            // remove .0
+            if (usignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
+                usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
+            }
+
+            String convertedRepresentation = picture.convert(usignedDoubleString);
+            if (picture.containsSymbol(PictureSymbol.SIGN)) {
+                if (valueIsNegative) {
+                    convertedRepresentation = "-" + convertedRepresentation;
+                } else {
+                    convertedRepresentation = " " + convertedRepresentation;
+                }
+            }
+
+            return convertedRepresentation;
+        } else if (getType() == Type.ALPHANUMERIC) {
+                String convertedRepresentation = picture.convert(value.toString());
+                return convertedRepresentation.stripLeading();
+            } else {
+                throw new IllegalArgumentException("Unsupported type for picture conversion: " + getType());
+            }
     }
 
     public void applyPictureToValue() {
