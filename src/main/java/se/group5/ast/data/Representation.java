@@ -175,18 +175,44 @@ public final class Representation implements Node, Typeable {
     }
 
     public String convert(String text) {
+        List<PictureSymbol> patternToMatch = pattern.stream().filter(symbol -> symbol.glyph !=
+                PictureSymbol.SIGN.glyph).toList();
+
         String patternText = text;
-        if (text.length() < pattern.size())
+        List<PictureSymbol> patternBeforeDot = patternToMatch.stream()
+                .takeWhile(symbol -> symbol.glyph != PictureSymbol.DECIMAL.glyph)
+                .toList();
+
+        List<PictureSymbol> patternAfterDot = new ArrayList<>();
+        if(patternToMatch.contains(PictureSymbol.DECIMAL)) {
+             patternAfterDot = patternToMatch.stream().toList().subList(patternBeforeDot.size() + 1, patternToMatch.size());
+        }
+
+        int indexOfDot = text.indexOf('.');
+        String textBeforeDot = "";
+        String textAfterDot = "";
+        if(indexOfDot != -1) {
+            textBeforeDot = text.substring(0, indexOfDot);
+            textAfterDot = text.substring(indexOfDot + 1);
+        }
+        else
+            textBeforeDot = text;
+
+        if (text.length() < patternToMatch.size())
             if (isPatternNumeric())
-                patternText = ("0".repeat(pattern.size() - text.length())) + patternText;
+                patternText = ("0".repeat(patternBeforeDot.size() - textBeforeDot.length())) + patternText +
+                        ("0".repeat(patternAfterDot.size() - textAfterDot.length())) ;
             else {
-                patternText = (" ".repeat(pattern.size() - text.length())) + patternText;
+                patternText = (" ".repeat(patternToMatch.size() - text.length())) + patternText;
             }
-        else if(text.length() > pattern.size())
-            patternText = text.substring(0, pattern.size());
+        else if(text.length() > patternToMatch.size())
+            patternText = text.substring(0, patternToMatch.size());
 
         if(matches(patternText))
-            return patternText;
+            if(isPatternNumeric())
+                return patternText.replaceFirst("^0+", "");
+            else
+                return patternText;
         else
             throw new IllegalArgumentException("Text does not match PICTURE: " + text + " does not match " + this);
     }

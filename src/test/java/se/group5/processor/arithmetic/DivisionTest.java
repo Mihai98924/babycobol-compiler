@@ -71,10 +71,10 @@ public class DivisionTest {
                       AUTHOR. SUSPICIOUSLAWNMOWERS.
                       DATE-WRITTEN. 2022-04-22.
                   DATA DIVISION.
-                      01 A PICTURE IS 9V9.
-                      01 B PICTURE IS 99.
-                      01 C PICTURE IS 99.
-                      01 D PICTURE IS 99.
+                      01 A PICTURE IS 9V99.
+                      01 B PICTURE IS 99V99.
+                      01 C PICTURE IS 99V99.
+                      01 D PICTURE IS 99V99.
                   PROCEDURE DIVISION.
                       ACCEPT A B C.
                       DISPLAY A DELIMITED BY SIZE.
@@ -97,10 +97,10 @@ public class DivisionTest {
                       AUTHOR. SUSPICIOUSLAWNMOWERS.
                       DATE-WRITTEN. 2022-04-22.
                   DATA DIVISION.
-                      01 A PICTURE IS 9V9.
-                      01 B PICTURE IS 99.
-                      01 C PICTURE IS 99.
-                      01 D PICTURE IS 99.
+                      01 A PICTURE IS 9V99.
+                      01 B PICTURE IS 99V99.
+                      01 C PICTURE IS 99V99.
+                      01 D PICTURE IS 99V99.
                   PROCEDURE DIVISION.
                       ACCEPT A B C.
                       DISPLAY A DELIMITED BY SIZE.
