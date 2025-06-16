@@ -162,6 +162,28 @@ public class ProcessorDisplayTest {
     }
 
     @Test
+    public void programRunTest_Display_LITERAL_Passes() throws IOException {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 A PICTURE IS XXXXXX.
+                      01 B PICTURE IS XXXXXXXX.
+                  PROCEDURE DIVISION.
+                      ACCEPT A B.
+                      DISPLAY A DELIMITED BY "ma" B DELIMITED BY "ale" WITH NO ADVANCING.
+           """;
+
+        Program program = processor.parse(source);
+        program.run(literalStrategy, displayStrategy);
+
+        Assert.assertEquals("ala", results.get(0));
+        Assert.assertEquals("kotma", results.get(1));
+    }
+
+    @Test
     public void programRunTest_Display_SPACE_Passes() throws IOException {
         String source = """
                   IDENTIFICATION DIVISION.
@@ -173,13 +195,13 @@ public class ProcessorDisplayTest {
                       01 B PICTURE IS XXXXXXXX.
                   PROCEDURE DIVISION.
                       ACCEPT A B.
-                      DISPLAY A DELIMITED BY "ma" B DELIMITED BY "kot" WITH NO ADVANCING.
+                      DISPLAY A DELIMITED BY SPACE B DELIMITED BY SPACE WITH NO ADVANCING.
            """;
 
         Program program = processor.parse(source);
-        program.run(literalStrategy, displayStrategy);
+        program.run(trimStrategy, displayStrategy);
 
-        Assert.assertEquals("alama", results.get(0));
-        Assert.assertEquals("kot", results.get(1));
+        Assert.assertEquals("A", results.get(0));
+        Assert.assertEquals("AB", results.get(1));
     }
 }
