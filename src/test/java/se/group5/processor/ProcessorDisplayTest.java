@@ -2,7 +2,6 @@ package se.group5.processor;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.ProgramDisplayStrategy;
@@ -16,6 +15,8 @@ public class ProcessorDisplayTest {
 
     private ProgramInputStrategy strategy;
     private ProgramInputStrategy alphanumericStrategy;
+    private ProgramInputStrategy trimStrategy;
+    private ProgramInputStrategy literalStrategy;
     private ProgramDisplayStrategy displayStrategy;
     private Processor processor;
     private List<String> results;
@@ -42,6 +43,26 @@ public class ProcessorDisplayTest {
 
         alphanumericStrategy = new ProgramInputStrategy() {
             String[] inputs = {"A", "AB", "ABC", "AB9", "AB10"};
+            int inputIndex = 0;
+
+            @Override
+            public String getInput() {
+                return inputs[inputIndex++];
+            }
+        };
+
+        trimStrategy = new ProgramInputStrategy() {
+            String[] inputs = {"  A  ", " AB"};
+            int inputIndex = 0;
+
+            @Override
+            public String getInput() {
+                return inputs[inputIndex++];
+            }
+        };
+
+        literalStrategy = new ProgramInputStrategy() {
+            String[] inputs = {"alamakota", "kotmaale"};
             int inputIndex = 0;
 
             @Override
@@ -116,27 +137,49 @@ public class ProcessorDisplayTest {
     }
 
     @Test
-    public void programRunTest_Divide_DisplaysReducedSizeValue_Passes() throws IOException {
+    public void programRunTest_Display_SIZE_Passes() throws IOException {
+        // Arrange
         String source = """
                   IDENTIFICATION DIVISION.
                       PROGRAM-ID. ADDTEST.
                       AUTHOR. SUSPICIOUSLAWNMOWERS.
                       DATE-WRITTEN. 2022-04-22.
                   DATA DIVISION.
-                      01 A PICTURE IS 9.
-                      01 B PICTURE IS 99.
-                      01 C PICTURE IS 99.
-                      01 D PICTURE IS 99.
+                      01 A PICTURE IS XXXXXX.
+                      01 B PICTURE IS XXXXXXXX.
                   PROCEDURE DIVISION.
-                      ACCEPT A B C.
-                      DISPLAY A DELIMITED BY SIZE.
-                      DIVIDE C INTO B GIVING A.
-                      DISPLAY A.
+                      ACCEPT A B.
+                      DISPLAY A DELIMITED BY SIZE B DELIMITED BY SIZE WITH NO ADVANCING.
+           """;
+
+        // Act
+        Program program = processor.parse(source);
+        program.run(alphanumericStrategy, displayStrategy);
+
+        // Assert
+        Assert.assertEquals("A     ", results.get(0));
+        Assert.assertEquals("AB      ", results.get(1));
+    }
+
+    @Test
+    public void programRunTest_Display_SPACE_Passes() throws IOException {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 A PICTURE IS XXXXXX.
+                      01 B PICTURE IS XXXXXXXX.
+                  PROCEDURE DIVISION.
+                      ACCEPT A B.
+                      DISPLAY A DELIMITED BY "ma" B DELIMITED BY "kot" WITH NO ADVANCING.
            """;
 
         Program program = processor.parse(source);
-        program.run(strategy, displayStrategy);
+        program.run(literalStrategy, displayStrategy);
 
-        Assert.assertEquals("1\n", results.get(0));
+        Assert.assertEquals("alama", results.get(0));
+        Assert.assertEquals("kot", results.get(1));
     }
 }
