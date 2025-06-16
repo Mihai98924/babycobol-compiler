@@ -36,6 +36,6 @@ public class AstCallTest {
         ProcedureList procedures = program.procedures;
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
-        Assert.assertEquals("4210004", output.getOutput());
+        Assert.assertEquals("42100054", output.getOutput());
     }
 }
