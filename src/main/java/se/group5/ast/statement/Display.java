@@ -3,6 +3,7 @@ package se.group5.ast.statement;
 import lombok.Getter;
 import se.group5.ast.Atomic;
 import se.group5.ast.Program;
+import se.group5.ast.data.Representation;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.procedure.Procedure;
 
@@ -47,11 +48,15 @@ public class Display implements Procedure {
 
                 switch (delimiter.type) {
                     case SPACE -> {
-                        state.getDisplayStrategy().display(argumentValue + newline);
+                        state.getDisplayStrategy().display(value.trim() + newline);
                     }
                     case SIZE -> {
-                        String result = argument.atomic.getElement().picture().convert(argumentValue);
-                        state.getDisplayStrategy().display(result + newline);
+                        if(atomic.isElement())
+                        {
+                            Representation rep = atomic.getElement().picture();
+                            state.getDisplayStrategy().display(value +
+                                    (" ".repeat(rep.length() - value.length())) + newline);
+                        }
                     }
                     case LITERAL -> {
                         String literal = delimiter.literal().raw();
@@ -62,7 +67,7 @@ public class Display implements Procedure {
                             throw new IllegalArgumentException("Argument " + argument +
                                     " has substring literal: " + literal);
 
-                        state.getDisplayStrategy().display(result + newline);
+                        state.getDisplayStrategy().display(result + literal + newline);
                     }
                 }
             } else {
