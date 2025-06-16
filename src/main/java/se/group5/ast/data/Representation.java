@@ -12,6 +12,17 @@ import java.util.List;
 public final class Representation implements Node, Typeable {
     private final List<PictureSymbol> pattern;
 
+    public Representation(List<PictureSymbol> pattern, int occurs) {
+        this.pattern = new ArrayList<>(pattern.size() * occurs);
+        for (int i = 0; i < occurs; i++) {
+            this.pattern.addAll(pattern);
+        }
+    }
+
+    public List<PictureSymbol> getPattern() {
+        return pattern;
+    }
+
     public Representation(String raw) {
         raw = raw.trim();
         if (raw.isEmpty())

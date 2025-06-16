@@ -208,9 +208,6 @@ OTHER               : O WS* T WS* H WS* E WS* R;
 STOP                : S WS* T WS* O WS* P;
 ZERO                : Z WS* E WS* R WS* O;
 XOR                 : X WS* O WS* R;
-CODE_IDENTIFIER
-    : IDENTIFIER        -> type(IDENTIFIER)
-    ;
 
 // === OPERATORS & PUNCTUATION ================================
 AND : A WS* N WS* D;
@@ -229,6 +226,10 @@ LT   : '<'  ;
 
 LPAR : '(' ;
 RPAR : ')' ;
+
+CODE_IDENTIFIER
+    : IDENTIFIER        -> type(IDENTIFIER)
+    ;
 
 // === LITERALS =================================================
 STRINGLITERAL
