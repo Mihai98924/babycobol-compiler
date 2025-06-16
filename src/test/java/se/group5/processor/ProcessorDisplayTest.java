@@ -173,14 +173,14 @@ public class ProcessorDisplayTest {
                       01 B PICTURE IS XXXXXXXX.
                   PROCEDURE DIVISION.
                       ACCEPT A B.
-                      DISPLAY A DELIMITED BY "ma" B DELIMITED BY "ale" WITH NO ADVANCING.
+                      DISPLAY A DELIMITED BY "ma" B DELIMITED BY "kot" WITH NO ADVANCING.
            """;
 
         Program program = processor.parse(source);
         program.run(literalStrategy, displayStrategy);
 
-        Assert.assertEquals("ala", results.get(0));
-        Assert.assertEquals("kotma", results.get(1));
+        Assert.assertEquals("alama", results.get(0));
+        Assert.assertEquals("kot", results.get(1));
     }
 
     @Test
