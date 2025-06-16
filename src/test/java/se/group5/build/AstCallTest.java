@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
+import se.group5.ast.StringAccumulatingDisplayStrategy;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.processor.Processor;
 
@@ -29,10 +30,12 @@ public class AstCallTest {
                       CALL "src/test/resources/programs/test_0.baby".
            """;
         Program program = processor.parse(source);
-        System.out.println(program);
+        var output = new StringAccumulatingDisplayStrategy();
+        program.run(null, output);
 
         ProcedureList procedures = program.procedures;
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
+        Assert.assertEquals("4210004", output.getOutput());
     }
 }
