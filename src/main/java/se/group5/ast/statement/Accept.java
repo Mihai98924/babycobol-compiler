@@ -27,9 +27,9 @@ public record Accept(List<Identifier> targets) implements Procedure {
 
             try {
                 double value = Double.parseDouble(input);
-                state.symbolTable.table.get(target.value()).setValue(value);
+                state.symbolTable.table.get(target.value()).setValue(value, true);
             } catch (NumberFormatException e) {
-                state.symbolTable.table.get(target.value()).setValue(input);
+                state.symbolTable.table.get(target.value()).setValue(input, true);
             }
         }
     }

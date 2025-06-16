@@ -33,7 +33,7 @@ public class AstSmokeTest {
         processor = new Processor();
     }
 
-    @Parameterized.Parameters(name = "{0}")
+    @Parameterized.Parameters(name = "{0}") 
     public static Collection<Object[]> parameters() throws IOException {
         try (Stream<Path> paths = Files.walk(
                 Paths.get(Objects.requireNonNull(

@@ -172,7 +172,7 @@ public final class Arithmetic implements Procedure {
     /** Composite-field compatibility for ADD/SUBTRACT (shared rule). */
     private void validateCompositeCompatibility() {
         if (verb == Verb.ADD || verb == Verb.SUBTRACT) {
-            boolean compositeSource = sources.size() == 1 && sources.get(0).isComposite();
+            boolean compositeSource = sources.stream().allMatch(Atomic::isComposite);
             boolean compositeReceiver = receivers.size() == 1 && receivers.get(0).isComposite();
             if (compositeSource ^ compositeReceiver) {
                 error("Both operands must be composite or both simple.");
@@ -226,36 +226,47 @@ public final class Arithmetic implements Procedure {
         // First is a composite
         if(firstSource.isComposite())
         {
-            DataGroup sourceGroup = firstSource.getGroup();
             DataGroup receiverGroup = receiver.getGroup();
             if(!giving.isEmpty()) {
                 aggregatedGroup = receiver.clone();
             }
+            for (Atomic atomic : sources) {
+                DataGroup sourceGroup = atomic.getGroup();
+                for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                    if(receiverGroup.children.containsKey(entry.getKey())) {
+                        DataDefinition receiverDefinition;
+                        if(giving.isEmpty()){
+                            receiverDefinition = receiverGroup.children.get(entry.getKey());
+                        } else {
+                            receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        }
 
-            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
-                if(receiverGroup.children.containsKey(entry.getKey())) {
-                    DataDefinition receiverDefinition;
-                    if(giving.isEmpty()){
-                        receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    } else {
-                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
-                    }
+                        if(receiverDefinition == null) {
+                            continue;
+                        }
 
-                    if(receiverDefinition == null) {
-                        continue;
-                    }
-
-                    switch (entry.getValue().getType()) {
-                        case NUMERIC:
-                            receiverDefinition.setValue((double)receiverDefinition.getValue() +
-                                    (double)entry.getValue().getValue());
-                            break;
-                        case ALPHANUMERIC:
-                            receiverDefinition.setValue(entry.getValue().getValue().toString() +
-                                    receiverDefinition.getValue().toString());
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unsupported type for addition: " + type);
+                        Object receiverValue = receiverDefinition.getValue();
+                        Object entryValue = entry.getValue().getValue();
+                        switch (entry.getValue().getType()) {
+                            case NUMERIC:
+                                if(receiverValue != null || entryValue != null)
+                                    receiverDefinition.setValue((receiverValue != null ? (double)receiverValue : 0) +
+                                            (entryValue != null ? (double)entryValue : 0));
+                                else
+                                    receiverDefinition.setValue(null);
+                                break;
+                            case ALPHANUMERIC:
+                                if(receiverValue != null || entryValue != null)
+                                    receiverDefinition.setValue((receiverValue != null ? receiverValue.toString() : "") +
+                                            (entryValue != null ? (double)entryValue : 0));
+                                else
+                                    receiverDefinition.setValue(null);
+                                receiverDefinition.setValue(entry.getValue().getValue().toString() +
+                                        receiverDefinition.getValue().toString());
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unsupported type for addition: " + type);
+                        }
                     }
                 }
             }
@@ -278,7 +289,7 @@ public final class Arithmetic implements Procedure {
                 }
             } else {
                 if (source.isLiteral()) {
-                    sb.append(((AlphanumericLiteral)source.getLiteral()).getText());
+                    sb.append(source.getLiteral().raw());
                 } else {
                     sb.append(source.getElement().getValue().toString());
                 }
@@ -287,31 +298,36 @@ public final class Arithmetic implements Procedure {
 
         if (receiver.isLiteral()) {
             if (type == Type.ALPHANUMERIC) {
-                sb.append(((AlphanumericLiteral)receiver.getLiteral()).getText());
+                sb.append(receiver.getLiteral().raw());
             } else {
                 sum += Double.parseDouble(receiver.getLiteral().raw());
             }
         } else {
             DataElement element = receiver.getElement();
             if (type == Type.ALPHANUMERIC) {
-                sb.append(element.getValue().toString());
+                if(element.getType() == Type.NUMERIC) {
+                    String elementValue = element.convert();
+                    sb.append(elementValue);
+                } else {
+                    sb.append(element.getValue().toString());
+                }
             } else {
                 sum += (double) element.getValue();
             }
             if (giving.isEmpty()) {
                 if (type == Type.ALPHANUMERIC) {
-                    element.setValue(sb.toString());
+                    element.setValue(sb.toString(), true);
                 } else {
-                    element.setValue(sum);
+                    element.setValue(sum, true);
                 }
             }
         }
 
         for (DataDefinition giving : giving) {
             if (type == Type.ALPHANUMERIC) {
-                giving.setValue(sb.toString());
+                giving.setValue(sb.toString(), true);
             } else {
-                giving.setValue(sum);
+                giving.setValue(sum, true);
             }
         }
     }
@@ -325,7 +341,7 @@ public final class Arithmetic implements Procedure {
         Atomic aggregatedGroup = null;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(!giving.isEmpty()) {
             aggregatedGroup = firstReceiver.clone();
@@ -333,20 +349,26 @@ public final class Arithmetic implements Procedure {
         // First is a composite
         if(firstSource.isComposite())
         {
-            DataGroup sourceGroup = firstSource.getGroup();
             DataGroup receiverGroup = firstReceiver.getGroup();
+            for (Atomic atomic : sources) {
+                DataGroup sourceGroup = atomic.getGroup();
+                for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
+                    if (receiverGroup.children.containsKey(entry.getKey())) {
+                        DataDefinition receiverDefinition;
+                        if (giving.isEmpty()) {
+                            receiverDefinition = receiverGroup.children.get(entry.getKey());
+                        } else {
+                            receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        }
 
-            for (Map.Entry<String, DataDefinition> entry : sourceGroup.children.entrySet()) {
-                if(receiverGroup.children.containsKey(entry.getKey())) {
-                    DataDefinition receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    if(giving.isEmpty()){
-                        receiverDefinition = receiverGroup.children.get(entry.getKey());
-                    } else {
-                        receiverDefinition = aggregatedGroup.getGroup().children.get(entry.getKey());
+                        Object receiverValue = receiverDefinition.getValue();
+                        Object entryValue = entry.getValue().getValue();
+                        if(receiverValue != null || entryValue != null)
+                            receiverDefinition.setValue((receiverValue != null ? (double)receiverValue : 0) -
+                                    (entryValue != null ? (double)entryValue : 0));
+                        else
+                            receiverDefinition.setValue(null);
                     }
-
-                    receiverDefinition.setValue((double)receiverDefinition.getValue() -
-                            (double)entry.getValue().getValue());
                 }
             }
 
@@ -393,7 +415,7 @@ public final class Arithmetic implements Procedure {
         double value;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
@@ -422,7 +444,7 @@ public final class Arithmetic implements Procedure {
         double value, remainderValue = -1;
 
         // VALIDATE
-        validatePictureClausesToExcludeAandX();
+        validatePictureClausesToExcludeAandX(true);
 
         if(sources.get(0).isLiteral()) {
             value = Double.parseDouble(sources.get(0).getLiteral().raw());
@@ -465,13 +487,17 @@ public final class Arithmetic implements Procedure {
     }
 
     private void validatePictureClausesToExcludeAandX() {
+        validatePictureClausesToExcludeAandX(false);
+    }
+
+    private void validatePictureClausesToExcludeAandX(boolean always) {
         // Check if identifiers are defined with picture clauses without A and X
         List<Atomic> atomics = new ArrayList<>();
         atomics.addAll(sources);
         atomics.addAll(receivers);
 
         for (Atomic atomic : atomics) {
-            if(atomic.doesPictureContainAnySymbols(
+            if((always || atomic.getType() == Type.NUMERIC || atomic.getType() == Type.COMPOSITE) && atomic.doesPictureContainAnySymbols(
                     PictureSymbol.ALPHA,
                     PictureSymbol.ALPHANUM
             )) {
@@ -482,7 +508,7 @@ public final class Arithmetic implements Procedure {
         }
 
         for (DataDefinition giving : giving) {
-            if(giving.doesPictureContainAnySymbols(
+            if((always || giving.getType() == Type.NUMERIC || giving.getType() == Type.COMPOSITE) && giving.doesPictureContainAnySymbols(
                     PictureSymbol.ALPHA,
                     PictureSymbol.ALPHANUM
             )) {

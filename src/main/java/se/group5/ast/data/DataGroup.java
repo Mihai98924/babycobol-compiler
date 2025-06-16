@@ -47,7 +47,12 @@ public final class DataGroup implements DataDefinition {
 
     @Override
     public void setValue(Object value) {
+        throw new UnsupportedOperationException();
+    }
 
+    @Override
+    public void setValue(Object value, boolean applyPictureToValue) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

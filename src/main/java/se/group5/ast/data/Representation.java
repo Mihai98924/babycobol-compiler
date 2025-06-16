@@ -70,24 +70,55 @@ public final class Representation implements Node, Typeable {
         return pattern.stream().anyMatch(pic -> pic.glyph == symbol.glyph);
     }
 
+    public boolean isPatternNumeric() {
+        return pattern.stream().allMatch(pic -> pic.glyph != PictureSymbol.ALPHANUM.glyph &&
+                pic.glyph != PictureSymbol.ALPHA.glyph);
+    }
+
     /**
      * Quick helper that tells whether supplied text already matches the picture
      */
     public boolean matches(String text) {
-        if (text.length() != pattern.size()) return false;
+
+        // We don't match S, we store it internally
+        List<PictureSymbol> patternToMatch = pattern.stream().filter(symbol -> symbol.glyph !=
+                PictureSymbol.SIGN.glyph).toList();
+
+        if (text.length() != patternToMatch.size()) return false;
+        boolean leading = true;
         for (int i = 0; i < text.length(); i++) {
-            PictureSymbol pic = pattern.get(i);
+            PictureSymbol pic = patternToMatch.get(i);
             char ch = text.charAt(i);
             switch (pic) {
                 case DIGIT -> {
+                    leading = false;
                     if (!Character.isDigit(ch)) return false;
                 }
                 case ALPHA -> {
+                    leading = false;
                     if (!Character.isLetter(ch)) return false;
                 }
-                case ALPHANUM -> { /* any printable char */ }
-                case SIGN -> { /* sign char is implementation defined – accept +‑CR/DB etc. */ }
-                case DECIMAL -> { /* nothing stored, logical point */ }
+                case ALPHANUM -> {
+                    leading = false;
+                    /* any printable char */ }
+                case SIGN -> {
+                    /* sign char is implementation defined – accept +‑CR/DB etc. */
+                    // A sign has to be the first character in the string
+                    if(!(ch == '-' || ch == '+' || Character.isSpaceChar(ch)) && leading) return false;
+                    leading = false;
+                }
+                case DECIMAL -> {
+                    leading = false;
+                    /* nothing stored, logical point */
+                    if(!(ch == ',' || ch == '.' )) return false;
+                }
+                case LEADING_DIGIT -> {
+                    if(Character.isDigit(ch)) {
+                        leading = false;
+                    } else if (!Character.isSpaceChar(ch) && leading) {
+                        return false;
+                    }
+                }
             }
         }
         return true;
@@ -103,17 +134,61 @@ public final class Representation implements Node, Typeable {
         return true;
     }
 
+    public String maxValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT, LEADING_DIGIT -> result.append('9');
+                case ALPHA -> result.append('z');
+                case ALPHANUM -> result.append((char)255);
+                case SIGN -> result.append('+');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
+    public String minValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT -> result.append('0');
+                case ALPHA, LEADING_DIGIT -> result.append(' ');
+                case ALPHANUM -> result.append((char)0);
+                case SIGN -> result.append('-');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
+    public String spacesValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT-> result.append('0');
+                case ALPHA, LEADING_DIGIT, ALPHANUM, SIGN -> result.append(' ');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
     public String convert(String text) {
-        if(matches(text)) return text;
-
+        String patternText = text;
         if (text.length() < pattern.size())
-            throw new IllegalArgumentException("Text length is shorter than PICTURE length");
+            if (isPatternNumeric())
+                patternText = ("0".repeat(pattern.size() - text.length())) + patternText;
+            else {
+                patternText = (" ".repeat(pattern.size() - text.length())) + patternText;
+            }
+        else if(text.length() > pattern.size())
+            patternText = text.substring(0, pattern.size());
 
-        String substring = text.substring(0, pattern.size());
-        if(matches(substring))
-            return substring;
+        if(matches(patternText))
+            return patternText;
         else
-            throw new IllegalArgumentException("Text does not match PICTURE");
+            throw new IllegalArgumentException("Text does not match PICTURE: " + text + " does not match " + this);
     }
 
     @Override

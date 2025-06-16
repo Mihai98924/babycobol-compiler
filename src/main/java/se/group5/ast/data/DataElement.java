@@ -53,6 +53,76 @@ public final class DataElement implements DataDefinition {
     }
 
     @Override
+    public void setValue(Object value, boolean applyPictureToValue) {
+        setValue(value);
+        if(applyPictureToValue)
+            applyPictureToValue();
+    }
+
+    public String convert() {
+
+        double unsignedDouble = (double) value;
+        boolean valueIsNegative = false;
+        if (unsignedDouble < 0) {
+            valueIsNegative = true;
+            unsignedDouble = Math.abs((double) value);
+        }
+
+        String usignedDoubleString = Double.toString(unsignedDouble);
+        // remove .0
+        if (usignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
+            usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
+        }
+
+        String convertedRepresentation = picture.convert(usignedDoubleString);
+        if (picture.containsSymbol(PictureSymbol.SIGN)) {
+            if (valueIsNegative) {
+                convertedRepresentation = "-" + convertedRepresentation;
+            } else {
+                convertedRepresentation = " " + convertedRepresentation;
+            }
+        }
+
+        return convertedRepresentation;
+    }
+
+    public void applyPictureToValue() {
+        if (picture != null && value != null) {
+            if(getType() == Type.NUMERIC) {
+                // When double is positive add space
+                // When double is negative replace the first '-' with a space
+                double unsignedDouble;
+                boolean valueIsNegative;
+                try {
+                    unsignedDouble = (double) value;
+                    valueIsNegative = false;
+                    if (unsignedDouble < 0) {
+                        valueIsNegative = true;
+                        unsignedDouble = Math.abs((double)value);
+                    }
+                } catch (ClassCastException e) {
+                    throw new IllegalArgumentException("Value must be a number for numeric picture: " + picture);
+                }
+
+                String usignedDoubleString = Double.toString(unsignedDouble);
+                // remove .0
+                if (usignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
+                    usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
+                }
+
+                this.value = Double.parseDouble(picture.convert(usignedDoubleString));
+                if(valueIsNegative) {
+                    this.value = -((double)this.value);
+                }
+            } else if(getType() == Type.ALPHANUMERIC) {
+                this.value = picture.convert(value.toString()).stripLeading();
+            } else {
+                throw new IllegalArgumentException("Unsupported type for picture conversion: " + getType());
+            }
+        }
+    }
+
+    @Override
     public String toString() {
         return (isArray() ? "ARRAY" : "ELEM") + "(" + level + ", " + name + ", " + picture + ")";
     }
