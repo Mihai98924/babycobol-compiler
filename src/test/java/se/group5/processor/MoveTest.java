@@ -209,7 +209,6 @@ public class MoveTest {
                       DISPLAY B OF Y.
            """;
 
-        // TODO should move atomic, move A to B? OR only composite to composite?
         // Act
         Program program = processor.parse(source);
         program.run(compositesStrategy);

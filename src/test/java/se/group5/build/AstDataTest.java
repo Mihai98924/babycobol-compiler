@@ -181,7 +181,7 @@ public class AstDataTest {
                           03 X.
                               05 Y.
                                   07 C PICTURE IS 99.
-                      01 J LIKE X.
+                      01 J LIKE Y.
                           03 C PICTURE IS 99.
                   PROCEDURE DIVISION.
                       MOVE HIGH-VALUES TO C OF X Y.

@@ -82,6 +82,16 @@ public final class Representation implements Node, Typeable {
         return true;
     }
 
+    public boolean matches(List<PictureSymbol> pictureSymbols) {
+        if(pictureSymbols.size() != pattern.size()) return false;
+
+        for (int i = 0; i < pattern.size(); i++) {
+            if(pattern.get(i).glyph != pictureSymbols.get(i).glyph) return false;
+        }
+
+        return true;
+    }
+
     public String convert(String text) {
         if(matches(text)) return text;
 

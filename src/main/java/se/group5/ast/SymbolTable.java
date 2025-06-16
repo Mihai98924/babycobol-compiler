@@ -26,9 +26,13 @@ public final class SymbolTable implements Node {
         String fqWithoutLeadingDot = fq.substring(1); // fully qualified (skip leading dot)
         table.put(fqWithoutLeadingDot, def);
 
-        List<String> existingKeys = symbolTableQuickAccesMap.get(shortName);
+        String quickAccessString = shortName;
+        if(shortName.lastIndexOf('.') != -1)
+            quickAccessString = shortName.substring(shortName.lastIndexOf('.') + 1);
+
+        List<String> existingKeys = symbolTableQuickAccesMap.get(quickAccessString);
         if (existingKeys == null) {
-            symbolTableQuickAccesMap.put(shortName, new ArrayList<>() {{
+            symbolTableQuickAccesMap.put(quickAccessString, new ArrayList<>() {{
                 add(fqWithoutLeadingDot);
             }});
         } else {
