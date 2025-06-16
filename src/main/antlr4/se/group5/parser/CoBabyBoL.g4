@@ -95,7 +95,7 @@ perform
       (atomic TIMES)?
     ;
 
-signal      : SIGNAL (atomic | OFF) ON_ERROR ;
+signal      : SIGNAL ((atomic ON_ERROR) | OFF) ;
 
 copy
     : COPY file_name

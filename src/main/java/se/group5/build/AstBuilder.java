@@ -461,12 +461,20 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     }
 
     public Node visitSignal(CoBabyBoL.SignalContext ctx) {
+
         Signal signal;
-        if (ctx.atomic() != null) {
-            Atomic procedureName = visitAtomic(ctx.atomic());
-            signal = new ProcedureSignal(procedureName, symbolTable);
-        } else {
+        if (ctx.OFF() != null) {
             signal = new OffSignal();
+        } else {
+            String id = ctx.atomic().identifier().getText();
+            var elem = symbolTable.resolve(id);
+            Atomic atomic;
+            if (elem.isPresent()) {
+                atomic = visitAtomic(ctx.atomic());
+            } else {
+                atomic = new Atomic(new AlphanumericLiteral(id));
+            }
+            signal = new ProcedureSignal(atomic, symbolTable);
         }
         procedures.add(signal);
         return signal;
