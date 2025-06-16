@@ -134,6 +134,46 @@ public final class Representation implements Node, Typeable {
         return true;
     }
 
+    public String maxValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT, LEADING_DIGIT -> result.append('9');
+                case ALPHA -> result.append('z');
+                case ALPHANUM -> result.append((char)255);
+                case SIGN -> result.append('+');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
+    public String minValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT -> result.append('0');
+                case ALPHA, LEADING_DIGIT -> result.append(' ');
+                case ALPHANUM -> result.append((char)0);
+                case SIGN -> result.append('-');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
+    public String spacesValueStringForRepresentation() {
+        StringBuilder result = new StringBuilder();
+        for (PictureSymbol pictureSymbol : pattern) {
+            switch (pictureSymbol) {
+                case DIGIT-> result.append('0');
+                case ALPHA, LEADING_DIGIT, ALPHANUM, SIGN -> result.append(' ');
+                case DECIMAL -> result.append('.');
+            }
+        }
+        return result.toString();
+    }
+
     public String convert(String text) {
         String patternText = text;
         if (text.length() < pattern.size())

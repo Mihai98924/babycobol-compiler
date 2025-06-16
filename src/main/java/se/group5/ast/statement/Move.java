@@ -3,10 +3,7 @@ package se.group5.ast.statement;
 import se.group5.ast.Atomic;
 import se.group5.ast.Identifier;
 import se.group5.ast.Program;
-import se.group5.ast.data.DataDefinition;
-import se.group5.ast.data.DataElement;
-import se.group5.ast.data.DataGroup;
-import se.group5.ast.data.PictureSymbol;
+import se.group5.ast.data.*;
 import se.group5.ast.literal.Literal;
 import se.group5.ast.procedure.Procedure;
 
@@ -25,13 +22,18 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
                     DataDefinition data = state.symbolTable.table.get(fullyQualifiedIdentifier);
 
                     if(data instanceof DataElement element) {
-                        // TODO add logic for different types
-                        element.setValue(Double.MAX_VALUE);
+                        if (element.getType() == Type.NUMERIC)
+                            element.setValue(Double.valueOf(element.picture().maxValueStringForRepresentation()));
+                        else if (element.getType() == Type.ALPHANUMERIC)
+                            element.setValue(element.picture().maxValueStringForRepresentation());
+
                     } else if(data instanceof DataGroup group) {
                         for (DataDefinition groupChild : group.children.values()) {
                             if(groupChild instanceof DataElement element) {
-                                // TODO add logic for different types
-                                element.setValue(Double.MAX_VALUE);
+                                if (element.getType() == Type.NUMERIC)
+                                    element.setValue(Double.valueOf(element.picture().maxValueStringForRepresentation()));
+                                else if (element.getType() == Type.ALPHANUMERIC)
+                                    element.setValue(element.picture().maxValueStringForRepresentation());
                             }
                         }
                     }
@@ -43,13 +45,17 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
                     DataDefinition data = state.symbolTable.table.get(fullyQualifiedIdentifier);
 
                     if(data instanceof DataElement element) {
-                        // TODO add logic for different types
-                        element.setValue(Double.MIN_VALUE);
+                        if (element.getType() == Type.NUMERIC)
+                            element.setValue(Double.valueOf(element.picture().minValueStringForRepresentation()));
+                        else if (element.getType() == Type.ALPHANUMERIC)
+                            element.setValue(element.picture().minValueStringForRepresentation());
                     } else if(data instanceof DataGroup group) {
                         for (DataDefinition groupChild : group.children.values()) {
                             if(groupChild instanceof DataElement element) {
-                                // TODO add logic for different types
-                                element.setValue(Double.MIN_VALUE);
+                                if (element.getType() == Type.NUMERIC)
+                                    element.setValue(Double.valueOf(element.picture().minValueStringForRepresentation()));
+                                else if (element.getType() == Type.ALPHANUMERIC)
+                                    element.setValue(element.picture().minValueStringForRepresentation());
                             }
                         }
                     }
@@ -60,24 +66,20 @@ public record Move(Object type, List<Identifier> targets) implements Procedure {
                     String fullyQualifiedIdentifier = state.symbolTable.getFullyQualifiedIdentifier(target.value());
                     DataDefinition data = state.symbolTable.table.get(fullyQualifiedIdentifier);
 
-                    if(data instanceof DataElement dataElement) {
-                        boolean containsA = dataElement.picture().containsSymbol(PictureSymbol.ALPHA);
-                        boolean containsX = dataElement.picture().containsSymbol(PictureSymbol.ALPHANUM);
-                        if(containsA || containsX) {
-                            throw new IllegalArgumentException("MOVE SPACES can only be applied to a numeric" +
-                                    " data definition, not " + dataElement.picture());
+                    if(data instanceof DataElement element) {
+                        if (element.getType() == Type.NUMERIC)
+                            element.setValue(Double.valueOf(element.picture().spacesValueStringForRepresentation()));
+                        else if (element.getType() == Type.ALPHANUMERIC)
+                            element.setValue(element.picture().spacesValueStringForRepresentation());
+                    } else if(data instanceof DataGroup group) {
+                        for (DataDefinition groupChild : group.children.values()) {
+                            if(groupChild instanceof DataElement element) {
+                                if (element.getType() == Type.NUMERIC)
+                                    element.setValue(Double.valueOf(element.picture().spacesValueStringForRepresentation()));
+                                else if (element.getType() == Type.ALPHANUMERIC)
+                                    element.setValue(element.picture().spacesValueStringForRepresentation());
+                            }
                         }
-                    }
-
-                    if(data != null) {
-                        try {
-                            data.setValue(0);
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("MOVE SPACES can only be applied to a numeric" +
-                                    " data definition", e);
-                        }
-                    } else {
-                        throw new RuntimeException("Data definition not found for identifier: " + target.value());
                     }
                 }
             }
