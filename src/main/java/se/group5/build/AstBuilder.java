@@ -43,6 +43,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
+        System.out.println("Groupstack end: " + groupStack);
         if (ctx.function() != null) {
             for (var function : ctx.function()) {
                 visitFunction(function);
@@ -76,6 +77,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     // === DATA DIVISION =======================================================
     @Override
     public Node visitData_item(CoBabyBoL.Data_itemContext ctx) {
+        System.out.println("Groupstack: " + groupStack);
+
         // level number & identifier
         int level = Integer.parseInt(ctx.level().LEVEL().getText());
         Identifier id = new Identifier(ctx.IDENTIFIER().getText());
@@ -117,14 +120,15 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         while (!groupStack.isEmpty() && groupStack.peek().level() >= level) {
             groupStack.pop();
         }
+
         if (!groupStack.isEmpty()) {
-            groupStack.peek().register(id.toString(), def);
+            System.out.println("Registering identifier: " + id + " in group: " + groupStack.peek());
+            groupStack.peek().register(id, def);
+        } else {
+            System.out.println("Registering identifier: " + id);
+            symbolTable.register(id, def);
         }
 
-        List<Identifier> qualification = new ArrayList<>();
-        groupStack.descendingIterator().forEachRemaining(g -> qualification.add(g.name()));
-        qualification.add(id);
-        symbolTable.register(qualification, def);
 
         if (def instanceof DataGroup g) {
             groupStack.push(g);
@@ -172,7 +176,6 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         procedures.add(display);
         return display;
     }
-
 
     @Override
     public Atomic visitAtomic(CoBabyBoL.AtomicContext ctx) {

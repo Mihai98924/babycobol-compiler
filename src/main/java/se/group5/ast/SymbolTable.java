@@ -16,6 +16,10 @@ public final class SymbolTable implements Node {
 
     public final Map<String, Function> functions = new HashMap<>();
 
+    public void register(Identifier id, DataDefinition def) {
+        table.put(id.value(), def);
+    }
+
     /**
      * Register a definition under its own simple name and the fully‑qualified path
      */

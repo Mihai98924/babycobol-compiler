@@ -210,6 +210,27 @@ public class AstDataTest {
                       MOVE HIGH-VALUES TO C OF Y OF X Y.
            """;
 
-        Assert.assertNotNull(processor.parse(source));
+        Program program = processor.parse(source);
+        System.out.println(program);
+        Assert.assertNotNull(program);
+    }
+
+    @Test
+    public void groupStackResolution() throws IOException {
+        String source = """
+                  IDENTIFICATION DIVISION.
+                      PROGRAM-ID. ADDTEST.
+                      AUTHOR. SUSPICIOUSLAWNMOWERS.
+                      DATE-WRITTEN. 2022-04-22.
+                  DATA DIVISION.
+                      01 A.
+                          03 B.
+                              05 C.
+                                  07 D PICTURE IS 99.
+           """;
+
+        Program program = processor.parse(source);
+        System.out.println(program);
+        Assert.assertNotNull(program);
     }
 }

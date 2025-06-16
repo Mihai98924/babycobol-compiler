@@ -18,6 +18,10 @@ public final class DataGroup implements DataDefinition {
         this.name = name;
     }
 
+    public void register(Identifier id, DataDefinition d) {
+        register(id.value(), d);
+    }
+
     public void register(String name, DataDefinition d) {
         children.put(name, d);
     }
@@ -52,7 +56,36 @@ public final class DataGroup implements DataDefinition {
 
     @Override
     public String toString() {
-        return "GROUP(" + level + " " + name + ")";
+        StringBuilder sb = new StringBuilder();
+        appendTo(sb, 0);
+        return sb.toString();
+    }
+
+    /**
+     * Recursively builds the pretty string.
+     */
+    private void appendTo(StringBuilder sb, int depth) {
+        String indent = "  ".repeat(depth);        // two-space step
+        sb.append(indent).append("GROUP").append('\n');
+
+        sb.append(indent).append("  level: ").append(level).append('\n');
+        sb.append(indent).append("  name : ").append(name).append('\n');
+
+        sb.append(indent).append("  children:");
+        if (children == null || children.isEmpty()) {
+            sb.append(" ∅");                       // empty set sigil
+        }
+        sb.append('\n');
+
+        if (children != null) {
+            for (DataDefinition child : children.values()) {
+                if (child instanceof DataGroup) {
+                    ((DataGroup) child).appendTo(sb, depth + 2);
+                } else {
+                    sb.append("  ".repeat(depth + 2)).append(child.toString()).append("\n");
+                }
+            }
+        }
     }
 
     @Override
@@ -65,7 +98,7 @@ public final class DataGroup implements DataDefinition {
         for (DataDefinition child : children.values()) {
             // Analyze only direct data elements, not nested groups
             if (child instanceof DataElement element) {
-                if(element.doesPictureContainAnySymbols(symbols))
+                if (element.doesPictureContainAnySymbols(symbols))
                     return true;
             }
         }
@@ -82,7 +115,7 @@ public final class DataGroup implements DataDefinition {
         }
         cloned.children = new HashMap<>();
         for (Map.Entry<String, DataDefinition> entry : this.children.entrySet()) {
-            if(entry.getValue() instanceof DataElement dataElement)
+            if (entry.getValue() instanceof DataElement dataElement)
                 cloned.children.put(entry.getKey(), dataElement.clone());
         }
         return cloned;
