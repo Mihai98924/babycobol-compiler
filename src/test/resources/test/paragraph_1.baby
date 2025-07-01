@@ -1,0 +1,6 @@
+           COPY "src/test/resources/test/paragraph_2.baby"
+      - REPLACING ===A=== BY ===D=== ===B=== BY ===E=== ===C=== BY ===F===.
+           GO TO MOVING.
+           GO TO DISPLAYING.
+       MOVING.
+           MOVE "ITS ALIVE" TO D E F.

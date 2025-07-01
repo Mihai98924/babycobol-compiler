@@ -41,10 +41,13 @@ clause_value  : ID_VALUE ;
 
 // === DATA DIVISION ============================================
 data_item
-    : DEFAULT_LINE level IDENTIFIER
-      (picture_clause | like_clause)*
-      occurs_clause*
-      EOL
+    : (DEFAULT_LINE copy EOL)
+      | (
+        DEFAULT_LINE level IDENTIFIER
+        (picture_clause | like_clause)*
+        occurs_clause*
+        EOL
+        )
     ;
 
 picture_clause : PICTURE_IS REPRESENTATION ;

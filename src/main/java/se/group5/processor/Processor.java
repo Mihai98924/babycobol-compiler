@@ -94,8 +94,7 @@ public class Processor {
         StringBuilder sb = new StringBuilder(4096);
         String line;
         while ((line = reader.readLine()) != null) {
-            if (line.length() > 6 &&
-                    (line.replace(" ", "").startsWith("*") || line.length() > 80)) {
+            if (line.length() >  80) {
                 continue;
             }
             sb.append(line).append('\n');
