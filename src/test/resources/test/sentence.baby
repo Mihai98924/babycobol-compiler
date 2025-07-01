@@ -1,0 +1,4 @@
+           MOVE "ITS ALIVE" TO A B C.
+           DISPLAY A.
+           DISPLAY B.
+           DISPLAY C.

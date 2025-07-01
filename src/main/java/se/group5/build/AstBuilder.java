@@ -3,7 +3,7 @@ package se.group5.build;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.Lexer;
 import se.group5.ast.*;
 import se.group5.ast.data.DataDefinition;
 import se.group5.ast.data.DataElement;
@@ -40,7 +40,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     private ProcedureList procedures = new ProcedureList();
 
     @Override
-    public Node visitProgram(CoBabyBoL.ProgramContext ctx) {
+    public Program visitProgram(CoBabyBoL.ProgramContext ctx) {
         if (ctx.data_division() != null) visit(ctx.data_division());
         if (ctx.identification_division() != null) visit(ctx.identification_division());
         if (ctx.function() != null) {
@@ -73,12 +73,24 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return symbolTable;
     }
 
+    @Override
+    public Node visitProcedure_division(CoBabyBoL.Procedure_divisionContext ctx) {
+        for (var sentenceCtx : ctx.sentence()) {
+            visit(sentenceCtx);
+        }
+        return procedures;
+    }
+
     // === DATA DIVISION =======================================================
     @Override
     public Node visitData_item(CoBabyBoL.Data_itemContext ctx) {
+        if (ctx.copy() != null) return this.visit(ctx.copy());
+
         // level number & identifier
         int level = Integer.parseInt(ctx.level().LEVEL().getText());
-        Identifier id = new Identifier(ctx.IDENTIFIER().getText());
+        var value = ctx.IDENTIFIER().getText();
+        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value)) value = replacementsStack.peek().get(value);
+        Identifier id = new Identifier(value);
 
         // Determine the picture (may come from LIKE, or explicit PIC, or none)
         Representation pic = null;
@@ -227,7 +239,9 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             );
         }
         recurrenceLevel--;
-        return new Identifier(ctx.IDENTIFIER().getText());
+        var value = ctx.IDENTIFIER().getText();
+        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value)) value = replacementsStack.peek().get(value);
+        return new Identifier(value);
     }
 
 
@@ -504,41 +518,62 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return visit(ctx.alphanumeric_literal());
     }
 
+    final ArrayDeque<HashMap<String, String>> replacementsStack = new ArrayDeque<>();
+
     @Override
     public Node visitCopy(CoBabyBoL.CopyContext ctx) {
+        Literal fileNameLiteral = (Literal) visit(ctx.file_name());
+        String fileName = fileNameLiteral.raw();
+
+        Path path = Paths.get(fileName);
+        String content;
         try {
-            Literal fileNameLiteral = (Literal) visit(ctx.file_name());
-            String fileName = fileNameLiteral.raw();
-            fileName = fileName.substring(1, fileName.length() - 1);
-
-            Path path = Paths.get(fileName);
-            String content = Files.readString(path);
-
-            if (ctx.REPLACING() != null) {
-                List<CoBabyBoL.Argument_literalContext> args = ctx.argument_literal();
-                for (int i = 0; i < args.size(); i += 2) {
-                    String from = args.get(i).ARG_LIT_ATOMIC().getText();
-                    from = from.substring(0, from.length() - 3);
-
-                    String to = args.get(i + 1).ARG_LIT_ATOMIC().getText();
-                    to = to.substring(0, to.length() - 3);
-
-                    content = content.replaceAll("(?<=\\s)" + from + "(?=\\s)", to);
-                }
-            }
-
-            CharStream charStream = CharStreams.fromString(content);
-            CoBabyBoLLexer lexer = new CoBabyBoLLexer(charStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CoBabyBoL parser = new CoBabyBoL(tokens);
-
-            ParseTree tree = parser.program();
-
-            return this.visit(tree);
+            content = Files.readString(path);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println("The file " + path + "could not be found");
+            e.printStackTrace();
+            return null;
         }
-        return null;
+        HashMap<String, String> replacements = new HashMap<>();
+        if (ctx.REPLACING() != null) {
+            List<CoBabyBoL.Argument_literalContext> args = ctx.argument_literal();
+            for (int i = 0; i < args.size(); i += 2) {
+                String from = args.get(i).ARG_LIT_ATOMIC().getText();
+                from = from.substring(0, from.length() - 3);
+
+                String to = args.get(i + 1).ARG_LIT_ATOMIC().getText();
+                to = to.substring(0, to.length() - 3);
+
+                replacements.put(from, to);
+            }
+            replacementsStack.push(replacements);
+        }
+        var isDataDivision = ctx.getParent().getClass() == CoBabyBoL.Data_itemContext.class;
+        if (isDataDivision) {
+            content = """
+                           IDENTIFICATION DIVISION.
+                           DATA DIVISION.
+                    """ + content + """
+                           PROCEDURE DIVISION.
+                    """;
+        } else {
+            content = """
+                           IDENTIFICATION DIVISION.
+                           PROCEDURE DIVISION.
+                    """ + content;
+        }
+
+        CharStream charStream = CharStreams.fromString(content);
+        CoBabyBoLLexer lexer = new CoBabyBoLLexer(charStream);
+        lexer.pushMode(Lexer.DEFAULT_MODE);
+        lexer.mode(Lexer.DEFAULT_MODE);
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        CoBabyBoL parser = new CoBabyBoL(tokens);
+
+        var program = this.visitProgram(parser.program());
+        if (!replacements.isEmpty()) replacementsStack.pop();
+        return isDataDivision ? program.procedures : program.symbolTable;
     }
 
     @Override

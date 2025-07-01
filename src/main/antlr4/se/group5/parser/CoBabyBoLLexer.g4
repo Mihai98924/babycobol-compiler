@@ -108,6 +108,11 @@ IV_END  : EOL -> type(EOL), popMode, pushMode(DEFAULT_MODE);
 // === DATA DIVISION TOKENS =====================================
 mode DD;
 DD_EOL          : EOL                           -> type(EOL), pushMode(DEFAULT_MODE);
+DD_COPY         : COPY                          -> type(COPY);
+DD_STRING_LIT   : STRINGLITERAL                 -> type(STRINGLITERAL);
+DD_REPLACING    : REPLACING                     -> type(REPLACING);
+DD_ARG_LIT      : ARG_LIT                       -> type(ARG_LIT), pushMode(ARG_LIT_MODE);
+DD_BY           : BY                            -> type(BY);
 DD_WS           : WS                            -> channel(HIDDEN);
 LEVEL           : (([0-9] [0-9])
                 | [0-9])                         -> pushMode(ID_REP);
@@ -195,6 +200,7 @@ USING               : U WS* S WS* I WS* N WS* G;
 BY_REFERENCE        : B WS* Y WS+ R WS* E WS* F WS* E WS* R WS* E WS* N WS* C WS* E;
 BY_CONTENT          : B WS* Y WS+ C WS* O WS* N WS* T WS* E WS* N WS* T;
 BY_VALUE            : B WS* Y WS+ V WS* A WS* L WS* U WS* E;
+CODE_BY             : BY    -> type(BY);
 THROUGH             : T WS* H WS* R WS* O WS* U WS* G WS* H;
 RETURNING           : R WS* E WS* T WS* U WS* R WS* N WS* I WS* N WS* G;
 AS_PRIMITIVE        : A WS* S WS+ P WS* R WS* I WS* M WS* I WS* T WS* I WS* V WS* E;
