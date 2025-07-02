@@ -206,11 +206,21 @@ public final class Representation implements Node, Typeable {
                 patternText = (" ".repeat(patternToMatch.size() - text.length())) + patternText;
             }
         else if(text.length() > patternToMatch.size())
-            patternText = text.substring(0, patternToMatch.size());
+            if(isPatternNumeric())
+                patternText = text.substring(text.length() - patternToMatch.size());
+            else
+                patternText = text.substring(0, patternToMatch.size());
 
         if(matches(patternText))
-            if(isPatternNumeric())
-                return patternText.replaceFirst("^0+", "");
+            if(isPatternNumeric()) {
+                // Check if the pattern is not just zeroes
+                if(patternText.matches("^0*$"))
+                    return "0";
+                else if(patternText.matches("^0+\\.[0-9]+$"))
+                    return "0" + patternText.replaceFirst("^0+", "");
+                else
+                    return patternText.replaceFirst("^0+", "");
+            }
             else
                 return patternText;
         else
