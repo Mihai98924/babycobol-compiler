@@ -11,6 +11,9 @@ public final class DataElement implements DataDefinition {
     private final Representation picture;
     private final int occurs; // 0 == not an array
 
+    // If value was truncated during conversion (to fit the picture),
+    // this is set to true.
+    private boolean truncated = false;
     private Object value;
 
     public DataElement(int level, Identifier name, Representation picture, int occurs) {
@@ -49,6 +52,7 @@ public final class DataElement implements DataDefinition {
 
     @Override
     public void setValue(Object value) {
+        truncated = false;
         this.value = value;
     }
 
@@ -76,6 +80,13 @@ public final class DataElement implements DataDefinition {
             }
 
             String convertedRepresentation = picture.convert(usignedDoubleString);
+            if(truncated) {
+                int numberOfZeros = picture.length() - convertedRepresentation.length();
+                if (numberOfZeros > 0) {
+                    convertedRepresentation = "0".repeat(numberOfZeros) + convertedRepresentation;
+                }
+            }
+
             if (picture.containsSymbol(PictureSymbol.SIGN)) {
                 if (valueIsNegative) {
                     convertedRepresentation = "-" + convertedRepresentation;
@@ -106,6 +117,9 @@ public final class DataElement implements DataDefinition {
                     if (unsignedDouble < 0) {
                         valueIsNegative = true;
                         unsignedDouble = Math.abs((double)value);
+                    } else if(unsignedDouble == 0 && value.toString().contains("-")) {
+                        valueIsNegative = true;
+                        unsignedDouble = Math.abs((double)value);
                     }
                 } catch (ClassCastException e) {
                     throw new IllegalArgumentException("Value must be a number for numeric picture: " + picture);
@@ -117,7 +131,11 @@ public final class DataElement implements DataDefinition {
                     usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
                 }
 
-                this.value = Double.parseDouble(picture.convert(usignedDoubleString));
+                String convertedString = picture.convert(usignedDoubleString);
+                if(convertedString.length() < usignedDoubleString.length())
+                    truncated = true;
+
+                this.value = Double.parseDouble(convertedString);
                 if(valueIsNegative) {
                     this.value = -((double)this.value);
                 }

@@ -45,6 +45,10 @@ public class Program implements Node {
         run(inputStrategy, null);
     }
 
+    public void run(ProgramDisplayStrategy displayStrategy) {
+        run(null, displayStrategy);
+    }
+
     public void run(ProgramInputStrategy inputStrategy, ProgramDisplayStrategy displayStrategy) {
         this.inputStrategy = inputStrategy;
         this.displayStrategy = displayStrategy;

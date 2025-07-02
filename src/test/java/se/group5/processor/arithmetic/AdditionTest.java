@@ -545,7 +545,6 @@ public class AdditionTest {
                   PROCEDURE DIVISION.
                       ACCEPT A B C D.
                       ADD A B C TO D GIVING E F.
-                      DISPLAY C.
            """;
 
         // Act
@@ -553,7 +552,7 @@ public class AdditionTest {
         program.run(compositesStrategy);
 
         // Assert
-        Assert.assertEquals(1.0, (double)program.symbolTable.table.get("E").getValue(), 0.001);
+        Assert.assertEquals(0.0, (double)program.symbolTable.table.get("E").getValue(), 0.001);
         Assert.assertEquals(10.0, (double)program.symbolTable.table.get("F").getValue(), 0.001);
     }
 
