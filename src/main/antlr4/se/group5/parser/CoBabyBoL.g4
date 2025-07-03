@@ -200,15 +200,7 @@ giving_identifier_list : GIVING IDENTIFIER* ;
 // ── LOOP / EVALUATE ───────────────────────────────────────────
 loop
     : LOOP (
-          DEFAULT_LINE? (
-              WHILE   boolean_expression
-            | UNTIL   boolean_expression
-            | statement
-            | VARYING IDENTIFIER?
-                (FROM atomic)?
-                (TO   atomic)?
-                (BY   atomic)?
-          )
+      DEFAULT_LINE? (WHILE boolean_expression | UNTIL boolean_expression | statement | (VARYING IDENTIFIER (FROM atomic)? (TO atomic)? (BY atomic)?) )
       )+ DEFAULT_LINE? END
     ;
 

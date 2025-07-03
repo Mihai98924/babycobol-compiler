@@ -514,5 +514,10 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         symbolTable.registerFunc(identifier, function);
         return function;
     }
+
+    public Node visitLoop(CoBabyBoL.LoopContext ctx) {
+
+        return null;
+    }
 }
 

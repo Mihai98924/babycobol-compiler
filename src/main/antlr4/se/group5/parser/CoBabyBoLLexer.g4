@@ -289,6 +289,21 @@ INTO        : I N T O           -> popMode;
 UI_OF       : OF                -> type(OF);
 UI_ID       : IDENTIFIER        -> type(IDENTIFIER);
 
+mode LOOP_MODE;
+LI_WS       : WS                -> skip;
+LI_LOOP     : LOOP              -> type(LOOP);
+LI_FROM     : FROM           -> type(FROM);
+LI_BY       : BY               -> type(BY);
+LI_TO       : TO               -> type(TO);
+LI_OF       : OF               -> type(OF);
+LI_NUMERIC  : NUMERICLITERAL    -> type(NUMERICLITERAL);
+LI_INTEGER  : INTEGERLITERAL    -> type(INTEGERLITERAL);
+LI_ZERO     : ZERO              -> type(ZERO);
+LI_STRING   : STRINGLITERAL     -> type(STRINGLITERAL);
+LI_VARYING  : VARYING           -> type(VARYING);
+LI_ID       : IDENTIFIER        -> type(IDENTIFIER);
+LI_END      : E N D DOT         -> type(END), popMode;
+
 mode ARG_LIT_MODE;
 
 T_ARG_LIT: '===';
