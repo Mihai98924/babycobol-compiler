@@ -4,11 +4,9 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import se.group5.ast.*;
-import se.group5.ast.data.DataDefinition;
-import se.group5.ast.data.DataElement;
-import se.group5.ast.data.DataGroup;
-import se.group5.ast.data.Representation;
+import se.group5.ast.data.*;
 import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.Literal;
@@ -584,6 +582,41 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         procedures = new ProcedureList();
         symbolTable.registerFunc(identifier, function);
         return function;
+    }
+
+    @Override
+    public Node visitLoop(CoBabyBoL.LoopContext ctx) {
+        List<LoopVariable> variables = new ArrayList<>();
+        for (CoBabyBoL.Loop_variablesContext variable : ctx.loop_variables()) {
+            Identifier id = new Identifier(variable.IDENTIFIER().getText());
+            Atomic from = null;
+            Atomic to = null;
+            Atomic step = null;
+            if (variable.loop_from() != null) {
+                from = visitAtomic(variable.loop_from().atomic());
+            }
+            if (variable.loop_to() != null) {
+                to = visitAtomic(variable.loop_to().atomic());
+            }
+            if (variable.loop_by() != null) {
+                step = visitAtomic(variable.loop_by().atomic());
+            }
+            LoopVariable loopVariable = new LoopVariable((DataElement) symbolTable.resolve(id.toString()).get(),
+                    from, to, step);
+            variables.add(loopVariable);
+        }
+
+        ProcedureList procedureList = procedures;
+        procedures = new ProcedureList();
+        for (CoBabyBoL.StatementContext statement : ctx.statement()) {
+            visitChildren(statement);
+        }
+
+        Loop loop = new Loop(procedures, variables);
+        procedures = procedureList;
+
+        procedures.add(loop);
+        return loop;
     }
 }
 

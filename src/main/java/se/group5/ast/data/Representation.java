@@ -253,4 +253,9 @@ public final class Representation implements Node, Typeable {
         else
             return Type.NUMERIC;
     }
+
+    public double maxValue() {
+        String maxValueString = maxValueStringForRepresentation();
+        return Double.parseDouble(maxValueString);
+    }
 }
