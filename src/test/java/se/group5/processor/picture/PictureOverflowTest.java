@@ -1,4 +1,4 @@
-package se.group5.processor;
+package se.group5.processor.picture;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -7,6 +7,7 @@ import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.ProgramDisplayStrategy;
 import se.group5.ast.ProgramInputStrategy;
+import se.group5.processor.Processor;
 
 import java.io.IOException;
 import java.util.ArrayList;
