@@ -233,6 +233,14 @@ LT   : '<'  ;
 LPAR : '(' ;
 RPAR : ')' ;
 
+// LOOP
+CODE_FROM
+    : FROM           -> type(FROM)
+    ;
+CODE_TO
+    : TO               -> type(TO)
+    ;
+
 CODE_IDENTIFIER
     : IDENTIFIER        -> type(IDENTIFIER)
     ;
