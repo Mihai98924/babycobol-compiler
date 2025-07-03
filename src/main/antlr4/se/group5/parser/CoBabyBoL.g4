@@ -205,13 +205,18 @@ loop
               WHILE   boolean_expression
             | UNTIL   boolean_expression
             | statement
-            | VARYING IDENTIFIER?
-                (FROM atomic)?
-                (TO   atomic)?
-                (BY   atomic)?
+            | loop_variables
           )
       )+ DEFAULT_LINE? END
     ;
+loop_variables: VARYING IDENTIFIER?
+                loop_from?
+                loop_to?
+                loop_by?
+    ;
+loop_from: (FROM atomic);
+loop_to: (TO atomic);
+loop_by: (BY atomic);
 
 evaluate
     : EVALUATE any_expression
