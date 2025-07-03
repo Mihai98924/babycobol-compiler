@@ -197,19 +197,33 @@ public final class Representation implements Node, Typeable {
         }
         else
             textBeforeDot = text;
-
         if (text.length() < patternToMatch.size())
             if (isPatternNumeric())
-                patternText = ("0".repeat(patternBeforeDot.size() - textBeforeDot.length())) + patternText +
-                        ("0".repeat(patternAfterDot.size() - textAfterDot.length())) ;
+                patternText = ("0".repeat(patternBeforeDot.size() - textBeforeDot.length())) +
+                        (!textAfterDot.isEmpty() && patternAfterDot.isEmpty() ? textBeforeDot : patternText) +
+                        (!patternAfterDot.isEmpty() ? "0".repeat(patternAfterDot.size() - textAfterDot.length()) : "");
             else {
                 patternText = (" ".repeat(patternToMatch.size() - text.length())) + patternText;
             }
         else if(text.length() > patternToMatch.size())
             if(isPatternNumeric())
-                patternText = text.substring(text.length() - patternToMatch.size());
+                // When there is no pattern after the dot, but the value checked is a float
+                if(!textAfterDot.isEmpty() && patternAfterDot.isEmpty())
+                        if(textBeforeDot.length() > patternToMatch.size())
+                            patternText = textBeforeDot.substring(textBeforeDot.length() - patternToMatch.size());
+                        else
+                            patternText = textBeforeDot;
+                else
+                    patternText = text.substring(text.length() - patternToMatch.size());
             else
                 patternText = text.substring(0, patternToMatch.size());
+        else if(textAfterDot.length() > patternAfterDot.size() && isPatternNumeric()) {
+            if(textBeforeDot.length() < patternBeforeDot.size())
+                textBeforeDot = ("0".repeat(patternBeforeDot.size() - textBeforeDot.length())) + textBeforeDot;
+
+            patternText = textBeforeDot + "." + textAfterDot.substring(0, patternAfterDot.size());
+        }
+
 
         if(matches(patternText))
             if(isPatternNumeric()) {

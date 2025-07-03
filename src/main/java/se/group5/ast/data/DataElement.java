@@ -125,14 +125,15 @@ public final class DataElement implements DataDefinition {
                     throw new IllegalArgumentException("Value must be a number for numeric picture: " + picture);
                 }
 
-                String usignedDoubleString = Double.toString(unsignedDouble);
+                String unsignedDoubleString = Double.toString(unsignedDouble);
                 // remove .0
-                if (usignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
-                    usignedDoubleString = usignedDoubleString.substring(0, usignedDoubleString.length() - 2);
+                if (unsignedDoubleString.endsWith(".0") && !picture.containsSymbol(PictureSymbol.DECIMAL)) {
+                    unsignedDoubleString = unsignedDoubleString.substring(0, unsignedDoubleString.length() - 2);
                 }
 
-                String convertedString = picture.convert(usignedDoubleString);
-                if(convertedString.length() < usignedDoubleString.length())
+                String convertedString = picture.convert(unsignedDoubleString);
+                if(unsignedDoubleString.length() > picture.symbols().stream()
+                        .filter(s -> s.glyph != PictureSymbol.SIGN.glyph).toList().size())
                     truncated = true;
 
                 this.value = Double.parseDouble(convertedString);
