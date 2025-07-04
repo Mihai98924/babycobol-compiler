@@ -1,5 +1,7 @@
 package se.group5.ast.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import se.group5.ast.Identifier;
 
 /**
@@ -10,6 +12,7 @@ public final class DataElement implements DataDefinition {
     private final Identifier name;
     private final Representation picture;
     private final int occurs; // 0 == not an array
+    public boolean readOnly;
 
     // If value was truncated during conversion (to fit the picture),
     // this is set to true.
@@ -52,12 +55,14 @@ public final class DataElement implements DataDefinition {
 
     @Override
     public void setValue(Object value) {
+        if (this.readOnly) throw new IllegalArgumentException("Cannot set value on readonly data element!");
         truncated = false;
         this.value = value;
     }
 
     @Override
     public void setValue(Object value, boolean applyPictureToValue) {
+        if (this.readOnly) throw new IllegalArgumentException("Cannot set value on readonly data element!");
         setValue(value);
         if(applyPictureToValue)
             applyPictureToValue();
@@ -181,5 +186,15 @@ public final class DataElement implements DataDefinition {
         c.truncated = this.truncated;
         c.value     = this.value;
         return c;
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    @Override
+    public boolean getReadOnly() {
+        return this.readOnly;
     }
 }

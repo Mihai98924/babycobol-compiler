@@ -58,7 +58,7 @@ public class DivisionTest {
            """;
 
         Program program = processor.parse(source);
-        program.run(divisionStrategy, System.out::print);
+        program.run(divisionStrategy, null);
 
         Assert.assertEquals(3.0, (double)program.symbolTable.table.get("C").getValue(), 0.001);
     }
@@ -83,7 +83,7 @@ public class DivisionTest {
            """;
 
         Program program = processor.parse(source);
-        program.run(divisionStrategy, System.out::print);
+        program.run(divisionStrategy, null);
 
         Assert.assertEquals(3.0, (double)program.symbolTable.table.get("B").getValue(), 0.001);
         Assert.assertEquals(1.5, (double)program.symbolTable.table.get("C").getValue(), 0.001);
@@ -109,7 +109,7 @@ public class DivisionTest {
            """;
 
         Program program = processor.parse(source);
-        program.run(divisionStrategy, System.out::print);
+        program.run(divisionStrategy, null);
 
         Assert.assertEquals(1.5, (double)program.symbolTable.table.get("B").getValue(), 0.001);
         Assert.assertEquals(0.75, (double)program.symbolTable.table.get("C").getValue(), 0.001);
@@ -135,7 +135,7 @@ public class DivisionTest {
            """;
 
         Program program = processor.parse(source);
-        program.run(divisionStrategy, System.out::print);
+        program.run(divisionStrategy, null);
 
         Assert.assertEquals(1.0, (double)program.symbolTable.table.get("C").getValue(), 0.001);
         Assert.assertEquals(1.0, (double)program.symbolTable.table.get("D").getValue(), 0.001);
@@ -161,7 +161,7 @@ public class DivisionTest {
            """;
 
         Program program = processor.parse(source);
-        program.run(divisionStrategy, System.out::print);
+        program.run(divisionStrategy, null);
 
         Assert.assertEquals(3.0, (double)program.symbolTable.table.get("C").getValue(), 0.001);
     }

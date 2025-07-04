@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.ProgramInputStrategy;
+import se.group5.ast.StringAccumulatingDisplayStrategy;
 import se.group5.ast.procedure.ProcedureList;
 import se.group5.processor.Processor;
 
@@ -46,12 +47,17 @@ public class AstGoToTest {
                       DISPLAY "This is 3".
            """;
         Program program = processor.parse(source);
-        System.out.println(program);
-
+        var output = new StringAccumulatingDisplayStrategy();
         ProcedureList procedures = program.procedures;
-        program.run(strategy, System.out::println);
+        program.run(strategy, output);
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
+        Assert.assertEquals("""
+                Hello World!
+                This is 1.
+                This is 2.
+                This is 3
+                """, output.getOutput());
     }
 
     @Test
@@ -78,11 +84,16 @@ public class AstGoToTest {
                       DISPLAY "This is 3".
            """;
         Program program = processor.parse(source);
-        System.out.println(program);
+        var output = new StringAccumulatingDisplayStrategy();
 
         ProcedureList procedures = program.procedures;
-        program.run(strategy, System.out::println);
+        program.run(strategy, output);
         Assert.assertNotNull("Program should not be null", program);
         Assert.assertNotNull("Procedure list should not be null", procedures);
+        Assert.assertEquals("""
+                This is 1.
+                This is 2.
+                This is 3
+                """, output.getOutput());
     }
 }

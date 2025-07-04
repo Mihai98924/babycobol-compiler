@@ -1,8 +1,8 @@
 package se.group5.ast.call;
 
 
+import lombok.Getter;
 import se.group5.ast.Program;
-import se.group5.ast.SymbolTable;
 import se.group5.ast.procedure.Procedure;
 
 import java.util.List;
@@ -13,16 +13,17 @@ import java.util.stream.Collectors;
  */
 public final class Call implements Procedure {
 
-    private final Program externalProgram;
+    @Getter
+    private final Program callee;
     private final List<CallArgument> arguments;
     private final List<CallReturn> returns;
     private final String functionName;
 
-    public Call(Program externalProgram,
+    public Call(Program callee,
                 String functionName,
                 List<CallArgument> arguments,
                 List<CallReturn> returns) {
-        this.externalProgram = externalProgram;
+        this.callee = callee;
         this.arguments = arguments;
         this.returns = returns;
         this.functionName = functionName;
@@ -31,35 +32,31 @@ public final class Call implements Procedure {
     @Override
     public void execute(Program caller) {
 
-        /* 1.  Bind USING arguments (copy-in phase) */
-        CallUsing using = new CallUsing(arguments);
-        List<CallUsing.Binding> byValuePairs = using.execute(caller, externalProgram);
+        callee.setDisplayStrategy(caller.getDisplayStrategy());
+        callee.setInputStrategy(caller.getInputStrategy());
 
-        /* 2.  Execute the requested procedure */
+        for (CallArgument arg : arguments) {
+            arg.register(callee);
+        }
+
         if (functionName == null) {
-            externalProgram.run(caller.getInputStrategy(), caller.getDisplayStrategy());
+            callee.run();
         } else {
-            externalProgram.symbolTable.resolveFunc(functionName)
+            callee.symbolTable.resolveFunc(functionName)
                     .orElseThrow(() -> new IllegalStateException(
                             "Function '" + functionName + "' not found"))
-                    .execute(externalProgram);
+                    .execute(callee);
         }
 
-        /* 3.  Copy-out for BY VALUE */
-        for (CallUsing.Binding b : byValuePairs) {
-            CallUsing.copyValues(b.calleeDef(), b.callerDef());
-        }
-
-        /* 4.  RETURNING … */
         for (CallReturn ret : returns) {
-            ret.execute(caller, externalProgram);
+            ret.resolve(caller, callee);
         }
     }
 
     @Override
     public String toString() {
         if (functionName == null) {
-            return "CALL " + externalProgram.toString() +
+            return "CALL " + callee.toString() +
                     (arguments.isEmpty() ? "" :
                             ", ARGS(" + arguments.stream()
                                     .map(Object::toString)
@@ -70,7 +67,7 @@ public final class Call implements Procedure {
                                     .collect(Collectors.joining(", ")) + ")") +
                     ")";
         } else {
-            return "CALL FUNCTION(" + functionName + ") OF " + externalProgram.toString() +
+            return "CALL FUNCTION(" + functionName + ") OF " + callee.toString() +
                     (arguments.isEmpty() ? "" :
                             ", ARGS(" + arguments.stream()
                                     .map(Object::toString)

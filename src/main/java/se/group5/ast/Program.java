@@ -2,6 +2,7 @@ package se.group5.ast;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.procedure.Procedure;
 import se.group5.ast.procedure.ProcedureList;
@@ -15,10 +16,12 @@ public class Program implements Node {
     public final ProcedureList procedures;
 
     @Getter
-    private ProgramInputStrategy inputStrategy;
+    @Setter
+    private ProgramInputStrategy inputStrategy = null;
 
     @Getter
-    private ProgramDisplayStrategy displayStrategy;
+    @Setter
+    private ProgramDisplayStrategy displayStrategy = null;
 
     public Program(IdentityTable identityTable, SymbolTable symbolTable,
                    ProcedureList procedures) {
@@ -38,15 +41,15 @@ public class Program implements Node {
     }
 
     public void run() {
-        run(null, null);
+        run(inputStrategy, displayStrategy);
     }
 
     public void run(ProgramInputStrategy inputStrategy) {
-        run(inputStrategy, null);
+        run(inputStrategy, displayStrategy);
     }
 
     public void run(ProgramDisplayStrategy displayStrategy) {
-        run(null, displayStrategy);
+        run(inputStrategy, displayStrategy);
     }
 
     public void run(ProgramInputStrategy inputStrategy, ProgramDisplayStrategy displayStrategy) {

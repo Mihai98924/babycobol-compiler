@@ -18,4 +18,6 @@ public interface DataDefinition extends Node, Typeable, Pictureable, Cloneable {
     void setValue(Object value, boolean applyPictureToValue);
 
     DataDefinition copy();
+    void setReadOnly(boolean readOnly);
+    boolean getReadOnly();
 }
