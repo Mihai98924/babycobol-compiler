@@ -73,17 +73,16 @@ public class Atomic implements Node, Typeable, Pictureable, Cloneable {
         }
     }
 
-    @Override
-    public Atomic clone() {
-        try {
-            Atomic atomic = (Atomic) super.clone();
-            if(atomic.getGroup() != null)
-                atomic.group = (DataGroup) atomic.getGroup().clone();
-            if(atomic.getElement() != null)
-                atomic.element = (DataElement) atomic.getElement().clone();
-            return atomic;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+    public Atomic copy() {
+        if (isLiteral()) {
+            return new Atomic(literal);                   // Literals are immutable
         }
+        if (isElement()) {
+            return new Atomic((DataElement) element.copy());
+        }
+        if (isComposite()) {
+            return new Atomic((DataGroup)  group.copy());
+        }
+        throw new IllegalStateException("Empty Atomic cannot be copied");
     }
 }

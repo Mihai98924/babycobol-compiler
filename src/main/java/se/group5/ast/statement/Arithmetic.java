@@ -228,7 +228,7 @@ public final class Arithmetic implements Procedure {
         {
             DataGroup receiverGroup = receiver.getGroup();
             if(!giving.isEmpty()) {
-                aggregatedGroup = receiver.clone();
+                aggregatedGroup = receiver.copy();
             }
             for (Atomic atomic : sources) {
                 DataGroup sourceGroup = atomic.getGroup();
@@ -344,7 +344,7 @@ public final class Arithmetic implements Procedure {
         validatePictureClausesToExcludeAandX(true);
 
         if(!giving.isEmpty()) {
-            aggregatedGroup = firstReceiver.clone();
+            aggregatedGroup = firstReceiver.copy();
         }
         // First is a composite
         if(firstSource.isComposite())
