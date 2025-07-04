@@ -3,6 +3,7 @@ package se.group5.ast.procedure;
 import org.antlr.v4.runtime.ParserRuleContext;
 import se.group5.ast.Node;
 import se.group5.ast.Program;
+import se.group5.ast.statement.LoopVariable;
 import se.group5.parser.CoBabyBoL;
 
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.Optional;
 
 public class ProcedureList implements Node {
     private final List<Procedure> procedures = new ArrayList<>();
+
+    public boolean breakIteration = false;
 
     /**
      * Add a Procedure to the list
@@ -49,8 +52,20 @@ public class ProcedureList implements Node {
     }
 
     public void execute(Program program) {
+        breakIteration = false;
         for (var procedure : procedures) {
+            if(breakIteration) break;
             procedure.execute(program);
         }
+    }
+
+    public <T> List<T> getAllLoopProcedures(Class<T> type) {
+        List<T> loopProcedures = new ArrayList<>();
+        for (Procedure procedure : procedures) {
+            if (procedure.getClass() == type) {
+                loopProcedures.add((T) procedure);
+            }
+        }
+        return loopProcedures;
     }
 }
