@@ -1,0 +1,15 @@
+       IDENTIFICATION DIVISION.
+           PROGRAM-ID. TEST.
+       DATA DIVISION.
+          01 A PICTURE IS X(9).
+          01 B PICTURE IS X(9).
+          01 C PICTURE IS X(9).
+       PROCEDURE DIVISION.
+          DISPLAY 42 10005 DELIMITED BY 5 4 DELIMITED BY SPACE WITH NO
+     -    ADVANCING.
+       MOVING.
+          MOVE "ITS ALIVE" TO A B C.
+       DISPLAYING.
+          DISPLAY A.
+          DISPLAY B.
+          DISPLAY C.

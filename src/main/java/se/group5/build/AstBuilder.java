@@ -1,12 +1,21 @@
 package se.group5.build;
 
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import se.group5.ast.*;
+import se.group5.ast.call.*;
+import se.group5.ast.call.parameter_passing.ByContent;
+import se.group5.ast.call.parameter_passing.ByReference;
+import se.group5.ast.call.parameter_passing.ByValue;
+import se.group5.ast.call.parameter_passing.ParameterPassing;
+import se.group5.ast.call.representation.AsPrimitive;
+import se.group5.ast.call.representation.AsRepresentation;
+import se.group5.ast.call.representation.AsStruct;
 import se.group5.ast.data.*;
+import se.group5.ast.data.Representation;
 import se.group5.ast.identity.IdentityTable;
 import se.group5.ast.literal.AlphanumericLiteral;
 import se.group5.ast.literal.Literal;
@@ -19,10 +28,7 @@ import se.group5.ast.statement.*;
 import se.group5.parser.CoBabyBoL;
 import se.group5.parser.CoBabyBoLBaseVisitor;
 import se.group5.parser.CoBabyBoLLexer;
-import se.group5.processor.Processor;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +37,7 @@ import java.util.*;
 /**
  * Visits the parse‑tree and constructs a hierarchical AST using the new model
  */
+@Slf4j
 public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     private final IdentityTable identityTable = new IdentityTable();
     private final SymbolTable symbolTable = new SymbolTable();
@@ -87,7 +94,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         // level number & identifier
         int level = Integer.parseInt(ctx.level().LEVEL().getText());
         var value = ctx.IDENTIFIER().getText();
-        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value)) value = replacementsStack.peek().get(value);
+        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value))
+            value = replacementsStack.peek().get(value);
         Identifier id = new Identifier(value);
 
         // Determine the picture (may come from LIKE, or explicit PIC, or none)
@@ -217,7 +225,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
     private int recurrenceLevel = 0;
 
     @Override
-    public Node visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
+    public Identifier visitIdentifier(CoBabyBoL.IdentifierContext ctx) {
         recurrenceLevel++;
         if (ctx.identifier() != null) {
             Identifier identifier = (Identifier) visit(ctx.identifier());
@@ -238,7 +246,8 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         }
         recurrenceLevel--;
         var value = ctx.IDENTIFIER().getText();
-        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value)) value = replacementsStack.peek().get(value);
+        if (!replacementsStack.isEmpty() && replacementsStack.peek().containsKey(value))
+            value = replacementsStack.peek().get(value);
         return new Identifier(value);
     }
 
@@ -354,6 +363,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return subtract;
     }
 
+    @Override
     public Node visitMove(CoBabyBoL.MoveContext ctx) {
         Object moveType;
         if (ctx.move_arg().HIGH_VALUES() != null) {
@@ -411,50 +421,100 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return move;
     }
 
+    @Override
     public Node visitCall(CoBabyBoL.CallContext ctx) {
+        System.out.println("CALL!");
+        log.info("VISITING CALL!");
+        Literal fileNameLiteral = (Literal) visit(ctx.file_name());
+        String fileName = fileNameLiteral.raw();
 
-        var filename = new AlphanumericLiteral(ctx.file_name().getText()).value().replace("\"", "");
-        File file = new File(filename);
-        if (!file.exists()) {
-            throw new IllegalStateException("File '" + filename + "' cannot be found");
-        }
-        Processor processor = new Processor();
-        Program program = null;
+        Path path = Paths.get(fileName);
+        String content;
         try {
-            program = processor.parseFile(file.getAbsolutePath());
-        } catch (IOException e) {
-            throw new IllegalStateException("Error processing file '" + filename + "': " + e.getMessage(), e);
+            content = Files.readString(path);
+        } catch (Exception e) {
+            System.err.println("The file " + path + "could not be found");
+            e.printStackTrace();
+            return null;
         }
-        HashMap<Call.CallArgs, Object> args = new HashMap<>();
-        if (ctx.call_function().isEmpty()) {
-            if (ctx.using_clause() != null) {
-                var options = ctx.using_clause().by_with_as();
-                for (var option : options) {
-                    if (option.as_clause().size() > 1) {
-                        throw new IllegalStateException("AS clause is not supported in CALL without a function name");
-                    }
-                    if (option.by_clause() != null) {
-                        if (option.by_clause().by_reference() != null) {
-                            if (option.by_clause().by_reference().atomic().identifier().IDENTIFIER() == null) {
-                                throw new IllegalStateException("An identifier must be used for BY REFERENCE option of CALL");
-                            } else {
-                                args.put(Call.CallArgs.BY_REFERENCE, visitAtomic(option.by_clause().by_reference().atomic()));
-                            }
-                        }
-                        if (option.by_clause().by_value() != null) {
-                            args.put(Call.CallArgs.BY_VALUE, visitAtomic(option.by_clause().by_value().atomic()));
-                        }
-                        if (option.by_clause().by_content() != null) {
-                            args.put(Call.CallArgs.BY_CONTENT, visitAtomic(option.by_clause().by_content().atomic()));
-                        }
-                    }
-                }
+
+        CharStream charStream = CharStreams.fromString(content);
+        CoBabyBoLLexer lexer = new CoBabyBoLLexer(charStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        CoBabyBoL parser = new CoBabyBoL(tokens);
+        AstBuilder builder = new AstBuilder();
+        var program = builder.visitProgram(parser.program());
+
+        List<CallArgument> args = new ArrayList<>();
+
+        if (ctx.using_clause() != null) {
+            for (var callArgCtx : ctx.using_clause().by_atomic_as()) {
+                args.add(visitBy_atomic_as(callArgCtx));
             }
         }
-        Call call = new Call(program, args);
 
+        List<CallReturn> returns = new ArrayList<>();
+        if (ctx.returning_clause() != null) {
+            for (var callReturnCtx : ctx.returning_clause().by_identifier_as()) {
+                returns.add(visitBy_identifier_as(callReturnCtx));
+            }
+        }
+
+        Call call;
+        String funcName = null;
+        if (ctx.function_name() != null) {
+            funcName = ctx.function_name().alphanumeric_literal().STRINGLITERAL().getText();
+        }
+
+        call = new Call(
+                program,
+                funcName,
+                args,
+                returns,
+                symbolTable
+        );
         procedures.add(call);
         return call;
+    }
+
+    @Override
+    public ParameterPassing visitBy_clause(CoBabyBoL.By_clauseContext ctx) {
+        if (ctx.BY_REFERENCE() != null) {
+            return new ByReference();
+        } else if (ctx.BY_CONTENT() != null) {
+            return new ByContent();
+        } else if (ctx.BY_VALUE() != null) {
+            return new ByValue();
+        }
+        return null;
+    }
+
+    @Override
+    public AsRepresentation visitAs_clause(CoBabyBoL.As_clauseContext ctx) {
+        if (ctx.AS_PRIMITIVE() != null) {
+            return new AsPrimitive();
+        } else if (ctx.AS_STRUCT() != null) {
+            return new AsStruct();
+        }
+        return null;
+    }
+
+    @Override
+    public CallArgument visitBy_atomic_as(CoBabyBoL.By_atomic_asContext ctx) {
+        return new CallArgument(
+                visitAtomic(ctx.atomic()),
+                visitBy_clause(ctx.by_clause()),
+                visitAs_clause(ctx.as_clause())
+        );
+    }
+
+    @Override
+    public CallReturn visitBy_identifier_as(CoBabyBoL.By_identifier_asContext ctx) {
+        return new CallReturn(
+                visitIdentifier(ctx.identifier()),
+                visitBy_clause(ctx.by_clause()),
+                visitAs_clause(ctx.as_clause())
+        );
     }
 
     @Override
@@ -472,6 +532,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         return goTo;
     }
 
+    @Override
     public Node visitSignal(CoBabyBoL.SignalContext ctx) {
 
         Signal signal;
@@ -532,6 +593,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             e.printStackTrace();
             return null;
         }
+
         HashMap<String, String> replacements = new HashMap<>();
         if (ctx.REPLACING() != null) {
             List<CoBabyBoL.Argument_literalContext> args = ctx.argument_literal();
@@ -546,6 +608,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
             replacementsStack.push(replacements);
         }
+
         var isDataDivision = ctx.getParent().getClass() == CoBabyBoL.Data_itemContext.class;
         if (isDataDivision) {
             content = """

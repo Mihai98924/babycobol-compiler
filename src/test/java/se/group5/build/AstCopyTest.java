@@ -90,7 +90,7 @@ public class AstCopyTest {
         var output = new StringAccumulatingDisplayStrategy();
         program.run(null, output);
         Assert.assertNotNull("Program should not be null", program);
-        Assert.assertEquals("There should be 4 procedures", 2, program.procedures.size());
+        Assert.assertEquals("There should be 2 procedures", 2, program.procedures.size());
         Assert.assertEquals("The Output should be correct",
                 """
                 ITS ALIVE
