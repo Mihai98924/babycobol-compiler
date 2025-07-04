@@ -654,30 +654,6 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         ProcedureList procedureList = procedures;
         procedures = new ProcedureList();
 
-//        List<LoopVariable> variables = new ArrayList<>();
-//        for (CoBabyBoL.Loop_variablesContext variable : ctx.loop_variables()) {
-//            Identifier id = new Identifier(variable.IDENTIFIER().getText());
-//            Atomic from = null;
-//            Atomic to = null;
-//            Atomic step = null;
-//            if (variable.loop_from() != null) {
-//                from = visitAtomic(variable.loop_from().atomic());
-//            }
-//            if (variable.loop_to() != null) {
-//                to = visitAtomic(variable.loop_to().atomic());
-//            }
-//            if (variable.loop_by() != null) {
-//                step = visitAtomic(variable.loop_by().atomic());
-//            }
-//            LoopVariable loopVariable = new LoopVariable((DataElement) symbolTable.resolve(id.toString()).get(),
-//                    from, to, step);
-//
-//            if(loopVariable.identifier.getType() != Type.NUMERIC)
-//                throw new IllegalArgumentException("The loop variable " + id + " is not numeric!");
-//
-//            variables.add(loopVariable);
-//        }
-
         for (CoBabyBoL.Loop_statementsContext loop_statementsContext : ctx.loop_statements()) {
             visitChildren(loop_statementsContext);
         }
