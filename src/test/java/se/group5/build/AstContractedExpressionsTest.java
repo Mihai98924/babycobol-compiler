@@ -30,13 +30,9 @@ public class AstContractedExpressionsTest {
                       MOVE 10 TO A.
                       MOVE 10 TO B.
                       MOVE 10 TO C.
-                      IF A < B AND < C
-                      THEN DISPLAY A
-                      ELSE DISPLAY B
-                      END.
+                      IF A < B AND < C THEN DISPLAY A ELSE DISPLAY B END.
            """;
         Program program = processor.parse(source);
-        System.out.println(program);
 
         ProcedureList procedures = program.procedures;
         Assert.assertNotNull("Program should not be null", program);

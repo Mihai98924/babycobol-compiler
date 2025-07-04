@@ -29,6 +29,12 @@ public class Atomic implements Node, Typeable, Pictureable, Cloneable {
         return element.picture().length();
     }
 
+    public DataDefinition dataDefinition() {
+        if (this.isElement()) return this.getElement();
+        if (this.isComposite()) return this.getGroup();
+        throw new IllegalArgumentException("This atomic is a literal it has no data definition ");
+    }
+
     @Override
     public String toString() {
         if (literal != null) {

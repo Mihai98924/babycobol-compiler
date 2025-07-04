@@ -57,8 +57,6 @@ public class AstPictureLikeTest {
 
         // Act
         Program program = processor.parse(source);
-        System.out.println(program);
-
         String YFullpath = program.symbolTable.getFullyQualifiedIdentifier("Y");
         String WFullpath = program.symbolTable.getFullyQualifiedIdentifier("W");
 
@@ -102,7 +100,6 @@ public class AstPictureLikeTest {
 
         // Act
         Program program = processor.parse(source);
-        System.out.println(program);
 
         String AFullpath = program.symbolTable.getFullyQualifiedIdentifier("Y.A");
         String WFullpath = program.symbolTable.getFullyQualifiedIdentifier("W");

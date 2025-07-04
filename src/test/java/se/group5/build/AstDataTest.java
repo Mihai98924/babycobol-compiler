@@ -17,8 +17,12 @@ import se.group5.ast.statement.Display;
 import se.group5.processor.Processor;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.Assert.assertThrows;
 
 public class AstDataTest {
 
@@ -29,9 +33,24 @@ public class AstDataTest {
         processor = new Processor();
     }
 
-    @Test(expected = ParseCancellationException.class)
-    public void requiresIdentificationDivision() throws Exception {
-        processor.parse("PROCEDURE DIVISION. DISPLAY 'Hello'.");
+    @Test
+    public void requiresIdentificationDivision() {
+        PrintStream originalOut = System.out;
+        PrintStream originalErr = System.err;
+
+        try (PrintStream devNull = new PrintStream(OutputStream.nullOutputStream())) {
+            // Redirect *all* console output to the sink
+            System.setOut(devNull);
+            System.setErr(devNull);
+
+            // Your original assertion – now completely silent
+            assertThrows(ParseCancellationException.class,
+                    () -> processor.parse("PROCEDURE DIVISION. DISPLAY 'Hello'."));
+        } finally {
+            // Always put the real streams back, even if the test fails
+            System.setOut(originalOut);
+            System.setErr(originalErr);
+        }
     }
 
     @Test
@@ -187,7 +206,7 @@ public class AstDataTest {
                       MOVE HIGH-VALUES TO C OF X Y.
            """;
 
-        Assert.assertThrows(IllegalStateException.class, () -> processor.parse(source));
+        assertThrows(IllegalStateException.class, () -> processor.parse(source));
     }
 
     @Test

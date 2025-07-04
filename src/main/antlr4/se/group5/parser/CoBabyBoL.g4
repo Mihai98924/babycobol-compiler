@@ -115,7 +115,7 @@ display_atomic_clause
       (DELIMITED_BY (SIZE | SPACE | literal))?
     ;
 
-// ── CALL & MOVE ───────────────────────────────────────────────
+// ── CALL ───────────────────────────────────────────────
 call
     : CALL (function_name OF)? file_name using_clause? returning_clause?
     ;
@@ -147,6 +147,7 @@ by_identifier_as
     : by_clause? identifier as_clause?
     ;
 
+// ── MOVE ───────────────────────────────────────────────
 move
     : MOVE move_arg TO identifier+
     ;

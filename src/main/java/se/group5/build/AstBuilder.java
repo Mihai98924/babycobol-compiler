@@ -423,8 +423,6 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitCall(CoBabyBoL.CallContext ctx) {
-        System.out.println("CALL!");
-        log.info("VISITING CALL!");
         Literal fileNameLiteral = (Literal) visit(ctx.file_name());
         String fileName = fileNameLiteral.raw();
 
@@ -464,6 +462,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
         String funcName = null;
         if (ctx.function_name() != null) {
             funcName = ctx.function_name().alphanumeric_literal().STRINGLITERAL().getText();
+            funcName = funcName.substring(1, funcName.length() - 1);
         }
 
         call = new Call(
@@ -478,6 +477,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public ParameterPassing visitBy_clause(CoBabyBoL.By_clauseContext ctx) {
+        if (ctx == null) return null;
         if (ctx.BY_REFERENCE() != null) {
             return new ByReference();
         } else if (ctx.BY_CONTENT() != null) {
@@ -490,6 +490,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public AsRepresentation visitAs_clause(CoBabyBoL.As_clauseContext ctx) {
+        if (ctx == null) return null;
         if (ctx.AS_PRIMITIVE() != null) {
             return new AsPrimitive();
         } else if (ctx.AS_STRUCT() != null) {
@@ -500,6 +501,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public CallArgument visitBy_atomic_as(CoBabyBoL.By_atomic_asContext ctx) {
+        if (ctx == null) return null;
         return new CallArgument(
                 visitAtomic(ctx.atomic()),
                 visitBy_clause(ctx.by_clause()),
@@ -509,6 +511,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public CallReturn visitBy_identifier_as(CoBabyBoL.By_identifier_asContext ctx) {
+        if (ctx == null) return null;
         return new CallReturn(
                 visitIdentifier(ctx.identifier()),
                 visitBy_clause(ctx.by_clause()),

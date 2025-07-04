@@ -11,7 +11,7 @@ public final class DataGroup implements DataDefinition {
     private final int level;
     private final Identifier name;
     public Map<String, DataDefinition> children = new HashMap<>();
-
+    public boolean readOnly;
 
     public DataGroup(int level, Identifier name) {
         this.level = level;
@@ -47,11 +47,13 @@ public final class DataGroup implements DataDefinition {
 
     @Override
     public void setValue(Object value) {
+        if (this.readOnly) throw new IllegalArgumentException("Cannot set value on readonly data element!");
         throw new UnsupportedOperationException();
     }
 
     @Override
     public void setValue(Object value, boolean applyPictureToValue) {
+        if (this.readOnly) throw new IllegalArgumentException("Cannot set value on readonly data group!");
         throw new UnsupportedOperationException();
     }
 
@@ -84,5 +86,15 @@ public final class DataGroup implements DataDefinition {
             c.children.put(e.getKey(), e.getValue().copy());
         }
         return c;
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    @Override
+    public boolean getReadOnly() {
+        return this.readOnly;
     }
 }
