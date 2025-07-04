@@ -55,9 +55,9 @@ public class AstCallTest {
                       01 C PICTURE IS X(9).
                   PROCEDURE DIVISION.
                       CALL "MOVING" OF "src/test/resources/test/target_function_program.baby"
-                - USING BY REFERENCE A
-                - USING BY REFERENCE B
-                - USING BY REFERENCE C.
+                  -USING BY REFERENCE A
+                  -BY REFERENCE B
+                  -BY REFERENCE C.
            """;
         Program program = processor.parse(source);
         var output = new StringAccumulatingDisplayStrategy();

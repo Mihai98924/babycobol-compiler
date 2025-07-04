@@ -470,8 +470,7 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
                 program,
                 funcName,
                 args,
-                returns,
-                symbolTable
+                returns
         );
         procedures.add(call);
         return call;

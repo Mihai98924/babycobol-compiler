@@ -78,18 +78,11 @@ public final class DataGroup implements DataDefinition {
     }
 
     @Override
-    public DataDefinition clone() {
-        DataGroup cloned = null;
-        try {
-            cloned = (DataGroup) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+    public DataDefinition copy() {
+        DataGroup c = new DataGroup(level, name);
+        for (Map.Entry<String, DataDefinition> e : this.children.entrySet()) {
+            c.children.put(e.getKey(), e.getValue().copy());
         }
-        cloned.children = new HashMap<>();
-        for (Map.Entry<String, DataDefinition> entry : this.children.entrySet()) {
-            if(entry.getValue() instanceof DataElement dataElement)
-                cloned.children.put(entry.getKey(), dataElement.clone());
-        }
-        return cloned;
+        return c;
     }
 }

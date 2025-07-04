@@ -176,11 +176,10 @@ public final class DataElement implements DataDefinition {
     }
 
     @Override
-    public DataDefinition clone() {
-        try {
-            return (DataElement) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+    public DataDefinition copy() {
+        DataElement c = new DataElement(level, name, picture, occurs);
+        c.truncated = this.truncated;
+        c.value     = this.value;
+        return c;
     }
 }
