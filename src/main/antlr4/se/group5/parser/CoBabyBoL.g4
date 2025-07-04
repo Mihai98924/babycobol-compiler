@@ -191,13 +191,16 @@ giving_identifier_list : GIVING IDENTIFIER* ;
 loop
     : LOOP (
           DEFAULT_LINE? (
-              WHILE   boolean_expression
-            | UNTIL   boolean_expression
-            | statement
-            | loop_variables
+            loop_statements
           )
       )+ DEFAULT_LINE? END
     ;
+
+loop_statements: loop_while
+                | loop_until
+                | statement
+                | loop_variables;
+
 loop_variables: VARYING IDENTIFIER?
                 loop_from?
                 loop_to?
@@ -206,6 +209,9 @@ loop_variables: VARYING IDENTIFIER?
 loop_from: (FROM atomic);
 loop_to: (TO atomic);
 loop_by: (BY atomic);
+
+loop_while: WHILE boolean_expression;
+loop_until: UNTIL boolean_expression;
 
 evaluate
     : EVALUATE any_expression
@@ -247,12 +253,16 @@ string_expr
 
 boolean_expression
     : DEFAULT_LINE? (
-          NOT boolean_expression
-        | LPAR boolean_expression RPAR
-        | atomic (EQ_OP atomic)? boolean_eq_expression?
-        | LPAR boolean_expression RPAR boolean_eq_expression?
+          boolean_negation
+        | boolean_parenthesis
+        | boolean_expression_main
+        | boolean_parenthesis boolean_eq_expression?
       )
     ;
+
+boolean_negation: NOT boolean_expression;
+boolean_parenthesis: LPAR boolean_expression RPAR;
+boolean_expression_main: atomic (EQ_OP atomic)? boolean_eq_expression?;
 
 boolean_eq_expression
     : DEFAULT_LINE? (OR | AND | XOR) DEFAULT_LINE?

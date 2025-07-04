@@ -651,8 +651,62 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
 
     @Override
     public Node visitLoop(CoBabyBoL.LoopContext ctx) {
-        List<LoopVariable> variables = new ArrayList<>();
-        for (CoBabyBoL.Loop_variablesContext variable : ctx.loop_variables()) {
+        ProcedureList procedureList = procedures;
+        procedures = new ProcedureList();
+
+//        List<LoopVariable> variables = new ArrayList<>();
+//        for (CoBabyBoL.Loop_variablesContext variable : ctx.loop_variables()) {
+//            Identifier id = new Identifier(variable.IDENTIFIER().getText());
+//            Atomic from = null;
+//            Atomic to = null;
+//            Atomic step = null;
+//            if (variable.loop_from() != null) {
+//                from = visitAtomic(variable.loop_from().atomic());
+//            }
+//            if (variable.loop_to() != null) {
+//                to = visitAtomic(variable.loop_to().atomic());
+//            }
+//            if (variable.loop_by() != null) {
+//                step = visitAtomic(variable.loop_by().atomic());
+//            }
+//            LoopVariable loopVariable = new LoopVariable((DataElement) symbolTable.resolve(id.toString()).get(),
+//                    from, to, step);
+//
+//            if(loopVariable.identifier.getType() != Type.NUMERIC)
+//                throw new IllegalArgumentException("The loop variable " + id + " is not numeric!");
+//
+//            variables.add(loopVariable);
+//        }
+
+        for (CoBabyBoL.Loop_statementsContext loop_statementsContext : ctx.loop_statements()) {
+            visitChildren(loop_statementsContext);
+        }
+
+        Loop loop = new Loop(procedures);
+        List<Until> untils = procedures.getAllLoopProcedures(Until.class);
+        List<While> whiles = procedures.getAllLoopProcedures(While.class);
+        List<LoopVariable> loopVariables = procedures.getAllLoopProcedures(LoopVariable.class);
+
+        untils.forEach(until -> {
+            until.loop = loop;
+            until.procedureList = procedures;
+        });
+        whiles.forEach(whileProc -> {
+            whileProc.loop = loop;
+            whileProc.procedureList = procedures;
+        });
+        loopVariables.forEach(loopVariable -> {
+            loopVariable.loop = loop;
+            loopVariable.procedureList = procedures;
+        });
+
+        procedures = procedureList;
+        procedures.add(loop);
+        return loop;
+    }
+
+    @Override
+    public Node visitLoop_variables(CoBabyBoL.Loop_variablesContext variable) {
             Identifier id = new Identifier(variable.IDENTIFIER().getText());
             Atomic from = null;
             Atomic to = null;
@@ -668,20 +722,42 @@ public final class AstBuilder extends CoBabyBoLBaseVisitor<Node> {
             }
             LoopVariable loopVariable = new LoopVariable((DataElement) symbolTable.resolve(id.toString()).get(),
                     from, to, step);
-            variables.add(loopVariable);
-        }
 
-        ProcedureList procedureList = procedures;
-        procedures = new ProcedureList();
-        for (CoBabyBoL.StatementContext statement : ctx.statement()) {
-            visitChildren(statement);
-        }
+            if(loopVariable.identifier.getType() != Type.NUMERIC)
+                throw new IllegalArgumentException("The loop variable " + id + " is not numeric!");
 
-        Loop loop = new Loop(procedures, variables);
-        procedures = procedureList;
+            procedures.add(loopVariable);
+            return loopVariable;
+    }
 
-        procedures.add(loop);
-        return loop;
+    @Override
+    public Node visitLoop_until(CoBabyBoL.Loop_untilContext ctx) {
+        BooleanExpression ex = (BooleanExpression) visitBoolean_expression(ctx.boolean_expression());
+        Until until = new Until(ex);
+        procedures.add(until);
+        return until;
+    }
+
+    @Override
+    public Node visitLoop_while(CoBabyBoL.Loop_whileContext ctx) {
+        BooleanExpression ex = (BooleanExpression) visitBoolean_expression(ctx.boolean_expression());
+        While whileProc = new While(ex);
+        procedures.add(whileProc);
+        return whileProc;
+    }
+
+    @Override
+    public Node visitBoolean_expression_main(CoBabyBoL.Boolean_expression_mainContext ctx) {
+        // TODO add more boolean logic
+        Atomic lValue = visitAtomic(ctx.atomic(0));
+        Atomic rValue = visitAtomic(ctx.atomic(1));
+        EqOp eqop = EqOp.fromString(ctx.EQ_OP().getText());
+        return new BooleanExpression(lValue, rValue, eqop);
+    }
+
+    @Override
+    public Node visitBoolean_expression(CoBabyBoL.Boolean_expressionContext ctx) {
+        return visitBoolean_expression_main(ctx.boolean_expression_main());
     }
 }
 
