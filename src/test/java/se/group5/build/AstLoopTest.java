@@ -6,9 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.group5.ast.Program;
 import se.group5.ast.ProgramInputStrategy;
-import se.group5.ast.statement.Arithmetic;
-import se.group5.ast.statement.Display;
-import se.group5.ast.statement.Loop;
+import se.group5.ast.statement.*;
 import se.group5.processor.Processor;
 
 import java.io.IOException;
@@ -43,18 +41,19 @@ public class AstLoopTest {
                   DATA DIVISION.
                       01 X PICTURE IS 9.
                   PROCEDURE DIVISION.
-                      LOOP VARYING X
+                      LOOP
+                      VARYING X
                       DISPLAY X WITH NO ADVANCING
                       ADD X TO X
                       SUBTRACT 1 FROM X
-                      UNTIL "HELLO"
+                      UNTIL A < 10
                       END.
                       DISPLAY X WITH NO ADVANCING.
            """;
 
         // Act
         Program program = processor.parse(source);
-        program.run(strategy);
+        program.run(strategy, null);
 
         // Assert
         // Assert program structure
@@ -65,12 +64,16 @@ public class AstLoopTest {
                 program.procedures.get(1).get().getClass());
 
         // Assert loop structure
-        Assert.assertEquals(3, ((Loop)program.procedures.get(0).get()).procedures.size());
-        Assert.assertEquals(Display.class,
+        Assert.assertEquals(5, ((Loop)program.procedures.get(0).get()).procedures.size());
+        Assert.assertEquals(LoopVariable.class,
                 ((Loop)program.procedures.get(0).get()).procedures.get(0).get().getClass());
-        Assert.assertEquals(Arithmetic.class,
+        Assert.assertEquals(Display.class,
                 ((Loop)program.procedures.get(0).get()).procedures.get(1).get().getClass());
         Assert.assertEquals(Arithmetic.class,
                 ((Loop)program.procedures.get(0).get()).procedures.get(2).get().getClass());
+        Assert.assertEquals(Arithmetic.class,
+                ((Loop)program.procedures.get(0).get()).procedures.get(3).get().getClass());
+        Assert.assertEquals(Until.class,
+                ((Loop)program.procedures.get(0).get()).procedures.get(4).get().getClass());
     }
 }
